@@ -40,15 +40,15 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="javax.jms-api.jar-2.0.1" level="project" />
-    <orderEntry type="library" name="JAX-WS-Glassfish / JAX-WS 2.2 RI / Metro 1.X / JWSDP 2.2" level="project" />
-    <orderEntry type="library" name="JAX-RS-2.1.1" level="project" />
-    <orderEntry type="library" name="JPA 2.0-2.0" level="project" />
-    <orderEntry type="library" name="javax.json.processing-1.1.4" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.201.0" level="application_server_libraries" />
-    <orderEntry type="library" name="EJB-3.2.2" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.201.0 - CDI: Contexts and Dependency Injection" level="application_server_libraries" />
-    <orderEntry type="library" name="Mojarra-2.4.0" level="project" />
-    <orderEntry type="library" name="javax.json.bind-api-1.0" level="project" />
+    <orderEntry type="library" exported="" name="javax.jms-api.jar-2.0.1" level="project" />
+    <orderEntry type="library" exported="" name="JAX-WS-Glassfish / JAX-WS 2.2 RI / Metro 1.X / JWSDP 2.2" level="project" />
+    <orderEntry type="library" exported="" name="JAX-RS-2.1.1" level="project" />
+    <orderEntry type="library" exported="" name="JPA 2.0-2.0" level="project" />
+    <orderEntry type="library" exported="" name="javax.json.processing-1.1.4" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="GlassFish 5.201.0" level="application_server_libraries" />
+    <orderEntry type="library" exported="" name="EJB-3.2.2" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="GlassFish 5.201.0 - CDI: Contexts and Dependency Injection" level="application_server_libraries" />
+    <orderEntry type="library" exported="" name="Mojarra-2.4.0" level="project" />
+    <orderEntry type="library" exported="" name="javax.json.bind-api-1.0" level="project" />
   </component>
 </module>
