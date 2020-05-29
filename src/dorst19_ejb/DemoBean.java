@@ -24,6 +24,7 @@ public class DemoBean {
         Address address = new Address("tiense","3000","Leuven","vb","b");
         Bar hdr = new Bar("hdr",address,200);
         hdr.addToMenu(new MenuEntry(drankje,5,60));
+        entityManager.persist(hdr);
         return "hallo";
     }
 }

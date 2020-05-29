@@ -12,7 +12,7 @@ public class MenuEntry {
     @Id @GeneratedValue
     @Column(name = "id", updatable = false, nullable = false)
     private int id;
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "item_fk")
     private Item item;
     @Column(name = "price", nullable = false)
