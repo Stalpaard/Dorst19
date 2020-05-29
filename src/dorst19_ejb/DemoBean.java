@@ -16,8 +16,9 @@ public class DemoBean {
 
     public String getHello()
     {
-        Drink drink = entityManager.find(Drink.class, "vaasbeerdrank");
-        drink.setAlcoholPercentage(50);
-        return ((Float)drink.getAlcoholPercentage()).toString();
+        //Drink drink = entityManager.find(Drink.class, "vaasbeerdrank");
+        //drink.setAlcoholPercentage(50);
+        //return ((Float)drink.getAlcoholPercentage()).toString();
+        return "hallo";
     }
 }
