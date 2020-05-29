@@ -36,6 +36,10 @@ public class Bar {
     @Column(name = "capacity", nullable = true)
     private int capacity;
 
+    public int getId() {
+        return id;
+    }
+
     public List<Shift> getShifts(){
         return shifts;
     }

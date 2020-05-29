@@ -11,9 +11,7 @@ import java.util.Objects;
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.CHAR)
 @DiscriminatorValue("U")
 public abstract class User {
-    @Id @GeneratedValue
-    protected int id;
-    @Column(name = "user_name", nullable = false, unique = true)
+    @Id
     protected String username;
     @Column(name = "password", nullable = false)
     protected String password;
@@ -43,14 +41,12 @@ public abstract class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User that = (User) o;
-        return id == that.id &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(username, that.username) &&
+        return Objects.equals(username, that.username) &&
                 Objects.equals(password, that.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password);
+        return Objects.hash(username, password);
     }
 }

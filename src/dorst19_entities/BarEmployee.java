@@ -32,15 +32,13 @@ public class BarEmployee extends User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BarEmployee that = (BarEmployee) o;
-        return id == that.id &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(username, that.username) &&
+        return Objects.equals(username, that.username) &&
                 Objects.equals(password, that.password) &&
                 Objects.equals(shifts,that.shifts);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, shifts);
+        return Objects.hash(username, password, shifts);
     }
 }

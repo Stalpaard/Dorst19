@@ -47,9 +47,7 @@ public class Customer extends User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Customer that = (Customer) o;
-        return id == that.id &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(username, that.username) &&
+        return Objects.equals(username, that.username) &&
                 Objects.equals(password, that.password) &&
                 Objects.equals(credit, that.credit) &&
                 Objects.equals(reservations, that.reservations);
@@ -57,6 +55,6 @@ public class Customer extends User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, credit, reservations);
+        return Objects.hash(username, password, credit, reservations);
     }
 }

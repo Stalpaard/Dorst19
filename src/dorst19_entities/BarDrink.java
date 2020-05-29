@@ -19,6 +19,10 @@ public class BarDrink {
     @Column(name = "stock", nullable = false)
     private int stock;
 
+    public int getId() {
+        return id;
+    }
+
     public Bar getBar() {
         return bar;
     }

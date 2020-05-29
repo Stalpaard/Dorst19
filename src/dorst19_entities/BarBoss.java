@@ -38,15 +38,13 @@ public class BarBoss extends User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BarBoss that = (BarBoss) o;
-        return id == that.id &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(username, that.username) &&
+        return Objects.equals(username, that.username) &&
                 Objects.equals(password, that.password) &&
                 Objects.equals(ownedBars,that.ownedBars);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, ownedBars);
+        return Objects.hash(username, password, ownedBars);
     }
 }

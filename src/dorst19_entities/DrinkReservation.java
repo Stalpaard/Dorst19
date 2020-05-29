@@ -18,6 +18,10 @@ public class DrinkReservation  {
     @ManyToOne
     private Customer customer;
 
+    public int getId() {
+        return id;
+    }
+
     public BarDrink getBarDrink() {
         return barDrink;
     }

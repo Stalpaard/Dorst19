@@ -19,6 +19,10 @@ public class Shift {
     @Enumerated(EnumType.STRING)
     private DaysOfTheWeek dayOfTheWeek;
 
+    public int getId() {
+        return id;
+    }
+
     public Bar getBar() {
         return bar;
     }

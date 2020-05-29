@@ -16,11 +16,8 @@ public class DemoBean {
 
     public String getHello()
     {
-        Drink drink = new Drink();
-        drink.setAlcoholPercentage(5);
-        drink.setName("baasbeer");
-        drink.setVolume(5);
-        entityManager.persist(drink);
-        return "kaas";
+        Drink drink = entityManager.find(Drink.class, "vaasbeerdrank");
+        drink.setAlcoholPercentage(50);
+        return ((Float)drink.getAlcoholPercentage()).toString();
     }
 }
