@@ -12,7 +12,6 @@ public class DrinkReservation  {
     private int id;
     @ManyToOne
     private BarDrink barDrink;
-    @NotNull
     private int amountOfDrinks;
     @ManyToOne
     private Customer customer;

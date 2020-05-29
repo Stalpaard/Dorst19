@@ -16,7 +16,6 @@ public class Bar {
 
     @Id @GeneratedValue
     private int id;
-    @NotNull
     private String name;
     @Embedded
     private Address address;
@@ -28,7 +27,6 @@ public class Bar {
     private List<BarDrink> stock;
     @OneToMany
     private List<Shift> shifts;
-    @NotNull
     private int capacity;
 
     public List<Shift> getShifts(){

@@ -12,9 +12,7 @@ import java.util.Objects;
 public abstract class User {
     @Id @GeneratedValue
     protected int id;
-    @NotNull
     protected String username;
-    @NotNull
     protected String password;
 
     public void setUsername(String username)

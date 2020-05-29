@@ -11,11 +11,8 @@ import java.util.Objects;
 public class Drink {
     @Id @GeneratedValue
     private int id;
-    @NotNull
     private String name;
-    @NotNull
     private float alcoholPercentage;
-    @NotNull
     private float volume;
 
     public String getName() {

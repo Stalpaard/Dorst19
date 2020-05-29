@@ -13,9 +13,7 @@ public class BarDrink {
     private Bar bar;
     @ManyToOne
     private Drink drink;
-    @NotNull
     private float price;
-    @NotNull
     private int stock;
 
     public Bar getBar() {

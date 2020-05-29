@@ -9,7 +9,6 @@ import java.util.Objects;
 @Entity
 @DiscriminatorValue("C")
 public class Customer extends User {
-    @NotNull
     private float credit;
     @OneToMany
     private List<DrinkReservation> reservations;
