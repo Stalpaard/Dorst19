@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Customer extends User {
     @Column(name = "credit", nullable = false)
     private float credit;
-    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE})
+    @OneToMany(cascade = {CascadeType.MERGE,CascadeType.REMOVE})
     @JoinTable(
             name = "jnd_customer_reservation",
             joinColumns = @JoinColumn(name = "customer_fk"),

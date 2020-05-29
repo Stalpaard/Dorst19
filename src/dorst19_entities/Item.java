@@ -4,10 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(
-        name = "ITEM",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"name","alcohol_percentage","volume"})
-)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Item {
     @Id
     @Column(name = "name", nullable = false, updatable = false)

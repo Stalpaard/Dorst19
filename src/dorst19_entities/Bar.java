@@ -31,7 +31,7 @@ public class Bar {
     @OrderColumn(name = "day_order")
     private List<TimePeriod> openingHours = new ArrayList<>(Collections.nCopies(7, new TimePeriod(0,0)));
 
-    @ManyToMany(cascade = {CascadeType.MERGE})
+    @ManyToMany
     @JoinTable(name = "jnd_bar_barboss",
     joinColumns = @JoinColumn(name = "bar_fk"),
     inverseJoinColumns = @JoinColumn(name = "barboss_fk"))

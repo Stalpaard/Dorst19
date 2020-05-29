@@ -6,9 +6,10 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(discriminatorType = DiscriminatorType.CHAR)
-@DiscriminatorValue("D")
+@Table(
+        name = "DRINK",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"name","alcohol_percentage","volume"})
+)
 public class DrinkItem extends Item{
 
     @Column(name = "alcohol_percentage", nullable = false, updatable = false) //voor existing bardrinks
