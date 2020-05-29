@@ -20,7 +20,7 @@
         <setting name="provider-name" value="EclipseLink" />
         <datasource-mapping>
           <factory-entry name="Dorst19" />
-          <factory-entry name="DorstPersistenceUnit" />
+          <factory-entry name="DorstPersistenceUnit" value="092daa53-731c-46a3-b353-2f8d1cfa41cb" />
           <factory-entry name="NewPersistenceUnit" value="092daa53-731c-46a3-b353-2f8d1cfa41cb" />
         </datasource-mapping>
         <naming-strategy-map>

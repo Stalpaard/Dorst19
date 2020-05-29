@@ -4,6 +4,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.util.Objects;
 
 @Embeddable
 @Access(AccessType.FIELD)
@@ -27,5 +28,19 @@ public class TimePeriod {
 
     public void setEndHour(int endHour) {
         this.endHour = endHour;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TimePeriod that = (TimePeriod) o;
+        return Objects.equals(beginHour, that.beginHour) &&
+                Objects.equals(endHour, that.endHour);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(beginHour, endHour);
     }
 }

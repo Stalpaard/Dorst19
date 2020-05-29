@@ -6,12 +6,14 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "DRINK")
 public class Drink {
     @Id
+    @Column(name = "name")
     private String name;
-    @Column(name = "alcohol_percentage", nullable = true)
+    @Column(name = "alcohol_percentage", updatable = false) //voor existing bardrinks
     private float alcoholPercentage = 200;
-    @Column(name = "volume", nullable = false)
+    @Column(name = "volume", nullable = false, updatable = false) //voor existing bardrinks
     private float volume;
 
     public String getName() {
@@ -22,16 +24,8 @@ public class Drink {
         return alcoholPercentage;
     }
 
-    public void setAlcoholPercentage(float alcoholPercentage) {
-        this.alcoholPercentage = alcoholPercentage;
-    }
-
     public float getVolume() {
         return volume;
-    }
-
-    public void setVolume(float volume) {
-        this.volume = volume;
     }
 
     @Override

@@ -6,16 +6,18 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "DRINK_RESERVATION")
 public class DrinkReservation  {
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
+    @Column(name = "id")
     private int id;
     @ManyToOne
-    @JoinColumn(name = "bardrink_fk")
+    @JoinColumn(name = "bardrink_fk", nullable = false, updatable = false) //niet updatable vanwege stock ook
     private BarDrink barDrink;
-    @Column(name = "amount", nullable = false)
+    @Column(name = "amount", nullable = false, updatable = false) //niet updatable om bijv. stock te kunnen managen
     private int amountOfDrinks;
     @ManyToOne
+    @JoinColumn(name = "customer_fk", nullable = false)  //updatable kan gebruikt worden om een reservation te giften
     private Customer customer;
 
     public int getId() {
@@ -26,18 +28,9 @@ public class DrinkReservation  {
         return barDrink;
     }
 
-    public void setBarDrink(BarDrink barDrink) {
-        this.barDrink = barDrink;
-    }
-
     public int getAmountOfDrinks() {
         return amountOfDrinks;
     }
-
-    public void setAmountOfDrinks(int amountOfDrinks) {
-        this.amountOfDrinks = amountOfDrinks;
-    }
-
 
     public Customer getCustomer() {
         return customer;

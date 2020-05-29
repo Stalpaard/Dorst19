@@ -6,14 +6,18 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "BAR_DRINK")
 public class BarDrink {
     @Id @GeneratedValue
+    @Column(name = "id")
     private int id;
     @ManyToOne
+    @JoinColumn(name = "bar_fk", nullable = false, updatable = false) //Niet updatable voor existing orders
     private Bar bar;
     @ManyToOne
-    @JoinColumn(name = "drink_fk")
+    @JoinColumn(name = "drink_fk", nullable = false, updatable = false) //Niet updatable voor existing orders
     private Drink drink;
+
     @Column(name = "price", nullable = false)
     private float price;
     @Column(name = "stock", nullable = false)
@@ -27,16 +31,8 @@ public class BarDrink {
         return bar;
     }
 
-    public void setBar(Bar bar) {
-        this.bar = bar;
-    }
-
     public Drink getDrink() {
         return drink;
-    }
-
-    public void setDrink(Drink drink) {
-        this.drink = drink;
     }
 
     public float getPrice() {

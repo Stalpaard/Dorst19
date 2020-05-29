@@ -12,14 +12,10 @@ import java.util.Objects;
 @DiscriminatorValue("U")
 public abstract class User {
     @Id
+    @Column(name = "username")
     protected String username;
     @Column(name = "password", nullable = false)
     protected String password;
-
-    public void setUsername(String username)
-    {
-        this.username = username;
-    }
 
     public String getUsername()
     {

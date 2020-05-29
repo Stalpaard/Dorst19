@@ -7,16 +7,21 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "SHIFT")
 public class Shift {
     @Id @GeneratedValue
+    @Column(name = "id")
     private int id;
     @ManyToOne
+    @JoinColumn(name = "bar_fk", nullable = false)
     private Bar bar;
     @ManyToOne
+    @JoinColumn(name = "employee_fk")
     private BarEmployee employee;
     @Embedded
     private TimePeriod timePeriod;
     @Enumerated(EnumType.STRING)
+    @Column(name = "day")
     private DaysOfTheWeek dayOfTheWeek;
 
     public int getId() {

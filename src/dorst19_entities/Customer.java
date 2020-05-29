@@ -3,6 +3,7 @@ package dorst19_entities;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,9 +11,9 @@ import java.util.Objects;
 @DiscriminatorValue("C")
 public class Customer extends User {
     @Column(name = "credit", nullable = false)
-    private float credit = 0;
+    private float credit;
     @OneToMany(mappedBy = "customer")
-    private List<DrinkReservation> reservations;
+    private List<DrinkReservation> reservations = new ArrayList<>();
 
     public float getCredit() {
         return credit;

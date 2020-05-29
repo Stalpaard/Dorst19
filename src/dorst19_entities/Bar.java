@@ -16,8 +16,9 @@ import java.util.Objects;
 public class Bar {
 
     @Id @GeneratedValue
+    @Column(name = "id")
     private int id;
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false)
     private String name;
     @Embedded
     private Address address;
@@ -33,7 +34,7 @@ public class Bar {
     private List<BarDrink> stock = new ArrayList<>();
     @OneToMany(mappedBy = "bar")
     private List<Shift> shifts = new ArrayList<>();
-    @Column(name = "capacity", nullable = true)
+    @Column(name = "capacity", nullable = false)
     private int capacity;
 
     public int getId() {

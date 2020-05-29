@@ -1,14 +1,18 @@
 package dorst19_embeddables;
 
+import dorst19_entities.User;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.util.Objects;
 
 @Embeddable
 @Access(AccessType.FIELD)
 public class Address {
 
+    //Velden worden updatable gehouden opdat bars kunnen verhuizen
     @Column(name = "street", nullable = false)
     private String street;
     @Column(name = "zipcode", nullable = false)
@@ -58,5 +62,22 @@ public class Address {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address that = (Address) o;
+        return Objects.equals(street, that.street) &&
+                Objects.equals(zipcode, that.zipcode) &&
+                Objects.equals(city, that.city) &&
+                Objects.equals(state, that.state) &&
+                Objects.equals(country, that.country);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(street, zipcode, city, state, country);
     }
 }
