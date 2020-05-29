@@ -4,6 +4,7 @@ import dorst19_embeddables.TimePeriod;
 import dorst19_utilities.DaysOfTheWeek;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -13,11 +14,17 @@ public class Shift {
     @Column(name = "id")
     private int id;
     @ManyToOne
-    @JoinColumn(name = "bar_fk", nullable = false)
+    @JoinTable(
+            name = "jnd_bar_shift",
+            joinColumns = @JoinColumn(name = "shift_fk", insertable = false, updatable = false),
+            inverseJoinColumns = @JoinColumn(name = "bar_fk", insertable = false, updatable = false)
+    )
     private Bar bar;
-    @ManyToOne
-    @JoinColumn(name = "employee_fk")
-    private BarEmployee employee;
+    @ManyToMany
+    @JoinTable(name = "jnd_shift_employee",
+            joinColumns = @JoinColumn(name = "shift_fk"),
+            inverseJoinColumns = @JoinColumn(name = "employee_fk"))
+    private List<BarEmployee> employees;
     @Embedded
     private TimePeriod timePeriod;
     @Enumerated(EnumType.STRING)
@@ -36,12 +43,19 @@ public class Shift {
         this.bar = bar;
     }
 
-    public BarEmployee getEmployee() {
-        return employee;
+    public List<BarEmployee> getEmployees() {
+        return employees;
     }
 
-    public void setEmployee(BarEmployee employee) {
-        this.employee = employee;
+    public boolean addEmployee(BarEmployee barEmployee)
+    {
+        if(employees.contains(barEmployee) == false) return employees.add(barEmployee);
+        else return false;
+    }
+
+    public boolean removeEmployee(BarEmployee barEmployee)
+    {
+        return employees.remove(barEmployee);
     }
 
     public TimePeriod getTimePeriod() {
@@ -65,16 +79,13 @@ public class Shift {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Shift that = (Shift) o;
-        return id == that.id &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(bar, that.bar) &&
-                Objects.equals(employee, that.employee) &&
+        return Objects.equals(bar, that.bar) &&
                 Objects.equals(timePeriod,that.timePeriod) &&
                 Objects.equals(dayOfTheWeek, that.dayOfTheWeek);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, bar, employee, timePeriod, dayOfTheWeek);
+        return Objects.hash(bar, timePeriod, dayOfTheWeek);
     }
 }

@@ -33,18 +33,4 @@ public class BarBoss extends User {
         return ownedBars.remove(bar);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BarBoss that = (BarBoss) o;
-        return Objects.equals(username, that.username) &&
-                Objects.equals(password, that.password) &&
-                Objects.equals(ownedBars,that.ownedBars);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(username, password, ownedBars);
-    }
 }

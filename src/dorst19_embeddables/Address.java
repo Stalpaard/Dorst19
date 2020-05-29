@@ -11,7 +11,7 @@ import java.util.Objects;
 @Embeddable
 @Access(AccessType.FIELD)
 public class Address {
-
+    //Huisnummer weggelaten omdat cafés meerdere huisnummers kunnen hebben => veel werk
     //Velden worden updatable gehouden opdat bars kunnen verhuizen
     @Column(name = "street", nullable = false)
     private String street;
@@ -23,6 +23,21 @@ public class Address {
     private String state;
     @Column(name = "country", nullable = false)
     private String country;
+
+    protected Address()
+    {
+
+    }
+
+    public Address(String street, String zipcode, String city, String state, String country)
+    {
+        this();
+        this.street = street;
+        this.zipcode = zipcode;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+    }
 
     public String getStreet() {
         return street;

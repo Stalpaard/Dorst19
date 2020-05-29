@@ -10,9 +10,21 @@ import java.util.Objects;
 @Access(AccessType.FIELD)
 public class TimePeriod {
     @Column(name = "begin_hour", nullable = false)
-    private int beginHour = 0;
+    private int beginHour;
     @Column(name = "end_hour", nullable = false)
-    private int endHour = 0;
+    private int endHour;
+
+    protected TimePeriod()
+    {
+
+    }
+
+    public TimePeriod(int beginHour, int endHour)
+    {
+        this();
+        this.beginHour = beginHour;
+        this.endHour = endHour;
+    }
 
     public int getBeginHour() {
         return beginHour;

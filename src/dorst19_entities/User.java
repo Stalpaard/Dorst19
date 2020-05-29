@@ -9,7 +9,6 @@ import java.util.Objects;
 @Table(name = "USER")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.CHAR)
-@DiscriminatorValue("U")
 public abstract class User {
     @Id
     @Column(name = "username")

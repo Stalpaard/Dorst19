@@ -6,19 +6,29 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "DRINK")
-public class Drink {
-    @Id
-    @Column(name = "name")
-    private String name;
-    @Column(name = "alcohol_percentage", updatable = false) //voor existing bardrinks
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.CHAR)
+@DiscriminatorValue("D")
+public class DrinkItem extends Item{
+
+    @Column(name = "alcohol_percentage", nullable = false, updatable = false) //voor existing bardrinks
     private float alcoholPercentage = 200;
     @Column(name = "volume", nullable = false, updatable = false) //voor existing bardrinks
     private float volume;
 
-    public String getName() {
-        return name;
+    protected DrinkItem()
+    {
+
     }
+
+    public DrinkItem(String name, float percentage, float volume)
+    {
+        super(name);
+        this.alcoholPercentage = percentage;
+        this.volume = volume;
+    }
+
+
 
     public float getAlcoholPercentage() {
         return alcoholPercentage;
@@ -32,7 +42,7 @@ public class Drink {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Drink that = (Drink) o;
+        DrinkItem that = (DrinkItem) o;
         return  Objects.equals(name, that.name) &&
                 Objects.equals(alcoholPercentage, that.alcoholPercentage) &&
                 Objects.equals(volume,that.volume);

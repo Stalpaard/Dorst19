@@ -1,14 +1,11 @@
 package dorst19_entities;
 
-import com.sun.istack.NotNull;
 import dorst19_embeddables.Address;
 import dorst19_embeddables.TimePeriod;
 import dorst19_utilities.DaysOfTheWeek;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 @Entity
@@ -20,22 +17,62 @@ public class Bar {
     private int id;
     @Column(name = "name", nullable = false)
     private String name;
+    @Column(name = "capacity", nullable = false)
+    private int capacity;
+
     @Embedded
     private Address address;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "OPENING_HOURS")
-    private List<TimePeriod> openingHours = new ArrayList<>(7);
+    @OrderColumn(name = "day_order")
+    private List<TimePeriod> openingHours = new ArrayList<>(Collections.nCopies(7, new TimePeriod(0,0)));
+
     @ManyToMany
     @JoinTable(name = "jnd_bar_barboss",
     joinColumns = @JoinColumn(name = "bar_fk"),
     inverseJoinColumns = @JoinColumn(name = "barboss_fk"))
     private List<BarBoss> bosses = null;
-    @OneToMany(mappedBy = "bar")
-    private List<BarDrink> stock = new ArrayList<>();
-    @OneToMany(mappedBy = "bar")
-    private List<Shift> shifts = new ArrayList<>();
-    @Column(name = "capacity", nullable = false)
-    private int capacity;
+
+    @OneToMany
+    @JoinTable(
+            name = "jnd_bar_menu",
+            joinColumns = @JoinColumn(name = "bar_fk"),
+            inverseJoinColumns = @JoinColumn(name = "menu_entry_fk")
+    )
+    private List<MenuEntry> menu;
+
+    @OneToMany
+    @JoinTable(
+            name = "jnd_bar_shift",
+            joinColumns = @JoinColumn(name = "bar_fk"),
+            inverseJoinColumns = @JoinColumn(name = "shift_fk")
+    )
+    private List<Shift> shifts;
+
+    @OneToMany
+    @JoinTable(
+            name = "jnd_bar_reservations",
+            joinColumns = @JoinColumn(name = "bar_fk"),
+            inverseJoinColumns = @JoinColumn(name = "reservation_fk")
+    )
+    private List<ItemReservation> reservations;
+
+    protected Bar()
+    {
+
+    }
+
+    public Bar(String name, Address address, int capacity)
+    {
+        this.name = name;
+        this.address = address;
+        this.capacity = capacity;
+        for(DaysOfTheWeek d : DaysOfTheWeek.values())
+        {
+            setOpeningHourAtDay(d, new TimePeriod(0,0));
+        }
+    }
 
     public int getId() {
         return id;
@@ -76,17 +113,17 @@ public class Bar {
         return bosses.remove(boss);
     }
 
-    public List<BarDrink> getStock() {
-        return stock;
+    public List<MenuEntry> getMenu() {
+        return menu;
     }
 
-    public boolean addToStock(BarDrink drink) {
-        if(stock.contains(drink) == false) return stock.add(drink);
+    public boolean addToMenu(MenuEntry drink) {
+        if(menu.contains(drink) == false) return menu.add(drink);
         else return false;
     }
 
-    public boolean removeFromStock(BarDrink drink) {
-        return stock.remove(drink);
+    public boolean removeFromMenu(MenuEntry drink) {
+        return menu.remove(drink);
     }
 
     public int getCapacity() {
@@ -112,19 +149,16 @@ public class Bar {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Bar that = (Bar) o;
-        return id == that.id &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name) &&
+        return Objects.equals(name, that.name) &&
                 Objects.equals(address, that.address) &&
                 Objects.equals(openingHours, that.openingHours) &&
                 Objects.equals(bosses, that.bosses) &&
-                Objects.equals(stock, that.stock) &&
-                Objects.equals(capacity, that.capacity) &&
-                Objects.equals(shifts, that.shifts);
+                Objects.equals(menu, that.menu) &&
+                Objects.equals(capacity, that.capacity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, address, openingHours, bosses, stock, capacity, shifts);
+        return Objects.hash(name, address, openingHours, bosses, menu, capacity);
     }
 }

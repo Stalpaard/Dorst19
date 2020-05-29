@@ -1,7 +1,5 @@
 package dorst19_entities;
 
-import com.sun.istack.NotNull;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +10,13 @@ import java.util.Objects;
 public class Customer extends User {
     @Column(name = "credit", nullable = false)
     private float credit;
-    @OneToMany(mappedBy = "customer")
-    private List<DrinkReservation> reservations = new ArrayList<>();
+    @OneToMany
+    @JoinTable(
+            name = "jnd_customer_reservation",
+            joinColumns = @JoinColumn(name = "customer_fk"),
+            inverseJoinColumns = @JoinColumn(name = "reservation_fk")
+    )
+    private List<ItemReservation> reservations = new ArrayList<>();
 
     public float getCredit() {
         return credit;
@@ -23,39 +26,23 @@ public class Customer extends User {
         this.credit = credit;
     }
 
-    public boolean addReservation(DrinkReservation drinkReservationEntity)
+    public boolean addReservation(ItemReservation itemReservationEntity)
     {
-        if(reservations.contains(drinkReservationEntity) == false)
+        if(reservations.contains(itemReservationEntity) == false)
         {
-            reservations.add(drinkReservationEntity);
+            reservations.add(itemReservationEntity);
             return true;
         }
         return false;
     }
 
-    public boolean removeReservation(DrinkReservation drinkReservationEntity)
+    public boolean removeReservation(ItemReservation itemReservationEntity)
     {
-        return reservations.remove(drinkReservationEntity); //returns true if collection contained the reservation
+        return reservations.remove(itemReservationEntity); //returns true if collection contained the reservation
     }
 
-    public List<DrinkReservation> getReservations()
+    public List<ItemReservation> getReservations()
     {
         return reservations;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Customer that = (Customer) o;
-        return Objects.equals(username, that.username) &&
-                Objects.equals(password, that.password) &&
-                Objects.equals(credit, that.credit) &&
-                Objects.equals(reservations, that.reservations);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(username, password, credit, reservations);
     }
 }

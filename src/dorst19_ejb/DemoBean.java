@@ -1,6 +1,7 @@
 package dorst19_ejb;
 
-import dorst19_entities.Drink;
+import dorst19_entities.Bar;
+import dorst19_entities.MenuEntry;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -10,15 +11,13 @@ import javax.persistence.PersistenceContext;
 public class DemoBean {
     @PersistenceContext(unitName = "DorstPersistenceUnit")
     EntityManager entityManager;
-
+    int kak = 0;
     public DemoBean() {
     }
 
-    public String getHello()
+    public String epischeActie()
     {
-        //Drink drink = entityManager.find(Drink.class, "vaasbeerdrank");
-        //drink.setAlcoholPercentage(50);
-        //return ((Float)drink.getAlcoholPercentage()).toString();
+
         return "hallo";
     }
 }
