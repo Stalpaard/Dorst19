@@ -4,6 +4,7 @@ import dorst19_embeddables.TimePeriod;
 import dorst19_utilities.DaysOfTheWeek;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ import java.util.Objects;
 @Table(name = "SHIFT")
 public class Shift {
     @Id @GeneratedValue
-    @Column(name = "id")
+    @Column(name = "id", unique = true)
     private int id;
     @ManyToOne
     @JoinTable(
@@ -24,7 +25,7 @@ public class Shift {
     @JoinTable(name = "jnd_shift_employee",
             joinColumns = @JoinColumn(name = "shift_fk"),
             inverseJoinColumns = @JoinColumn(name = "employee_fk"))
-    private List<BarEmployee> employees;
+    private List<BarEmployee> employees = new ArrayList<>();
     @Embedded
     private TimePeriod timePeriod;
     @Enumerated(EnumType.STRING)

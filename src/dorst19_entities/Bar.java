@@ -9,7 +9,10 @@ import java.util.*;
 
 
 @Entity
-@Table(name = "BAR")
+@Table(
+        name = "BAR",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"name","city","country","state","street","zipcode"})
+)
 public class Bar {
 
     @Id @GeneratedValue
@@ -32,7 +35,7 @@ public class Bar {
     @JoinTable(name = "jnd_bar_barboss",
     joinColumns = @JoinColumn(name = "bar_fk"),
     inverseJoinColumns = @JoinColumn(name = "barboss_fk"))
-    private List<BarBoss> bosses = null;
+    private List<BarBoss> bosses = new ArrayList<>();
 
     @OneToMany
     @JoinTable(
@@ -40,7 +43,7 @@ public class Bar {
             joinColumns = @JoinColumn(name = "bar_fk"),
             inverseJoinColumns = @JoinColumn(name = "menu_entry_fk")
     )
-    private List<MenuEntry> menu;
+    private List<MenuEntry> menu = new ArrayList<>();
 
     @OneToMany
     @JoinTable(
@@ -48,7 +51,7 @@ public class Bar {
             joinColumns = @JoinColumn(name = "bar_fk"),
             inverseJoinColumns = @JoinColumn(name = "shift_fk")
     )
-    private List<Shift> shifts;
+    private List<Shift> shifts = new ArrayList<>();
 
     @OneToMany
     @JoinTable(
@@ -56,7 +59,7 @@ public class Bar {
             joinColumns = @JoinColumn(name = "bar_fk"),
             inverseJoinColumns = @JoinColumn(name = "reservation_fk")
     )
-    private List<ItemReservation> reservations;
+    private List<ItemReservation> reservations = new ArrayList<>();
 
     protected Bar()
     {

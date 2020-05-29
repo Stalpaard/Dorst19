@@ -4,7 +4,10 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "MENU_ENTRY")
+@Table(
+        name = "MENU_ENTRY",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"price","item_fk"})
+)
 public class MenuEntry {
     @Id @GeneratedValue
     @Column(name = "id", updatable = false, nullable = false)

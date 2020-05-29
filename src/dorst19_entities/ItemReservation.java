@@ -7,7 +7,7 @@ import java.util.Objects;
 @Table(name = "ITEM_RESERVATION")
 public class ItemReservation {
     @Id @GeneratedValue
-    @Column(name = "id")
+    @Column(name = "id", unique = true)
     private int id;
     @ManyToOne(optional = false)
     @JoinColumn(name = "item_fk", nullable = false, updatable = false) //niet updatable vanwege stock ook
