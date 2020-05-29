@@ -12,21 +12,28 @@ import java.util.Objects;
 
 
 @Entity
+@Table(name = "BAR")
 public class Bar {
 
     @Id @GeneratedValue
     private int id;
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
     @Embedded
     private Address address;
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "OPENING_HOURS")
     private List<TimePeriod> openingHours = new ArrayList<>(7);
-    @ManyToOne
-    private BarBoss owner;
-    @OneToMany
-    private List<BarDrink> stock;
-    @OneToMany
-    private List<Shift> shifts;
+    @ManyToMany
+    @JoinTable(name = "jnd_bar_barboss",
+    joinColumns = @JoinColumn(name = "bar_fk"),
+    inverseJoinColumns = @JoinColumn(name = "barboss_fk"))
+    private List<BarBoss> bosses = null;
+    @OneToMany(mappedBy = "bar")
+    private List<BarDrink> stock = new ArrayList<>();
+    @OneToMany(mappedBy = "bar")
+    private List<Shift> shifts = new ArrayList<>();
+    @Column(name = "capacity", nullable = true)
     private int capacity;
 
     public List<Shift> getShifts(){
@@ -49,12 +56,19 @@ public class Bar {
         this.address = address;
     }
 
-    public BarBoss getOwner() {
-        return owner;
+    public List<BarBoss> getBosses() {
+        return bosses;
     }
 
-    public void setOwner(BarBoss owner) {
-        this.owner = owner;
+    public boolean addBoss(BarBoss boss)
+    {
+        if(bosses.contains(boss) == false) return bosses.add(boss);
+        else return false;
+    }
+
+    public boolean removeBoss(BarBoss boss)
+    {
+        return bosses.remove(boss);
     }
 
     public List<BarDrink> getStock() {
@@ -98,7 +112,7 @@ public class Bar {
                 Objects.equals(name, that.name) &&
                 Objects.equals(address, that.address) &&
                 Objects.equals(openingHours, that.openingHours) &&
-                Objects.equals(owner, that.owner) &&
+                Objects.equals(bosses, that.bosses) &&
                 Objects.equals(stock, that.stock) &&
                 Objects.equals(capacity, that.capacity) &&
                 Objects.equals(shifts, that.shifts);
@@ -106,6 +120,6 @@ public class Bar {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, address, openingHours, owner, stock, capacity, shifts);
+        return Objects.hash(id, name, address, openingHours, bosses, stock, capacity, shifts);
     }
 }

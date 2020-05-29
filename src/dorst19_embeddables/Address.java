@@ -1,8 +1,11 @@
 package dorst19_embeddables;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
 
 @Embeddable
+@Access(AccessType.FIELD)
 public class Address {
 
     private String street;

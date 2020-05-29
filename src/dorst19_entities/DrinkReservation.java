@@ -11,7 +11,9 @@ public class DrinkReservation  {
     @GeneratedValue
     private int id;
     @ManyToOne
+    @JoinColumn(name = "bardrink_fk")
     private BarDrink barDrink;
+    @Column(name = "amount", nullable = false)
     private int amountOfDrinks;
     @ManyToOne
     private Customer customer;

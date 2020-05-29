@@ -2,6 +2,7 @@ package dorst19_entities;
 
 import com.sun.istack.NotNull;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -11,8 +12,11 @@ import java.util.Objects;
 public class Drink {
     @Id @GeneratedValue
     private int id;
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
+    @Column(name = "alcohol_percentage", nullable = true)
     private float alcoholPercentage;
+    @Column(name = "volume", nullable = false)
     private float volume;
 
     public String getName() {

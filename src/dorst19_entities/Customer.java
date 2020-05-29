@@ -9,8 +9,9 @@ import java.util.Objects;
 @Entity
 @DiscriminatorValue("C")
 public class Customer extends User {
-    private float credit;
-    @OneToMany
+    @Column(name = "credit", nullable = false)
+    private float credit = 0;
+    @OneToMany(mappedBy = "customer")
     private List<DrinkReservation> reservations;
 
     public float getCredit() {

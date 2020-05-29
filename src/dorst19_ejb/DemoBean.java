@@ -18,9 +18,9 @@ public class DemoBean {
     {
         Drink drink = new Drink();
         drink.setAlcoholPercentage(5);
-        drink.setName("kaasbeer");
+        drink.setName("baasbeer");
         drink.setVolume(5);
-        //entityManager.persist(drink);
+        entityManager.persist(drink);
         return "kaas";
     }
 }

@@ -6,13 +6,16 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "USER")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.CHAR)
 @DiscriminatorValue("U")
 public abstract class User {
     @Id @GeneratedValue
     protected int id;
+    @Column(name = "user_name", nullable = false, unique = true)
     protected String username;
+    @Column(name = "password", nullable = false)
     protected String password;
 
     public void setUsername(String username)

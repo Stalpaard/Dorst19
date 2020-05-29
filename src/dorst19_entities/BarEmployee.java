@@ -3,14 +3,15 @@ package dorst19_entities;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @DiscriminatorValue("E")
 public class BarEmployee extends User {
-    @OneToMany
-    private List<Shift> shifts;
+    @OneToMany(mappedBy = "employee")
+    private List<Shift> shifts = new ArrayList<>();
 
     public boolean addShift(Shift shift)
     {

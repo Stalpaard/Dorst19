@@ -12,8 +12,11 @@ public class BarDrink {
     @ManyToOne
     private Bar bar;
     @ManyToOne
+    @JoinColumn(name = "drink_fk")
     private Drink drink;
+    @Column(name = "price", nullable = false)
     private float price;
+    @Column(name = "stock", nullable = false)
     private int stock;
 
     public Bar getBar() {
