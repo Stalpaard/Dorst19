@@ -20,8 +20,7 @@ public class DemoBean {
         drink.setAlcoholPercentage(5);
         drink.setName("kaasbeer");
         drink.setVolume(5);
-        entityManager.persist(drink);
-        entityManager.flush();
+        //entityManager.persist(drink);
         return "kaas";
     }
 }
