@@ -31,13 +31,13 @@ public class Bar {
     @OrderColumn(name = "day_order")
     private List<TimePeriod> openingHours = new ArrayList<>(Collections.nCopies(7, new TimePeriod(0,0)));
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JoinTable(name = "jnd_bar_barboss",
     joinColumns = @JoinColumn(name = "bar_fk"),
     inverseJoinColumns = @JoinColumn(name = "barboss_fk"))
     private List<BarBoss> bosses = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(
             name = "jnd_bar_menu",
             joinColumns = @JoinColumn(name = "bar_fk"),
@@ -45,7 +45,7 @@ public class Bar {
     )
     private List<MenuEntry> menu = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(
             name = "jnd_bar_shift",
             joinColumns = @JoinColumn(name = "bar_fk"),

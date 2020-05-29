@@ -21,7 +21,7 @@ public class Shift {
             inverseJoinColumns = @JoinColumn(name = "bar_fk", insertable = false, updatable = false)
     )
     private Bar bar;
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "jnd_shift_employee",
             joinColumns = @JoinColumn(name = "shift_fk"),
             inverseJoinColumns = @JoinColumn(name = "employee_fk"))
