@@ -15,6 +15,7 @@
           <element id="library" level="project" name="JPA 2.0-2.0" />
           <element id="library" level="project" name="javax.json.processing-1.1.4" />
           <element id="library" level="project" name="Mojarra-2.4.0" />
+          <element id="library" level="project" name="JBoss Weld-2.0.3" />
         </element>
       </element>
     </root>

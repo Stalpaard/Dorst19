@@ -13,7 +13,7 @@ public class DemoManagedBean implements Serializable {
     @EJB
     DemoBean demoBean;
 
-    public void doDemo(){
-        demoBean.epischeActie();
+    public String doDemo(){
+        return demoBean.epischeActie();
     }
 }

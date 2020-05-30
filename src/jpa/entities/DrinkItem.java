@@ -6,7 +6,7 @@ import java.util.Objects;
 @Entity
 @Table(
         name = "DRINK",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "volume"})}
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "alcohol_percentage", "volume"})}
 )
 public class DrinkItem extends Item{
 
