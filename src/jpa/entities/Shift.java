@@ -32,7 +32,7 @@ public class Shift {
     )
     private Bar bar;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "jnd_shift_employee",
             joinColumns = @JoinColumn(name = "shift_fk"),
             inverseJoinColumns = @JoinColumn(name = "employee_fk"))

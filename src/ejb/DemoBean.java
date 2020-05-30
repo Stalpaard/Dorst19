@@ -11,8 +11,9 @@ import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.awt.*;
 
-@Stateful(name = "DemoEJB")
+@Stateless(name = "DemoEJB")
 public class DemoBean {
     @PersistenceContext(unitName = "DorstPersistenceUnit")
     EntityManager entityManager;
@@ -22,7 +23,7 @@ public class DemoBean {
 
     public String epischeActie()
     {
-        /*
+
         //Users, drankjes en de bar moeten apart gepersist worden
         Customer customer = new Customer("elias", "elias");
         entityManager.persist(customer);
@@ -32,15 +33,15 @@ public class DemoBean {
         entityManager.persist(employee);
 
         Item drankje = new DrinkItem("bier" ,5.2f,33f);
-        entityManager.merge(drankje);
+        entityManager.persist(drankje);
         Address address = new Address("tiense","leuven");
         Bar hdr = new Bar(new BarInfo("hdr",address),200);
         hdr.addToMenu(drankje, 1, 100);
         hdr.addBoss(baas);
         hdr.addEmployeeToShift(employee, new TimePeriod(5,2), DaysOfTheWeek.FRIDAY);
         hdr.addReservation(customer, drankje, 2);
-        entityManager.merge(hdr);
-*/
+        entityManager.persist(hdr);
+
 
         //return baas.getOwnedBars().get(0).getBarInfo().getName();
 /*
@@ -50,7 +51,9 @@ public class DemoBean {
         for(Shift sh : employee.getShifts())
         s = s + sh.getBar().getBarInfo().getAddress().getCity();
         */
-        return "demo uit";
+        String s = "";
+        for(MenuEntry m : hdr.getMenu()) s = s + m.getItem().getName();
+        return s;
 
     }
 }
