@@ -6,7 +6,9 @@ import java.util.Objects;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Item {
-    @Id
+    @Id @GeneratedValue
+    @Column(name = "id")
+    private int id;
     @Column(name = "name", nullable = false, updatable = false)
     protected String name;
 

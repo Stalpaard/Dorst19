@@ -12,13 +12,17 @@ import java.util.Objects;
 @Table(name = "SHIFT")
 public class Shift {
     @Id @GeneratedValue
-    @Column(name = "id", unique = true)
+    @Column(name = "id")
     private int id;
     @ManyToOne
     @JoinTable(
             name = "jnd_bar_shift",
             joinColumns = @JoinColumn(name = "shift_fk", insertable = false, updatable = false),
-            inverseJoinColumns = @JoinColumn(name = "bar_fk", insertable = false, updatable = false)
+            inverseJoinColumns = {
+                    @JoinColumn(name = "name", referencedColumnName = "name", insertable = false, updatable = false),
+                    @JoinColumn(name = "street", referencedColumnName = "street", insertable = false, updatable = false),
+                    @JoinColumn(name = "city", referencedColumnName = "city", insertable = false, updatable = false),
+            }
     )
     private Bar bar;
     @ManyToMany

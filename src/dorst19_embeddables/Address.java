@@ -1,42 +1,32 @@
 package dorst19_embeddables;
 
-import dorst19_entities.User;
-
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
 @Access(AccessType.FIELD)
-public class Address {
+public class Address implements Serializable {
     //Huisnummer weggelaten omdat cafés meerdere huisnummers kunnen hebben => veel werk
     //Velden worden updatable gehouden opdat bars kunnen verhuizen
-    @Column(name = "street", nullable = false)
+    @Column(name = "street", length = 90)
     private String street;
-    @Column(name = "zipcode", nullable = false)
-    private String zipcode;
-    @Column(name = "city", nullable = false)
+    @Column(name = "city", length = 90)
     private String city;
-    @Column(name = "state", nullable = false)
-    private String state;
-    @Column(name = "country", nullable = false)
-    private String country;
 
     protected Address()
     {
 
     }
 
-    public Address(String street, String zipcode, String city, String state, String country)
+    public Address(String street, String city)
     {
         this();
         this.street = street;
-        this.zipcode = zipcode;
         this.city = city;
-        this.state = state;
-        this.country = country;
     }
 
     public String getStreet() {
@@ -47,14 +37,6 @@ public class Address {
         this.street = street;
     }
 
-    public String getZipcode() {
-        return zipcode;
-    }
-
-    public void setZipcode(String zipcode) {
-        this.zipcode = zipcode;
-    }
-
     public String getCity() {
         return city;
     }
@@ -63,36 +45,17 @@ public class Address {
         this.city = city;
     }
 
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Address that = (Address) o;
         return Objects.equals(street, that.street) &&
-                Objects.equals(zipcode, that.zipcode) &&
-                Objects.equals(city, that.city) &&
-                Objects.equals(state, that.state) &&
-                Objects.equals(country, that.country);
+                Objects.equals(city, that.city);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(street, zipcode, city, state, country);
+        return Objects.hash(street, city);
     }
 }

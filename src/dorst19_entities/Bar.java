@@ -1,46 +1,51 @@
 package dorst19_entities;
 
-import dorst19_embeddables.Address;
 import dorst19_embeddables.TimePeriod;
+import dorst19_embeddables.BarInfo;
 import dorst19_utilities.DaysOfTheWeek;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.*;
 
 
 @Entity
 @Table(
-        name = "BAR",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"name","city","country","state","street","zipcode"})
+        name = "BAR"
 )
-public class Bar {
+public class Bar implements Serializable {
 
-    @Id @GeneratedValue
-    @Column(name = "id")
-    private int id;
-    @Column(name = "name", nullable = false)
-    private String name;
+    @EmbeddedId
+    private BarInfo barInfo;
+
     @Column(name = "capacity", nullable = false)
     private int capacity;
-
-    @Embedded
-    private Address address;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "OPENING_HOURS")
     @OrderColumn(name = "day_order")
     private List<TimePeriod> openingHours = new ArrayList<>(Collections.nCopies(7, new TimePeriod(0,0)));
 
-    @ManyToMany
-    @JoinTable(name = "jnd_bar_barboss",
-    joinColumns = @JoinColumn(name = "bar_fk"),
-    inverseJoinColumns = @JoinColumn(name = "barboss_fk"))
+    @ManyToMany(targetEntity = BarBoss.class)
+    @JoinTable(
+            name = "jnd_bar_boss",
+            joinColumns = {
+                    @JoinColumn(name = "name", referencedColumnName = "name"),
+                    @JoinColumn(name = "street", referencedColumnName = "street"),
+                    @JoinColumn(name = "city", referencedColumnName = "city"),
+            },
+            inverseJoinColumns = @JoinColumn(name = "boss_fk")
+    )
     private List<BarBoss> bosses = new ArrayList<>();
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(
             name = "jnd_bar_menu",
-            joinColumns = @JoinColumn(name = "bar_fk"),
+            joinColumns = {
+                    @JoinColumn(name = "name", referencedColumnName = "name"),
+                    @JoinColumn(name = "street", referencedColumnName = "street"),
+                    @JoinColumn(name = "city", referencedColumnName = "city"),
+            },
             inverseJoinColumns = @JoinColumn(name = "menu_entry_fk")
     )
     private List<MenuEntry> menu = new ArrayList<>();
@@ -48,7 +53,11 @@ public class Bar {
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(
             name = "jnd_bar_shift",
-            joinColumns = @JoinColumn(name = "bar_fk"),
+            joinColumns = {
+                    @JoinColumn(name = "name", referencedColumnName = "name"),
+                    @JoinColumn(name = "street", referencedColumnName = "street"),
+                    @JoinColumn(name = "city", referencedColumnName = "city"),
+            },
             inverseJoinColumns = @JoinColumn(name = "shift_fk")
     )
     private List<Shift> shifts = new ArrayList<>();
@@ -56,7 +65,11 @@ public class Bar {
     @OneToMany(cascade = {CascadeType.MERGE})
     @JoinTable(
             name = "jnd_bar_reservations",
-            joinColumns = @JoinColumn(name = "bar_fk"),
+            joinColumns = {
+                    @JoinColumn(name = "name", referencedColumnName = "name"),
+                    @JoinColumn(name = "street", referencedColumnName = "street"),
+                    @JoinColumn(name = "city", referencedColumnName = "city"),
+            },
             inverseJoinColumns = @JoinColumn(name = "reservation_fk")
     )
     private List<ItemReservation> reservations = new ArrayList<>();
@@ -66,10 +79,9 @@ public class Bar {
 
     }
 
-    public Bar(String name, Address address, int capacity)
+    public Bar(BarInfo barInfo, int capacity)
     {
-        this.name = name;
-        this.address = address;
+        this.barInfo = barInfo;
         this.capacity = capacity;
         for(DaysOfTheWeek d : DaysOfTheWeek.values())
         {
@@ -77,28 +89,13 @@ public class Bar {
         }
     }
 
-    public int getId() {
-        return id;
+    public BarInfo getBarInfo()
+    {
+        return barInfo;
     }
 
     public List<Shift> getShifts(){
         return shifts;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
     }
 
     public List<BarBoss> getBosses() {
@@ -152,16 +149,14 @@ public class Bar {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Bar that = (Bar) o;
-        return Objects.equals(name, that.name) &&
-                Objects.equals(address, that.address) &&
+        return Objects.equals(barInfo, that.barInfo) &&
                 Objects.equals(openingHours, that.openingHours) &&
                 Objects.equals(bosses, that.bosses) &&
                 Objects.equals(menu, that.menu) &&
                 Objects.equals(capacity, that.capacity);
     }
-
     @Override
     public int hashCode() {
-        return Objects.hash(name, address, openingHours, bosses, menu, capacity);
+        return Objects.hash(barInfo, openingHours, bosses, menu, capacity);
     }
 }

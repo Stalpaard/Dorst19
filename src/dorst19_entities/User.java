@@ -11,7 +11,7 @@ import java.util.Objects;
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.CHAR)
 public abstract class User {
     @Id
-    @Column(name = "username", unique = true)
+    @Column(name = "username")
     protected String username;
     @Column(name = "password", nullable = false)
     protected String password;

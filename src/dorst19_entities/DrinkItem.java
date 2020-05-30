@@ -1,14 +1,12 @@
 package dorst19_entities;
 
-import com.sun.istack.NotNull;
-
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(
         name = "DRINK",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"name","alcohol_percentage","volume"})
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "volume"})}
 )
 public class DrinkItem extends Item{
 

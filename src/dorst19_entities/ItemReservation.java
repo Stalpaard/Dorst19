@@ -7,7 +7,7 @@ import java.util.Objects;
 @Table(name = "ITEM_RESERVATION")
 public class ItemReservation {
     @Id @GeneratedValue
-    @Column(name = "id", unique = true)
+    @Column(name = "id")
     private int id;
     @ManyToOne(optional = false)
     @JoinColumn(name = "item_fk", nullable = false, updatable = false) //niet updatable vanwege stock ook
@@ -26,7 +26,11 @@ public class ItemReservation {
     @JoinTable(
             name = "jnd_bar_reservations",
             joinColumns = @JoinColumn(name = "reservation_fk", insertable = false, updatable = false),
-            inverseJoinColumns = @JoinColumn(name = "bar_fk", insertable = false, updatable = false)
+            inverseJoinColumns = {
+                    @JoinColumn(name = "name", referencedColumnName = "name",insertable = false, updatable = false),
+                    @JoinColumn(name = "street", referencedColumnName = "street",insertable = false, updatable = false),
+                    @JoinColumn(name = "city", referencedColumnName = "city",insertable = false, updatable = false),
+            }
     )
     private Bar bar;
 

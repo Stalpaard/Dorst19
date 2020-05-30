@@ -14,6 +14,7 @@ public class DemoManagedBean implements Serializable {
     DemoBean demoBean;
 
     public String getDemo(){
-        return demoBean.epischeActie();
+        demoBean.epischeActie();
+        return "jippie gelukt";
     }
 }

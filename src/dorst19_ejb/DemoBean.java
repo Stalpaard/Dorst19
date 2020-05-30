@@ -1,6 +1,7 @@
 package dorst19_ejb;
 
 import dorst19_embeddables.Address;
+import dorst19_embeddables.BarInfo;
 import dorst19_entities.Bar;
 import dorst19_entities.DrinkItem;
 import dorst19_entities.Item;
@@ -18,14 +19,25 @@ public class DemoBean {
     public DemoBean() {
     }
 
-    public String epischeActie()
+    public void epischeActie()
     {
+        /*
+        kak = 0;
         Item drankje = new DrinkItem("bier",5.2f,33f);
-        entityManager.persist(drankje);
-        Address address = new Address("tiense","3000","Leuven","vb","b");
-        Bar hdr = new Bar("hdr",address,200);
+        if(kak <= 0)
+        {
+            kak++;
+
+            entityManager.persist(drankje);
+
+            //entityManager.persist(drankje2);
+        }
+
+        Address address = new Address("tiense","Leuven");
+        Bar hdr = new Bar(new BarInfo("hdr",address),200);
         hdr.addToMenu(new MenuEntry(drankje,5,60));
         entityManager.persist(hdr);
-        return "hallo";
+        */
+
     }
 }

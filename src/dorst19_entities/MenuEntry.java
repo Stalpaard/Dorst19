@@ -5,15 +5,14 @@ import java.util.Objects;
 
 @Entity
 @Table(
-        name = "MENU_ENTRY",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"price","item_fk"})
+        name = "MENU_ENTRY"
 )
 public class MenuEntry {
     @Id @GeneratedValue
     @Column(name = "id", updatable = false, nullable = false)
     private int id;
     @ManyToOne(optional = false, cascade = {CascadeType.MERGE}) //kan nog errors geven
-    @JoinColumn(name = "item_fk")
+    @JoinColumn(name = "item_fk", unique = true)
     private Item item;
     @Column(name = "price", nullable = false)
     private float price;
