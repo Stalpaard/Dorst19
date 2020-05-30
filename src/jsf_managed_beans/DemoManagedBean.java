@@ -16,4 +16,8 @@ public class DemoManagedBean implements Serializable {
     public String doDemo(){
         return demoBean.epischeActie();
     }
+
+    public String doHashTest() {
+        return demoBean.hashTest();
+    }
 }

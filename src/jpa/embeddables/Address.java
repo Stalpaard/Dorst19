@@ -29,24 +29,29 @@ public class Address implements Serializable {
         this.city = city;
     }
 
-    public String getStreet() {
+    public String getStreet()
+    {
         return street;
     }
 
-    public void setStreet(String street) {
+    public void setStreet(String street)
+    {
         this.street = street;
     }
 
-    public String getCity() {
+    public String getCity()
+    {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(String city)
+    {
         this.city = city;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Address that = (Address) o;
