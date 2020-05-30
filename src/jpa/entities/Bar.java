@@ -1,8 +1,8 @@
-package dorst19_entities;
+package jpa.entities;
 
-import dorst19_embeddables.TimePeriod;
-import dorst19_embeddables.BarInfo;
-import dorst19_utilities.DaysOfTheWeek;
+import jpa.embeddables.TimePeriod;
+import jpa.embeddables.BarInfo;
+import utilities.DaysOfTheWeek;
 
 import javax.persistence.*;
 import java.io.Serializable;

@@ -1,6 +1,4 @@
-package dorst19_entities;
-
-import com.sun.istack.NotNull;
+package jpa.entities;
 
 import javax.persistence.*;
 import java.util.Objects;

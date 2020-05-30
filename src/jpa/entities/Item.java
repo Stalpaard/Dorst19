@@ -1,4 +1,4 @@
-package dorst19_entities;
+package jpa.entities;
 
 import javax.persistence.*;
 import java.util.Objects;

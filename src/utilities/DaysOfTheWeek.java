@@ -1,4 +1,4 @@
-package dorst19_utilities;
+package utilities;
 
 public enum DaysOfTheWeek {
     MONDAY,

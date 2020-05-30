@@ -1,6 +1,6 @@
-package dorst19_jsf_beans;
+package jsf_managed_beans;
 
-import dorst19_ejb.DemoBean;
+import ejb.DemoBean;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;

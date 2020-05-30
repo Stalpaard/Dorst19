@@ -1,11 +1,4 @@
-package dorst19_ejb;
-
-import dorst19_embeddables.Address;
-import dorst19_embeddables.BarInfo;
-import dorst19_entities.Bar;
-import dorst19_entities.DrinkItem;
-import dorst19_entities.Item;
-import dorst19_entities.MenuEntry;
+package ejb;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;

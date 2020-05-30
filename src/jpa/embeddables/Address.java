@@ -1,4 +1,4 @@
-package dorst19_embeddables;
+package jpa.embeddables;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
