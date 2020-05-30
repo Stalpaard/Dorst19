@@ -13,7 +13,8 @@ import java.util.*;
 @Table(
         name = "BAR"
 )
-public class Bar implements Serializable {
+public class Bar implements Serializable
+{
 
     @EmbeddedId
     private BarInfo barInfo;
@@ -24,9 +25,9 @@ public class Bar implements Serializable {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "OPENING_HOURS")
     @OrderColumn(name = "day_order")
-    private List<TimePeriod> openingHours = new ArrayList<>(Collections.nCopies(7, new TimePeriod(0,0)));
+    private List<TimePeriod> openingHours;
 
-    @ManyToMany(targetEntity = BarBoss.class)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(
             name = "jnd_bar_boss",
             joinColumns = {
@@ -36,9 +37,9 @@ public class Bar implements Serializable {
             },
             inverseJoinColumns = @JoinColumn(name = "boss_fk")
     )
-    private List<BarBoss> bosses = new ArrayList<>();
+    private List<BarBoss> bosses;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "jnd_bar_menu",
             joinColumns = {
@@ -48,31 +49,14 @@ public class Bar implements Serializable {
             },
             inverseJoinColumns = @JoinColumn(name = "menu_entry_fk")
     )
-    private List<MenuEntry> menu = new ArrayList<>();
+    private List<MenuEntry> menu;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-    @JoinTable(
-            name = "jnd_bar_shift",
-            joinColumns = {
-                    @JoinColumn(name = "name", referencedColumnName = "name"),
-                    @JoinColumn(name = "street", referencedColumnName = "street"),
-                    @JoinColumn(name = "city", referencedColumnName = "city"),
-            },
-            inverseJoinColumns = @JoinColumn(name = "shift_fk")
-    )
-    private List<Shift> shifts = new ArrayList<>();
 
-    @OneToMany(cascade = {CascadeType.MERGE})
-    @JoinTable(
-            name = "jnd_bar_reservations",
-            joinColumns = {
-                    @JoinColumn(name = "name", referencedColumnName = "name"),
-                    @JoinColumn(name = "street", referencedColumnName = "street"),
-                    @JoinColumn(name = "city", referencedColumnName = "city"),
-            },
-            inverseJoinColumns = @JoinColumn(name = "reservation_fk")
-    )
-    private List<ItemReservation> reservations = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bar")
+    private List<Shift> shifts;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bar")
+    private List<ItemReservation> reservations;
 
     protected Bar()
     {
@@ -83,6 +67,11 @@ public class Bar implements Serializable {
     {
         this.barInfo = barInfo;
         this.capacity = capacity;
+        this.bosses = new ArrayList<>();
+        this.shifts = new ArrayList<>();
+        this.reservations = new ArrayList<>();
+        this.menu = new ArrayList<>();
+        this.openingHours = new ArrayList<>(Collections.nCopies(7, new TimePeriod(0,0)));
         for(DaysOfTheWeek d : DaysOfTheWeek.values())
         {
             setOpeningHourAtDay(d, new TimePeriod(0,0));
@@ -94,8 +83,80 @@ public class Bar implements Serializable {
         return barInfo;
     }
 
+    public boolean addEmployeeToShift(BarEmployee barEmployee, TimePeriod timePeriod, DaysOfTheWeek day)
+    {
+        Shift shift = new Shift(this, timePeriod, day);
+        boolean add_shift = true;
+        if(shifts.contains(shift) == false)
+        {
+            add_shift = this.addShift(shift);
+        }
+        return add_shift && shifts.get(shifts.indexOf(shift)).addEmployee(barEmployee);
+    }
+
+    public boolean removeEmployeeFromShift(BarEmployee barEmployee, Shift shift)
+    {
+        if(shifts.contains(shift))
+        {
+
+            return shifts.get(shifts.indexOf(shift)).removeEmployee(barEmployee);
+        }
+        else return false;
+    }
+
+    private boolean addShift(Shift new_shift)
+    {
+        if(shifts.contains(new_shift) == false)
+        {
+            return shifts.add(new_shift);
+        }
+        else return false;
+    }
+
+    public boolean removeShift(Shift shift)
+    {
+        if(shifts.contains(shift))
+        {
+            Shift remove_shift = shifts.get(shifts.indexOf(shift));
+            boolean success_removal = true;
+            for(BarEmployee employee : remove_shift.getEmployees()){
+                success_removal = remove_shift.removeEmployee(employee);
+                if(success_removal == false) return false;
+            }
+            return shifts.remove(shift);
+        }
+        else return false;
+    }
+
     public List<Shift> getShifts(){
         return shifts;
+    }
+
+    public ItemReservation addReservation(Customer customer, Item item, int amount)
+    {
+        ItemReservation reservation = new ItemReservation(this, item, amount);
+        if(reservations.contains(reservation) == false)
+        {
+            boolean add_reservation_customer = reservation.setCustomer(customer);
+            boolean add_reservation = reservations.add(reservation);
+            if(add_reservation && add_reservation_customer) return reservations.get(reservations.indexOf(reservation));
+        }
+        return null;
+    }
+
+    public boolean removeReservation(ItemReservation reservation)
+    {
+        if(reservations.contains(reservation)) {
+
+            reservation.cancelReservation();
+        }
+        else return false;
+        return reservations.remove(reservation);
+    }
+
+    public List<ItemReservation> getReservations()
+    {
+        return reservations;
     }
 
     public List<BarBoss> getBosses() {
@@ -104,21 +165,27 @@ public class Bar implements Serializable {
 
     public boolean addBoss(BarBoss boss)
     {
-        if(bosses.contains(boss) == false) return bosses.add(boss);
+        if(bosses.contains(boss) == false)
+        {
+            boolean add_bar = boss.addBar(this);
+            return bosses.add(boss) && add_bar;
+        }
         else return false;
     }
 
     public boolean removeBoss(BarBoss boss)
     {
-        return bosses.remove(boss);
+        boolean remove_bar = boss.removeBar(this);
+        return bosses.remove(boss) && remove_bar;
     }
 
     public List<MenuEntry> getMenu() {
         return menu;
     }
 
-    public boolean addToMenu(MenuEntry drink) {
-        if(menu.contains(drink) == false) return menu.add(drink);
+    public boolean addToMenu(Item item, float price, int stock) {
+        MenuEntry new_entry = new MenuEntry(item, price, stock);
+        if(menu.contains(new_entry) == false) return menu.add(new_entry);
         else return false;
     }
 
@@ -159,4 +226,8 @@ public class Bar implements Serializable {
     public int hashCode() {
         return Objects.hash(barInfo, openingHours, bosses, menu, capacity);
     }
+
+
+
 }
+

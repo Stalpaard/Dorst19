@@ -7,24 +7,32 @@ import java.util.List;
 @Entity
 @DiscriminatorValue("B")
 public class BarBoss extends User {
-    @ManyToMany(mappedBy = "bosses")
+    @ManyToMany(mappedBy = "bosses", fetch = FetchType.LAZY)
     private List<Bar> ownedBars = new ArrayList<>();
+
+    protected BarBoss()
+    {
+
+    }
+
+    public BarBoss(String username, String password)
+    {
+        this.username = username;
+        this.password = password;
+    }
 
     public List<Bar> getOwnedBars()
     {
         return ownedBars;
     }
 
-    public boolean addBar(Bar bar)
+    protected boolean addBar(Bar bar)
     {
-        if(ownedBars.contains(bar) == false)
-        {
-           return ownedBars.add(bar); //returns true if collection has changed
-        }
+        if(ownedBars.contains(bar) == false) return ownedBars.add(bar);
         else return false;
     }
 
-    public boolean removeBar(Bar bar)
+    protected boolean removeBar(Bar bar)
     {
         return ownedBars.remove(bar);
     }

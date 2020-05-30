@@ -11,7 +11,7 @@ public class MenuEntry {
     @Id @GeneratedValue
     @Column(name = "id", updatable = false, nullable = false)
     private int id;
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "item_fk")
     private Item item;
     @Column(name = "price", nullable = false)
@@ -24,7 +24,7 @@ public class MenuEntry {
 
     }
 
-    public MenuEntry(Item item, float price, int stock)
+    protected MenuEntry(Item item, float price, int stock)
     {
         this.item = item;
         this.price = price;

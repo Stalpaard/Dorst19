@@ -7,15 +7,22 @@ import java.util.List;
 @Entity
 @DiscriminatorValue("C")
 public class Customer extends User {
-    @Column(name = "credit", nullable = false)
-    private float credit;
-    @OneToMany(cascade = {CascadeType.MERGE,CascadeType.REMOVE})
-    @JoinTable(
-            name = "jnd_customer_reservation",
-            joinColumns = @JoinColumn(name = "customer_fk"),
-            inverseJoinColumns = @JoinColumn(name = "reservation_fk")
-    )
+    @Column(name = "credit")
+    private float credit = 0;
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "customer")
     private List<ItemReservation> reservations = new ArrayList<>();
+
+    protected Customer()
+    {
+
+    }
+
+    public Customer(String username, String password)
+    {
+        this();
+        this.username = username;
+        this.password = password;
+    }
 
     public float getCredit() {
         return credit;
@@ -25,17 +32,16 @@ public class Customer extends User {
         this.credit = credit;
     }
 
-    public boolean addReservation(ItemReservation itemReservationEntity)
+    protected boolean addReservation(ItemReservation itemReservationEntity)
     {
         if(reservations.contains(itemReservationEntity) == false)
         {
-            reservations.add(itemReservationEntity);
-            return true;
+            return reservations.add(itemReservationEntity);
         }
         return false;
     }
 
-    public boolean removeReservation(ItemReservation itemReservationEntity)
+    protected boolean removeReservation(ItemReservation itemReservationEntity)
     {
         return reservations.remove(itemReservationEntity); //returns true if collection contained the reservation
     }

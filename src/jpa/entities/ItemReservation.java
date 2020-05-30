@@ -9,30 +9,42 @@ public class ItemReservation {
     @Id @GeneratedValue
     @Column(name = "id")
     private int id;
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "item_fk", nullable = false, updatable = false) //niet updatable vanwege stock ook
     private Item item;
     @Column(name = "amount", nullable = false, updatable = false) //niet updatable om bijv. stock te kunnen managen
     private int amountOfDrinks;
-    @ManyToOne(optional = false)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "jnd_customer_reservation",
-            joinColumns = @JoinColumn(name = "reservation_fk", insertable = false, updatable = false),
-            inverseJoinColumns = @JoinColumn(name = "customer_fk", insertable = false, updatable = false)
+            name = "jnd_reservation_customer",
+            joinColumns = @JoinColumn(name = "reservation_fk"),
+            inverseJoinColumns = @JoinColumn(name = "customer_fk")
     )
     private Customer customer;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "jnd_bar_reservations",
-            joinColumns = @JoinColumn(name = "reservation_fk", insertable = false, updatable = false),
-            inverseJoinColumns = {
-                    @JoinColumn(name = "name", referencedColumnName = "name",insertable = false, updatable = false),
-                    @JoinColumn(name = "street", referencedColumnName = "street",insertable = false, updatable = false),
-                    @JoinColumn(name = "city", referencedColumnName = "city",insertable = false, updatable = false),
-            }
+            name = "jnd_reservations_bar",
+            joinColumns = {
+                    @JoinColumn(name = "reservation_fk")
+            },
+            inverseJoinColumns = {@JoinColumn(name = "name", referencedColumnName = "name"),
+            @JoinColumn(name = "street", referencedColumnName = "street"),
+            @JoinColumn(name = "city", referencedColumnName = "city")}
     )
     private Bar bar;
+
+    protected ItemReservation()
+    {
+
+    }
+
+    protected ItemReservation(Bar bar, Item item, int amountOfDrinks)
+    {
+        this.bar = bar;
+        this.item = item;
+        this.amountOfDrinks = amountOfDrinks;
+    }
 
     public int getId() {
         return id;
@@ -50,12 +62,31 @@ public class ItemReservation {
         return customer;
     }
 
-    public void setCustomer(Customer customer) {
+    protected boolean setCustomer(Customer customer) {
         this.customer = customer;
+        return customer.addReservation(this);
     }
 
     public Bar getBar() {
         return bar;
+    }
+
+    protected void setBar(Bar bar)
+    {
+        this.bar = bar;
+    }
+
+    protected boolean cancelReservation()
+    {
+        this.bar = null;
+        boolean success_removal = customer.removeReservation(this);
+        if(success_removal)
+        {
+            this.bar = null;
+            this.customer = null;
+            return true;
+        }
+        else return false;
     }
 
     @Override
@@ -67,13 +98,13 @@ public class ItemReservation {
                 Objects.equals(id, that.id) &&
                 Objects.equals(item, that.item) &&
                 Objects.equals(amountOfDrinks, that.amountOfDrinks) &&
-                Objects.equals(customer,that.customer) &&
+                Objects.equals(customer,that.customer)&&
                 Objects.equals(bar, that.bar);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, item, amountOfDrinks, customer, bar);
+        return Objects.hash(id, bar, item, amountOfDrinks, customer);
     }
 
 }

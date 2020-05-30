@@ -9,32 +9,73 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "SHIFT")
+@Table(
+        name = "SHIFT"
+)
 public class Shift {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "id")
     private int id;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "jnd_bar_shift",
-            joinColumns = @JoinColumn(name = "shift_fk", insertable = false, updatable = false),
+            name = "jnd_shift_bar",
+            joinColumns = {
+                    @JoinColumn(name = "shift_fk")
+            },
             inverseJoinColumns = {
-                    @JoinColumn(name = "name", referencedColumnName = "name", insertable = false, updatable = false),
-                    @JoinColumn(name = "street", referencedColumnName = "street", insertable = false, updatable = false),
-                    @JoinColumn(name = "city", referencedColumnName = "city", insertable = false, updatable = false),
+                    @JoinColumn(name = "name", referencedColumnName = "name"),
+                    @JoinColumn(name = "street", referencedColumnName = "street"),
+                    @JoinColumn(name = "city", referencedColumnName = "city")
             }
     )
     private Bar bar;
-    @ManyToMany
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "jnd_shift_employee",
             joinColumns = @JoinColumn(name = "shift_fk"),
             inverseJoinColumns = @JoinColumn(name = "employee_fk"))
+
     private List<BarEmployee> employees = new ArrayList<>();
+
     @Embedded
     private TimePeriod timePeriod;
     @Enumerated(EnumType.STRING)
-    @Column(name = "day")
+    @Column(name = "day", updatable = false, nullable = false)
     private DaysOfTheWeek dayOfTheWeek;
+
+    protected Shift()
+    {
+
+    }
+
+    protected Shift(Bar bar, TimePeriod timePeriod, DaysOfTheWeek dayOfTheWeek)
+    {
+        this.bar = bar;
+        this.timePeriod = timePeriod;
+        this.dayOfTheWeek = dayOfTheWeek;
+    }
+
+    public List<BarEmployee> getEmployees() {
+        return employees;
+    }
+
+    public boolean addEmployee(BarEmployee barEmployee)
+    {
+        if(employees.contains(barEmployee) == false)
+        {
+            boolean add_shift = barEmployee.addShift(this);
+            return employees.add(barEmployee) && add_shift;
+        }
+        else return false;
+    }
+
+    public boolean removeEmployee(BarEmployee barEmployee)
+    {
+        boolean remove_shift = barEmployee.removeShift(this);
+        return employees.remove(barEmployee) && remove_shift;
+    }
 
     public int getId() {
         return id;
@@ -44,39 +85,12 @@ public class Shift {
         return bar;
     }
 
-    public void setBar(Bar bar) {
-        this.bar = bar;
-    }
-
-    public List<BarEmployee> getEmployees() {
-        return employees;
-    }
-
-    public boolean addEmployee(BarEmployee barEmployee)
-    {
-        if(employees.contains(barEmployee) == false) return employees.add(barEmployee);
-        else return false;
-    }
-
-    public boolean removeEmployee(BarEmployee barEmployee)
-    {
-        return employees.remove(barEmployee);
-    }
-
     public TimePeriod getTimePeriod() {
         return timePeriod;
     }
 
-    public void setTimePeriod(TimePeriod timePeriod) {
-        this.timePeriod = timePeriod;
-    }
-
     public DaysOfTheWeek getDayOfTheWeek() {
         return dayOfTheWeek;
-    }
-
-    public void setDayOfTheWeek(DaysOfTheWeek dayOfTheWeek) {
-        this.dayOfTheWeek = dayOfTheWeek;
     }
 
     @Override
