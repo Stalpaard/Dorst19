@@ -11,8 +11,8 @@ public class MenuEntry {
     @Id @GeneratedValue
     @Column(name = "id", updatable = false, nullable = false)
     private int id;
-    @ManyToOne(optional = false, cascade = {CascadeType.MERGE}) //kan nog errors geven
-    @JoinColumn(name = "item_fk", unique = true)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "item_fk")
     private Item item;
     @Column(name = "price", nullable = false)
     private float price;
