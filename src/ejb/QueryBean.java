@@ -1,15 +1,14 @@
 package ejb;
 
-import jpa.embeddables.BarInfo;
 import jpa.entities.Bar;
 import jpa.entities.MenuEntry;
-import jpa.entities.User;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Set;
 
 @Stateless(name = "BarQueryEJB")
 public class QueryBean {
@@ -27,9 +26,9 @@ public class QueryBean {
         return query.getResultList();
     }
 
-    public List<MenuEntry> queryMenuFromBar(BarInfo barInfo)
+    public Set<MenuEntry> queryMenuFromBar(int barId)
     {
-        Bar findBar = entityManager.find(Bar.class, barInfo);
+        Bar findBar = entityManager.find(Bar.class, barId);
         if(findBar != null)
         {
             entityManager.detach(findBar);

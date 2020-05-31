@@ -41,19 +41,19 @@ public class Bar implements Serializable
     )
     private List<BarBoss> bosses;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinTable(
             name = "jnd_bar_menu",
             joinColumns = @JoinColumn(name = "bar_fk", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "menu_entry_fk")
     )
-    private List<MenuEntry> menu;
+    private Set<MenuEntry> menu;
 
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bar")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bar", orphanRemoval = true)
     private List<Shift> shifts;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bar")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bar", orphanRemoval = true)
     private List<ItemReservation> reservations;
 
     protected Bar()
@@ -68,7 +68,7 @@ public class Bar implements Serializable
         this.bosses = new ArrayList<>();
         this.shifts = new ArrayList<>();
         this.reservations = new ArrayList<>();
-        this.menu = new ArrayList<>();
+        this.menu = new TreeSet<>();
         this.openingHours = new ArrayList<>(Collections.nCopies(7, new TimePeriod(0,0)));
         for(DaysOfTheWeek d : DaysOfTheWeek.values())
         {
@@ -177,28 +177,29 @@ public class Bar implements Serializable
         return bosses.remove(boss) && remove_bar;
     }
 
-    public List<MenuEntry> getMenu() {
+    public Set<MenuEntry> getMenu() {
         return menu;
     }
 
     public boolean addToMenu(Item item, float price, int stock) {
-        MenuEntry new_entry = new MenuEntry(item, price, stock);
-        if(menu.contains(new_entry) == false){
-            return menu.add(new_entry);
-        }
-        else return false;
+        return menu.add(new MenuEntry(item, price, stock));
     }
 
-    public boolean removeFromMenu(int entryId) {
+    public Item removeFromMenu(int entryId) {
 
         for(MenuEntry menuEntry : menu)
         {
             if(menuEntry.getId() == entryId)
             {
-                return menu.remove(menuEntry);
+                MenuEntry temp = menuEntry;
+                if(menu.remove(menuEntry))
+                {
+                    return temp.getItem();
+                }
+                return null;
             }
         }
-        return false;
+        return null;
     }
 
     public int getId() {

@@ -11,10 +11,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import javax.persistence.DiscriminatorValue;
 import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 @Named
 @SessionScoped
@@ -151,7 +148,7 @@ public class DemoManagedBean implements Serializable {
     public String queryDrinks()
     {
         String s = "";
-        List<MenuEntry> menu = barManagementBean.getMenu();
+        Set<MenuEntry> menu = barManagementBean.getMenu();
         for(MenuEntry m : menu) s = s + " " + m.getItem().getName();
         return s;
     }

@@ -14,6 +14,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 //@SessionScoped
 @Stateful(name = "BarManagementEJB")
@@ -78,12 +79,22 @@ public class BarManagementBean implements Serializable {
     {
         if(managedBar != null)
         {
-            managedBar.removeFromMenu(id);
-            entityManager.merge(managedBar);
+            Item removed = managedBar.removeFromMenu(id);
+            int removed_id = removed.getId();
+            if(removed != null)
+            {
+                entityManager.merge(managedBar);
+                TypedQuery<MenuEntry> removeDrinkQuery = entityManager.createNamedQuery("CHECK_DRINK_REF", MenuEntry.class)
+                        .setParameter("id", removed_id);
+                if(removeDrinkQuery.getResultList().size() <= 0)
+                {
+                    if(removed instanceof DrinkItem) entityManager.remove(entityManager.find(DrinkItem.class, removed_id));
+                }
+            }
         }
     }
 
-    public List<MenuEntry> getMenu()
+    public Set<MenuEntry> getMenu()
     {
         if(managedBar != null)
         {
@@ -102,10 +113,14 @@ public class BarManagementBean implements Serializable {
                         .setParameter("name", item.getName())
                         .setParameter("alc", ((DrinkItem) item).getAlcoholPercentage())
                         .setParameter("volume", ((DrinkItem) item).getVolume());
-                if(drinkQuery.getResultList().size() <= 0) entityManager.persist(item);
+                List<DrinkItem> resultList = drinkQuery.getResultList();
+                if(resultList.size() <= 0) entityManager.persist(item);
+                else
+                {
+                    if(item instanceof DrinkItem) item = entityManager.find(DrinkItem.class, resultList.get(0).getId());
+                }
             }
-            managedBar.addToMenu(item, price, stock);
-            entityManager.merge(managedBar);
+            if(managedBar.addToMenu(item, price, stock)) entityManager.merge(managedBar);
         }
     }
 

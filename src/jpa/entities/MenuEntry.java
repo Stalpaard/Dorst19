@@ -7,6 +7,8 @@ import java.util.Objects;
 @Table(
         name = "MENU_ENTRY"
 )
+@NamedQuery(name = "CHECK_DRINK_REF", query = "SELECT m FROM MenuEntry m WHERE m.item.id = :id")
+//@NamedQuery(name = "CHECK_EXISTING_MENU", query = "SELECT m FROM MenuEntry m WHERE (b.barInfo = :barinfo)")
 public class MenuEntry {
     @Id @GeneratedValue
     @Column(name = "id", updatable = false, nullable = false)
@@ -57,7 +59,6 @@ public class MenuEntry {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MenuEntry that = (MenuEntry) o;
         return Objects.equals(item, that.item);
