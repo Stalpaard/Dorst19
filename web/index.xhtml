@@ -6,9 +6,12 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
    <f:view>
-      <h:outputLabel value="Hello, world HOW YA DOING GAISSSSS xDDDDDDDDDDDDD #{demoManagedBean.doHashTest()}"/>
+      <h:outputLabel value="Cafés: #{demoManagedBean.caféNamen()} "/>
+      <h:outputLabel value="Recup managed? #{demoManagedBean.isRecupManaged()}"/>
    </f:view>
 <h:form>
-   <h:commandButton value="fiks" action="#{demoManagedBean.doDemo()}"/>
+   <h:commandButton value="create recup nuu" action="#{demoManagedBean.createRecup()}"/>
+   <h:commandButton value="manage recup" action="#{demoManagedBean.manageRecup()}"/>
+   <h:commandButton value="delete recup (enkel indien managed geeft dit effect)" action="#{demoManagedBean.removeRecup()}"/>
 </h:form>
 </html>

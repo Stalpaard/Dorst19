@@ -10,6 +10,7 @@ import java.util.*;
 
 
 @Entity
+@NamedQuery(name = "QUERY_BARINFO", query = "SELECT DISTINCT b.barInfo FROM Bar b")
 @Table(
         name = "BAR"
 )
@@ -132,16 +133,16 @@ public class Bar implements Serializable
         return shifts;
     }
 
-    public ItemReservation addReservation(Customer customer, Item item, int amount)
+    public boolean addReservation(Customer customer, Item item, int amount)
     {
         ItemReservation reservation = new ItemReservation(this, item, amount);
         if(reservations.contains(reservation) == false)
         {
             boolean add_reservation_customer = reservation.setCustomer(customer);
             boolean add_reservation = reservations.add(reservation);
-            if(add_reservation && add_reservation_customer) return reservations.get(reservations.indexOf(reservation));
+            return (add_reservation_customer && add_reservation);
         }
-        return null;
+        return false;
     }
 
     public boolean removeReservation(ItemReservation reservation)
