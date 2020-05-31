@@ -9,8 +9,10 @@ import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.awt.*;
+import java.util.concurrent.TimeUnit;
 
 @Stateful(name = "ReservationEJB")
+@StatefulTimeout(unit = TimeUnit.MINUTES, value = 60)
 @DependsOn("ReservationCounterBean")
 public class ReservationBean {
 /*

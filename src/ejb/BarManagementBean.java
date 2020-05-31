@@ -15,9 +15,11 @@ import javax.persistence.TypedQuery;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 //@SessionScoped
 @Stateful(name = "BarManagementEJB")
+@StatefulTimeout(unit = TimeUnit.MINUTES, value = 60)
 public class BarManagementBean implements Serializable {
 
     @PersistenceContext(name = "DorstPersistenceBean")
