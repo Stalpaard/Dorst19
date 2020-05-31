@@ -36,11 +36,11 @@ public class DemoManagedBean implements Serializable {
 
     public void createRecup() {
         BarBoss baasje = (BarBoss)userBean.createUser("kaashaas", "pasen", UserType.BOSS);
+        //Indien user al bestaat is baasje = null ==> inloggen dan gwn met validate
         if(baasje == null) baasje = (BarBoss)userBean.validateUser("kaashaas", "pasen");
         Address address = new Address("tiense", "leuven");
         BarInfo barInfo = new BarInfo("recup", address);
         barCreationBean.createBar(baasje, barInfo, 200);
-        //return demoBean.hashTest();
     }
 
     public String isRecupManaged()
@@ -50,6 +50,7 @@ public class DemoManagedBean implements Serializable {
     }
 
     public void manageRecup() {
+        //Om de named query te testen heb ik het zo gedaan
         for(BarInfo b : barQueryBean.queryBars())
         {
             if(b.getName().equals("recup")) barManagementBean.attachBar(b);
@@ -57,6 +58,7 @@ public class DemoManagedBean implements Serializable {
     }
 
     public void removeRecup() {
+        //remove attached bar
         barManagementBean.removeBar();
     }
 }
