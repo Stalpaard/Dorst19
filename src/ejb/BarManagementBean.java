@@ -79,6 +79,7 @@ public class BarManagementBean implements Serializable {
         if(managedBar != null)
         {
             managedBar.removeFromMenu(id);
+            entityManager.merge(managedBar);
         }
     }
 
@@ -104,6 +105,7 @@ public class BarManagementBean implements Serializable {
                 if(drinkQuery.getResultList().size() <= 0) entityManager.persist(item);
             }
             managedBar.addToMenu(item, price, stock);
+            entityManager.merge(managedBar);
         }
     }
 

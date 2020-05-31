@@ -24,11 +24,7 @@ public class Shift {
             joinColumns = {
                     @JoinColumn(name = "shift_fk")
             },
-            inverseJoinColumns = {
-                    @JoinColumn(name = "name", referencedColumnName = "name"),
-                    @JoinColumn(name = "street", referencedColumnName = "street"),
-                    @JoinColumn(name = "city", referencedColumnName = "city")
-            }
+            inverseJoinColumns = @JoinColumn(name = "bar_fk", referencedColumnName = "id")
     )
     private Bar bar;
 

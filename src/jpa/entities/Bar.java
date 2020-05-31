@@ -20,6 +20,7 @@ import java.util.*;
 public class Bar implements Serializable
 {
     @Id @GeneratedValue
+    @Column(name = "id")
     private int id;
     @Embedded
     private BarInfo barInfo;
@@ -35,11 +36,7 @@ public class Bar implements Serializable
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(
             name = "jnd_bar_boss",
-            joinColumns = {
-                    @JoinColumn(name = "name", referencedColumnName = "name"),
-                    @JoinColumn(name = "street", referencedColumnName = "street"),
-                    @JoinColumn(name = "city", referencedColumnName = "city"),
-            },
+            joinColumns = @JoinColumn(name = "bar_fk", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "boss_fk")
     )
     private List<BarBoss> bosses;
@@ -47,11 +44,7 @@ public class Bar implements Serializable
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "jnd_bar_menu",
-            joinColumns = {
-                    @JoinColumn(name = "name", referencedColumnName = "name"),
-                    @JoinColumn(name = "street", referencedColumnName = "street"),
-                    @JoinColumn(name = "city", referencedColumnName = "city"),
-            },
+            joinColumns = @JoinColumn(name = "bar_fk", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "menu_entry_fk")
     )
     private List<MenuEntry> menu;
@@ -190,7 +183,9 @@ public class Bar implements Serializable
 
     public boolean addToMenu(Item item, float price, int stock) {
         MenuEntry new_entry = new MenuEntry(item, price, stock);
-        if(menu.contains(new_entry) == false) return menu.add(new_entry);
+        if(menu.contains(new_entry) == false){
+            return menu.add(new_entry);
+        }
         else return false;
     }
 

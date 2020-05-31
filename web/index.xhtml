@@ -12,12 +12,13 @@
       <h:form>
          <c:if test="#{demoManagedBean.isLoggedIn()}">
             <h:commandButton value="Logout" action="#{demoManagedBean.logoutUser()}"/>
+            <h:commandButton value="Remove" action="#{demoManagedBean.removeUser()}"/>
          </c:if>
       </h:form>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
-      <h:outputLabel value="Users: #{demoManagedBean.queryUsers()} "/>
+      <h:outputLabel value="Users in DB: #{demoManagedBean.queryUsers()} "/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
-      <h:outputLabel value="Cafés: #{demoManagedBean.queryCafes()} "/>
+      <h:outputLabel value="Cafés in DB: #{demoManagedBean.queryCafes()} "/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
    </f:view>
 <h:form>
@@ -28,7 +29,6 @@
    </h:selectOneMenu>
    <h:commandButton value="Login" action="#{demoManagedBean.loginUser()}"/>
    <h:commandButton value="Register" action="#{demoManagedBean.createUser()}"/>
-   <h:commandButton value="Remove" action="#{demoManagedBean.removeUser()}"/>
    <h:outputText value="&lt;br/&gt;" escape="false"/>
    <h:outputText value="&lt;br/&gt;" escape="false"/>
 
@@ -47,6 +47,7 @@
       <h:commandButton value="create cafe nuu" action="#{demoManagedBean.createCafe()}"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
+      <h:outputText value="My cafés: " escape="false"/>
       <h:selectOneMenu id="select_cafe" value ="#{demoManagedBean.managedCafeId}">
          <f:selectItems value="#{demoManagedBean.ownedCafes}" />
       </h:selectOneMenu>
@@ -59,7 +60,7 @@
    <c:if test="#{demoManagedBean.isCafeManaged()}">
       <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
-      <h:outputText value="#{demoManagedBean.managedCafeNaam()} menu: #{demoManagedBean.queryDrinks()}"/>
+      <h:outputText value="#{demoManagedBean.managedCafeNaam()} menu overview: #{demoManagedBean.queryDrinks()}"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:inputText id="drank_naam" a:placeholder="drank_naam" value="#{demoManagedBean.drank_name}"/>
       <h:inputText id="drank_alc_percentage" a:placeholder="drank_alc_percentage" value="#{demoManagedBean.drank_alc}"/>
@@ -69,6 +70,7 @@
       <h:commandButton value="Voeg drankje toe" action="#{demoManagedBean.addDrinkToMenu()}"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
+      <h:outputText value="Menu: " escape="false"/>
       <h:selectOneMenu id="select_drink" value ="#{demoManagedBean.menuEntryId}">
          <f:selectItems value="#{demoManagedBean.menuMap}" />
       </h:selectOneMenu>

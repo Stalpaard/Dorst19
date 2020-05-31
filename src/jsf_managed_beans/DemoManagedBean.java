@@ -33,6 +33,7 @@ public class DemoManagedBean implements Serializable {
 
     String username = null;
     String password = null;
+    String loginStatus = null;
     UserType userType;
 
     String cafeNaam = null;
@@ -55,7 +56,12 @@ public class DemoManagedBean implements Serializable {
 
     public void loginUser()
     {
-        if(username != null && password != null) user = userBean.validateUser(username, password);
+        if(username != null && password != null)
+        {
+            User login_user = userBean.validateUser(username, password);
+            if(login_user != null) user = login_user;
+            else loginStatus = "User doesn't exist";
+        }
     }
 
     public boolean isLoggedIn()
@@ -65,8 +71,8 @@ public class DemoManagedBean implements Serializable {
 
     public String loginStatus()
     {
-        if(isLoggedIn()) return username + " logged in";
-        else return "User not logged in!";
+        if(!isLoggedIn()) return "User not logged in";
+        return loginStatus;
     }
 
     public void logoutUser()
@@ -77,7 +83,17 @@ public class DemoManagedBean implements Serializable {
 
     public void createUser()
     {
-        if(username != null && password != null && userType != null) user = userBean.createUser(username, password, userType);
+
+        if(username != null && password != null && userType != null)
+        {
+            User new_user = userBean.createUser(username, password, userType);
+            if(new_user != null)
+            {
+                user = new_user;
+                loginStatus = "User " + user.getUsername() + " is logged in";
+            }
+            else loginStatus = "User already exists";
+        }
     }
 
     public void removeUser()
@@ -86,6 +102,7 @@ public class DemoManagedBean implements Serializable {
         {
             userBean.removeUser(user.getUsername());
             user = null;
+            loginStatus = "User not logged in";
         }
     }
 

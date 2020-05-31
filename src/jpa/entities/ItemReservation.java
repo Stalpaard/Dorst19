@@ -28,9 +28,7 @@ public class ItemReservation {
             joinColumns = {
                     @JoinColumn(name = "reservation_fk")
             },
-            inverseJoinColumns = {@JoinColumn(name = "name", referencedColumnName = "name"),
-            @JoinColumn(name = "street", referencedColumnName = "street"),
-            @JoinColumn(name = "city", referencedColumnName = "city")}
+            inverseJoinColumns = @JoinColumn(name = "bar_fk", referencedColumnName = "id")
     )
     private Bar bar;
 
