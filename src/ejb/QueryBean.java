@@ -3,6 +3,7 @@ package ejb;
 import jpa.embeddables.BarInfo;
 import jpa.entities.Bar;
 import jpa.entities.MenuEntry;
+import jpa.entities.User;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -11,22 +12,22 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Stateless(name = "BarQueryEJB")
-public class BarQueryBean {
+public class QueryBean {
     @PersistenceContext(name = "DorstPersistenceUnit")
     EntityManager entityManager;
 
-    public BarQueryBean()
+    public QueryBean()
     {
 
     }
 
-    public List<BarInfo> queryBars()
+    public List<Bar> queryBars()
     {
-        TypedQuery<BarInfo> query = entityManager.createNamedQuery("QUERY_BARINFO", BarInfo.class);
+        TypedQuery<Bar> query = entityManager.createNamedQuery("QUERY_BARS", Bar.class);
         return query.getResultList();
     }
 
-    public List<MenuEntry> getMenuFromBar(BarInfo barInfo)
+    public List<MenuEntry> queryMenuFromBar(BarInfo barInfo)
     {
         Bar findBar = entityManager.find(Bar.class, barInfo);
         if(findBar != null)
@@ -35,5 +36,11 @@ public class BarQueryBean {
             return findBar.getMenu();
         }
         return null;
+    }
+
+    public List<String> queryUsers()
+    {
+        TypedQuery<String> query = entityManager.createNamedQuery("QUERY_USERNAMES", String.class);
+        return query.getResultList();
     }
 }

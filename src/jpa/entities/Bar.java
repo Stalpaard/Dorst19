@@ -10,14 +10,18 @@ import java.util.*;
 
 
 @Entity
-@NamedQuery(name = "QUERY_BARINFO", query = "SELECT DISTINCT b.barInfo FROM Bar b")
+@NamedQueries({
+        @NamedQuery(name = "QUERY_BARS", query = "SELECT DISTINCT b FROM Bar b"),
+        @NamedQuery(name = "CHECK_EXISTING_BARS", query = "SELECT b FROM Bar b WHERE (b.barInfo = :barinfo)")
+})
 @Table(
         name = "BAR"
 )
 public class Bar implements Serializable
 {
-
-    @EmbeddedId
+    @Id @GeneratedValue
+    private int id;
+    @Embedded
     private BarInfo barInfo;
 
     @Column(name = "capacity", nullable = false)
@@ -190,8 +194,20 @@ public class Bar implements Serializable
         else return false;
     }
 
-    public boolean removeFromMenu(MenuEntry drink) {
-        return menu.remove(drink);
+    public boolean removeFromMenu(int entryId) {
+
+        for(MenuEntry menuEntry : menu)
+        {
+            if(menuEntry.getId() == entryId)
+            {
+                return menu.remove(menuEntry);
+            }
+        }
+        return false;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getCapacity() {

@@ -24,7 +24,7 @@ public class UserBean {
 
     public User createUser(String username, String password, UserType type)
     {
-        if(entityManager.find(User.class,username) == null)
+        if(entityManager.find(User.class,username) == null && !username.isEmpty() && !password.isEmpty())
         {
             User new_user;
             String hashed_pw = PasswordHasher.hashPw(password);

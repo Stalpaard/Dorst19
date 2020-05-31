@@ -13,7 +13,7 @@ import java.awt.*;
 @Stateful(name = "ReservationEJB")
 @DependsOn("ReservationCounterBean")
 public class ReservationBean {
-
+/*
     @EJB
     ReservationCounterBean reservationCounterBean;
 
@@ -24,35 +24,13 @@ public class ReservationBean {
     SessionContext ctx;
 
 
-    BarInfo barInfo = null;
+    int barId = -1;
     MenuEntry menuEntry = null;
     Customer customer = null; //zou uit sessioncontext moeten gehaald worden
     int amount = 0;
 
     public ReservationBean()
     {
-    }
-
-
-    public void setCustomer(Customer customer)
-    {
-        //if(!ctx.isCallerInRole("Customer")) throw new SecurityException("Only customers can do reservations");
-        this.customer = customer;
-    }
-
-    public void setBarInfo(BarInfo barInfo)
-    {
-        this.barInfo = barInfo;
-    }
-
-    public void setMenuEntry(MenuEntry menuEntry)
-    {
-        this.menuEntry = menuEntry;
-    }
-
-    public void setAmount(int amount)
-    {
-        this.amount = amount;
     }
 
     @Remove
@@ -76,5 +54,5 @@ public class ReservationBean {
         }
         return false;
     }
-
+*/
 }
