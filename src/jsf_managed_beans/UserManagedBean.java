@@ -15,6 +15,8 @@ import javax.faces.annotation.ManagedProperty;
 import javax.faces.bean.ManagedBean;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -39,12 +41,20 @@ public class UserManagedBean implements Serializable {
     String loginStatus = null;
     UserType userType = null;
 
-    public void loginUser()
+    float amountToAdd = 0;
+
+    private static DecimalFormat geldFormat = new DecimalFormat("0.00");
+
+    public void attemptLogin()
     {
         if(username != null && password != null)
         {
             User login_user = userBean.validateUser(username, password);
-            if(login_user != null) user = login_user;
+            if(login_user != null)
+            {
+                user = login_user;
+                loginStatus = "logged in as " + login_user.getUsername();
+            }
             else loginStatus = "User doesn't exist";
         }
     }
@@ -54,19 +64,19 @@ public class UserManagedBean implements Serializable {
         return user != null;
     }
 
-    public String loginStatus()
+    public String getLoginStatus()
     {
         if(!isLoggedIn()) return "User not logged in";
         return loginStatus;
     }
 
-    public void logoutUser()
+    public void logout()
     {
         user = null;
         //if(barManagementBean.isManaged()) barManagementBean.detachBar();
     }
 
-    public String queryUsers(){
+    public String stringOfAllUsers(){
         String s = "";
         for(String u : queryBean.queryUsers()) s = s + " " + u;
         return s;
@@ -99,19 +109,19 @@ public class UserManagedBean implements Serializable {
 
     public boolean isUserBoss()
     {
-        if(user != null) return user instanceof BarBoss;
+        if(getUser() != null) return user instanceof BarBoss;
         else return false;
     }
 
     public boolean isUserCustomer()
     {
-        if(user != null) return user instanceof Customer;
+        if(getUser() != null) return user instanceof Customer;
         else return false;
     }
 
     public boolean isUserEmployee()
     {
-        if(user != null) return user instanceof BarEmployee;
+        if(getUser() != null) return user instanceof BarEmployee;
         else return false;
     }
 
@@ -125,10 +135,15 @@ public class UserManagedBean implements Serializable {
         return userTypes;
     }
 
-    public float getUserCredit()
+    public String getUserCredit()
     {
+        geldFormat.setRoundingMode(RoundingMode.UP);
+        return geldFormat.format(((Customer)getUser()).getCredit());
+    }
 
-        return ((Customer)getUser()).getCredit();
+    public void addCredit()
+    {
+        if(amountToAdd > 0) userBean.addCreditToUser((Customer)getUser(), amountToAdd);
     }
 
     public UserType getUserType() {
@@ -163,6 +178,14 @@ public class UserManagedBean implements Serializable {
         return userBean;
     }
 
+    public float getAmountToAdd() {
+        return amountToAdd;
+    }
+
+    public void setAmountToAdd(float amountToAdd) {
+        this.amountToAdd = amountToAdd;
+    }
+
     public void setUserBean(UserBean userBean) {
         this.userBean = userBean;
     }
@@ -173,13 +196,5 @@ public class UserManagedBean implements Serializable {
 
     public void setQueryBean(QueryBean queryBean) {
         this.queryBean = queryBean;
-    }
-
-    public String getLoginStatus() {
-        return loginStatus;
-    }
-
-    public void setLoginStatus(String loginStatus) {
-        this.loginStatus = loginStatus;
     }
 }

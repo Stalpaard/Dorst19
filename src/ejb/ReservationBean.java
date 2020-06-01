@@ -45,11 +45,13 @@ public class ReservationBean {
             total = bar.getMenuEntryById(menuEntryId).getPrice() * amount;
             if(customer.getCredit() >= total){
                 ready = true;
-                status = "Reservation set, ready to pay";
+                status = status = amount + " of " + bar.getMenuEntryById(menuEntryId).getItem().getName()
+                        + " in " + bar.getBarInfo().getName()
+                        + " with total price: " + total;
             }
             else
             {
-                status = "Insufficient amount of credit";
+                status = "Insufficient amount of credit (total: " + total + ")";
                 reset();
             }
         }
@@ -86,7 +88,7 @@ public class ReservationBean {
         if(bar != null && bar.getMenuEntryById(menuEntryId) != null && ready)
         {
             //customer = entityManager.find(Customer.class, customer.getUsername());
-            customer.setCredit(customer.getCredit() - bar.getMenuEntryById(menuEntryId).getPrice());
+            customer.setCredit(customer.getCredit() - (bar.getMenuEntryById(menuEntryId).getPrice()*amount));
             ItemReservation success = bar.addReservation(customer, menuEntryId, amount);
             if(success != null)
             {

@@ -8,17 +8,17 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
    <f:view>
-      <h:outputLabel value="Status: #{userManagedBean.loginStatus()} "/>
+      <h:outputLabel value="Status: #{userManagedBean.loginStatus} "/>
       <h:form>
          <c:if test="#{userManagedBean.isLoggedIn()}">
-            <h:commandButton value="Logout" action="#{userManagedBean.logoutUser()}"/>
+            <h:commandButton value="Logout" action="#{userManagedBean.logout()}"/>
             <h:commandButton value="Remove" action="#{userManagedBean.removeUser()}"/>
          </c:if>
       </h:form>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
-      <h:outputLabel value="Users in DB: #{userManagedBean.queryUsers()} "/>
+      <h:outputLabel value="Users in DB: #{userManagedBean.stringOfAllUsers()} "/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
-      <h:outputLabel value="Cafés in DB: #{cafeManagedBean.queryAllCafes()} "/>
+      <h:outputLabel value="Cafés in DB: #{cafeManagedBean.stringOfAllCafes()} "/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
    </f:view>
 <h:form>
@@ -28,7 +28,7 @@
       <h:selectOneMenu value="#{userManagedBean.userType}">
          <f:selectItems value="#{userManagedBean.userTypes}" />
       </h:selectOneMenu>
-      <h:commandButton value="Login" action="#{userManagedBean.loginUser()}"/>
+      <h:commandButton value="Login" action="#{userManagedBean.attemptLogin()}"/>
       <h:commandButton value="Register" action="#{userManagedBean.createUser()}"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
@@ -36,8 +36,12 @@
 
    <f:param name="user" value="#{userManagedBean.user}"/>
    <c:if test="#{userManagedBean.isLoggedIn() and userManagedBean.isUserCustomer()}">
-      <h:outputText value="Reservations: #{reservationManagedBean.reservationsInfo}" escape="false"/>
+      <h:outputText value="Reservations: #{reservationManagedBean.stringOfAllReservations}" escape="false"/>
+      <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:outputText value="Credit: #{userManagedBean.userCredit}" escape="false"/>
+      <h:outputText value="&lt;br/&gt;" escape="false"/>
+      <h:inputText a:placeholder="add credit" value="#{userManagedBean.amountToAdd}"/>
+      <h:commandButton value="Add to credit" action="#{userManagedBean.addCredit()}"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:outputText value="Reservation Menu" escape="false"/>
@@ -45,7 +49,7 @@
       <h:selectOneMenu id="select_cafe_cus" value ="#{reservationManagedBean.reservationCafeId}">
          <f:selectItems id="select_cafe_map_cus" value="#{cafeManagedBean.mapAllCafes()}" />
       </h:selectOneMenu>
-      <h:commandButton value="Load café menu" action="#{reservationManagedBean.onReservationBarChange()}"/>
+      <h:commandButton value="Load café menu" action="#{reservationManagedBean.updateReservationMenu()}"/>
       <h:selectOneMenu id="select_menu_cus" value ="#{reservationManagedBean.reservationMenuEntryId}">
          <f:selectItems id="select_menu_map_cus" value="#{reservationManagedBean.reservationMenu}" />
       </h:selectOneMenu>
@@ -53,11 +57,12 @@
          <h:inputText id="reservation_amount" a:placeholder="amount" value="#{reservationManagedBean.reservationAmount}"/>
       </c:if>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
-      <h:outputText value="status: #{reservationManagedBean.reservationStatus()}" escape="false"/>
+      <h:outputText value="status: #{reservationManagedBean.reservationStatus}" escape="false"/>
       <c:if test="#{reservationManagedBean.isReservationMenuLoaded()}">
-         <h:commandButton value="Calculate reservation" action="#{reservationManagedBean.prepareReservation()}"/>
+         <h:outputText value="&lt;br/&gt;" escape="false"/>
+         <h:commandButton value="Prepare reservation" action="#{reservationManagedBean.prepareReservation()}"/>
       </c:if>
-      <c:if test="#{reservationManagedBean.readyToPay()}">
+      <c:if test="#{reservationManagedBean.isReadyToPay()}">
          <h:commandButton value="Pay reservation" action="#{reservationManagedBean.payReservation()}"/>
       </c:if>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
@@ -91,7 +96,7 @@
    <c:if test="#{cafeManagedBean.isCafeManaged()}">
       <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
-      <h:outputText value="#{cafeManagedBean.managedCafeNaam()} menu overview: #{cafeManagedBean.queryManagedDrinks()}"/>
+      <h:outputText value="#{cafeManagedBean.managedCafeNaam} menu overview: #{cafeManagedBean.stringOfManagedMenu()}"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:inputText id="drank_naam" a:placeholder="drank_naam" value="#{cafeManagedBean.drank_name}"/>
       <h:inputText id="drank_alc_percentage" a:placeholder="drank_alc_percentage" value="#{cafeManagedBean.drank_alc}"/>

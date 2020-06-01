@@ -99,6 +99,16 @@ public class UserBean {
         return null;
     }
 
+    public void addCreditToUser(User user, float amount)
+    {
+        Customer customer = entityManager.find(Customer.class, user.getUsername());
+        if(customer != null)
+        {
+            customer.setCredit(customer.getCredit() + amount);
+            entityManager.merge(customer);
+        }
+    }
+
     public User refreshUser(User user)
     {
         return entityManager.find(User.class, user.getUsername());

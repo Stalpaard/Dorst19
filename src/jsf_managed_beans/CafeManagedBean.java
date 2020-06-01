@@ -55,15 +55,15 @@ public class CafeManagedBean implements Serializable {
     @Inject
     UserManagedBean userManagedBean;
 
-    public String queryManagedDrinks()
+    public String stringOfManagedMenu()
     {
         String s = "";
         Set<MenuEntry> menu = barManagementBean.getMenu();
-        for(MenuEntry m : menu) s = s + " " + m.getItem().getName();
+        for(MenuEntry m : menu) s = s + " " + m.getId() + m.getItem().getName();
         return s;
     }
 
-    public String queryAllCafes() {
+    public String stringOfAllCafes() {
         String s = "";
         for (Bar b : queryBean.queryBars()) {
             BarInfo info = b.getBarInfo();
@@ -101,9 +101,7 @@ public class CafeManagedBean implements Serializable {
         Map<String, Object> menumap = new TreeMap<>();
         for(MenuEntry m : barManagementBean.getMenu())
         {
-            Item item = m.getItem();
-            String key = "";
-            if(item instanceof DrinkItem) key = item.getName() + ((DrinkItem)item).getVolume();
+            String key = m.getId() + m.getItem().getName();
             menumap.put(key, m.getId());
         }
         return menumap;
@@ -137,7 +135,7 @@ public class CafeManagedBean implements Serializable {
         return barManagementBean.isManaged();
     }
 
-    public String managedCafeNaam()
+    public String getManagedCafeNaam()
     {
         if(barManagementBean.isManaged())
             return barManagementBean.getManagedBarInfo().getName();

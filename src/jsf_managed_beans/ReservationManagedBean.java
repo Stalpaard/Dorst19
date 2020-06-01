@@ -50,21 +50,24 @@ public class ReservationManagedBean implements Serializable {
     int reservationAmount = -1;
     int removeReservationId = -1;
 
-    public String getReservationsInfo()
+    public String getStringOfAllReservations()
     {
         String s = "";
         for(ItemReservation reservation : ((Customer)userManagedBean.getUser()).getReservations())
         {
-            s = s + reservation.getId() + " ";
+            s = s + reservation.getId() + ": " + reservation.getAmountOfDrinks()
+                    + " " + reservation.getMenuEntry().getItem().getName()
+                    + " in " + reservation.getBar().getBarInfo().getName()
+                    + " | ";
         }
         return s;
     }
 
-    public void onReservationBarChange() {
+    public void updateReservationMenu() {
         if (reservationCafeId > -1) {
             Map<String, Object> temp = new TreeMap<>();
             for (MenuEntry m : queryBean.queryMenuFromBar(reservationCafeId))
-                temp.put(m.getItem().getName(), m.getId());
+                temp.put(m.getId() + m.getItem().getName(), m.getId());
             reservationMenu = temp;
         } else
         {
@@ -102,12 +105,12 @@ public class ReservationManagedBean implements Serializable {
         userBean.removeUserReservation((Customer)userManagedBean.getUser(), removeReservationId);
     }
 
-    public boolean readyToPay()
+    public boolean isReadyToPay()
     {
         return reservationBean.readyToPay();
     }
 
-    public String reservationStatus()
+    public String getReservationStatus()
     {
         return reservationBean.getStatus();
     }
