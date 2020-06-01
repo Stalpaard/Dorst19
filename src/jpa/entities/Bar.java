@@ -5,8 +5,10 @@ import jpa.embeddables.BarInfo;
 import utilities.DaysOfTheWeek;
 
 import javax.persistence.*;
+import java.awt.*;
 import java.io.Serializable;
 import java.util.*;
+import java.util.List;
 
 
 @Entity
@@ -130,25 +132,15 @@ public class Bar implements Serializable
         return shifts;
     }
 
-    public boolean addReservation(Customer customer, Item item, int amount)
+    public ItemReservation addReservation(Customer customer, int menuEntryId, int amount)
     {
-        ItemReservation reservation = new ItemReservation(this, item, amount);
-        if(reservations.contains(reservation) == false)
-        {
-            boolean add_reservation_customer = reservation.setCustomer(customer);
-            boolean add_reservation = reservations.add(reservation);
-            return (add_reservation_customer && add_reservation);
-        }
-        return false;
+        ItemReservation reservation = new ItemReservation(this, getMenuEntryById(menuEntryId), amount, customer);
+        if(reservations.add(reservation)) return  reservation;
+        return null;
     }
 
     public boolean removeReservation(ItemReservation reservation)
     {
-        if(reservations.contains(reservation)) {
-
-            reservation.cancelReservation();
-        }
-        else return false;
         return reservations.remove(reservation);
     }
 
@@ -181,22 +173,27 @@ public class Bar implements Serializable
         return menu;
     }
 
+    public MenuEntry getMenuEntryById(int id)
+    {
+        for(MenuEntry m : menu)
+        {
+            if(m.getId() == id) return m;
+        }
+        return null;
+    }
+
     public boolean addToMenu(Item item, float price, int stock) {
         return menu.add(new MenuEntry(item, price, stock));
     }
 
     public Item removeFromMenu(int entryId) {
 
-        for(MenuEntry menuEntry : menu)
+        MenuEntry temp = getMenuEntryById(entryId);
+        if(temp != null)
         {
-            if(menuEntry.getId() == entryId)
+            if(menu.remove(temp))
             {
-                MenuEntry temp = menuEntry;
-                if(menu.remove(menuEntry))
-                {
-                    return temp.getItem();
-                }
-                return null;
+                return temp.getItem();
             }
         }
         return null;

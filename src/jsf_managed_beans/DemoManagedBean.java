@@ -9,7 +9,6 @@ import utilities.UserType;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
-import javax.persistence.DiscriminatorValue;
 import java.io.Serializable;
 import java.util.*;
 
@@ -24,6 +23,12 @@ public class DemoManagedBean implements Serializable {
 
     @EJB
     BarManagementBean barManagementBean;
+
+    @EJB
+    ReservationBean reservationBean;
+
+    @EJB
+    ReservationCounterBean reservationCounterBean;
 
     @EJB
     UserBean userBean;
@@ -49,6 +54,11 @@ public class DemoManagedBean implements Serializable {
     int managedCafeId = -1;
     int menuEntryId = -1;
 
+    int reservationCafeId = -1;
+    Map<String,Object> reservationMenu;
+    int reservationMenuEntryId = -1;
+    int reservationAmount = -1;
+    int removeReservationId = -1;
 
 
     public void loginUser()
@@ -97,7 +107,7 @@ public class DemoManagedBean implements Serializable {
     {
         if(username != null && password != null)
         {
-            userBean.removeUser(user.getUsername());
+            userBean.removeUser(getUser().getUsername());
             user = null;
             loginStatus = "User not logged in";
         }
@@ -111,6 +121,22 @@ public class DemoManagedBean implements Serializable {
             userTypes.put(type.name(), type);
         }
         return userTypes;
+    }
+
+    public float getUserCredit()
+    {
+
+        return ((Customer)getUser()).getCredit();
+    }
+
+    public String getReservationsInfo()
+    {
+        String s = "";
+        for(ItemReservation reservation : ((Customer)getUser()).getReservations())
+        {
+            s = s + reservation.getId() + " ";
+        }
+        return s;
     }
 
     public boolean isUserBoss()
@@ -133,10 +159,25 @@ public class DemoManagedBean implements Serializable {
 
 
 
-    public String queryCafes(){
+    public String queryAllCafes(){
         String s = "";
-        for(Bar b : queryBean.queryBars()) s = s + " " + b.getBarInfo().getName();
+        for(Bar b : queryBean.queryBars()){
+            BarInfo info = b.getBarInfo();
+            s = s + info.getName() + " in " + info.getAddress().getStreet() + ", " + info.getAddress().getCity() + " | ";
+        }
         return s;
+    }
+
+    public Map<String, Object> mapAllCafes()
+    {
+        Map<String, Object> cafeMap = new TreeMap<>();
+        for(Bar b : queryBean.queryBars())
+        {
+            BarInfo barInfo = b.getBarInfo();
+            String key = barInfo.getName() + barInfo.getAddress().getCity() + barInfo.getAddress().getStreet();
+            cafeMap.put(key, b.getId());
+        }
+        return cafeMap;
     }
 
     public String queryUsers(){
@@ -145,7 +186,7 @@ public class DemoManagedBean implements Serializable {
         return s;
     }
 
-    public String queryDrinks()
+    public String queryManagedDrinks()
     {
         String s = "";
         Set<MenuEntry> menu = barManagementBean.getMenu();
@@ -154,19 +195,22 @@ public class DemoManagedBean implements Serializable {
     }
 
 
-    public Map<String, Object> getOwnedCafes()
+    public Map<String, Object> mapOwnedCafes()
     {
-        Map<String,Object> ownedBars = new TreeMap<>();
-        for(Bar owned : ((BarBoss)user).getOwnedBars())
+        Map<String,Object> ownedBarsMap = new TreeMap<>();
+        BarBoss boss = ((BarBoss)getUser());
+        List<Bar> ownedBars = null;
+        if(boss != null)ownedBars = boss.getOwnedBars();
+        if(ownedBars != null)
         {
-            ownedBars.put(owned.getBarInfo().getName(),owned.getId());
+            for(Bar owned : ownedBars) ownedBarsMap.put(owned.getBarInfo().getName(),owned.getId());
         }
-        return ownedBars;
+        return ownedBarsMap;
     }
 
-    public Map<String, Object> getMenuMap()
+    public Map<String, Object> mapManagedMenu()
     {
-        Map<String, Object> menumap = new LinkedHashMap<>();
+        Map<String, Object> menumap = new TreeMap<>();
         for(MenuEntry m : barManagementBean.getMenu())
         {
             Item item = m.getItem();
@@ -177,11 +221,63 @@ public class DemoManagedBean implements Serializable {
         return menumap;
     }
 
+    public void onReservationBarChange() {
+        if (reservationCafeId > -1) {
+            Map<String, Object> temp = new TreeMap<>();
+            for (MenuEntry m : queryBean.queryMenuFromBar(reservationCafeId))
+                temp.put(m.getItem().getName(), m.getId());
+            reservationMenu = temp;
+        } else
+        {
+            reservationMenu = new TreeMap<>();
+        }
+    }
+
+    public boolean isReservationMenuLoaded()
+    {
+        return reservationMenu != null;
+    }
+
+    public void prepareReservation()
+    {
+        reservationBean.setReservation(reservationCafeId, reservationMenuEntryId, ((Customer)getUser()), reservationAmount);
+    }
+
+    public boolean payReservation()
+    {
+        return reservationBean.payReservation();
+    }
+
+    public Map<String, Object> getUserReservations()
+    {
+        Map<String, Object> reservationsMap = new TreeMap<>();
+        for(ItemReservation r : ((Customer)getUser()).getReservations())
+        {
+            reservationsMap.put(Integer.toString(r.getId()), r.getId());
+        }
+        return reservationsMap;
+    }
+
+    public void removeReservation()
+    {
+        userBean.removeUserReservation((Customer)getUser(), removeReservationId);
+    }
+
+    public boolean readyToPay()
+    {
+        return reservationBean.readyToPay();
+    }
+
+    public String reservationStatus()
+    {
+        return reservationBean.getStatus();
+    }
+
     public void createCafe() {
         if(user != null) {
             Address address = new Address(cafeStraat, cafeStad);
             BarInfo barInfo = new BarInfo(cafeNaam, address);
-            barCreationBean.createBar((BarBoss)user, barInfo, cafeCapaciteit);
+            barCreationBean.createBar((BarBoss)getUser(), barInfo, cafeCapaciteit);
         }
     }
 
@@ -279,6 +375,22 @@ public class DemoManagedBean implements Serializable {
         return userType;
     }
 
+    public Map<String, Object> getReservationMenu() {
+        return reservationMenu;
+    }
+
+    public void setReservationMenu(Map<String, Object> reservationMenu) {
+        this.reservationMenu = reservationMenu;
+    }
+
+    public int getRemoveReservationId() {
+        return removeReservationId;
+    }
+
+    public void setRemoveReservationId(int removeReservationId) {
+        this.removeReservationId = removeReservationId;
+    }
+
     public void setUserType(UserType userType) {
         this.userType = userType;
     }
@@ -296,7 +408,7 @@ public class DemoManagedBean implements Serializable {
     }
 
     public User getUser() {
-        return user;
+        return userBean.refreshUser(user);
     }
 
     public void setUser(User user) {
@@ -313,6 +425,30 @@ public class DemoManagedBean implements Serializable {
 
     public String getCafeStraat() {
         return cafeStraat;
+    }
+
+    public int getReservationCafeId() {
+        return reservationCafeId;
+    }
+
+    public void setReservationCafeId(int reservationCafeId) {
+        this.reservationCafeId = reservationCafeId;
+    }
+
+    public int getReservationMenuEntryId() {
+        return reservationMenuEntryId;
+    }
+
+    public void setReservationMenuEntryId(int reservationMenuEntryId) {
+        this.reservationMenuEntryId = reservationMenuEntryId;
+    }
+
+    public int getReservationAmount() {
+        return reservationAmount;
+    }
+
+    public void setReservationAmount(int reservationAmount) {
+        this.reservationAmount = reservationAmount;
     }
 
     public void setCafeStraat(String cafeStraat) {

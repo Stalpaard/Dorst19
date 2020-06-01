@@ -15,46 +15,95 @@ import java.util.concurrent.TimeUnit;
 @StatefulTimeout(unit = TimeUnit.MINUTES, value = 60)
 @DependsOn("ReservationCounterBean")
 public class ReservationBean {
-/*
     @EJB
     ReservationCounterBean reservationCounterBean;
 
     @PersistenceContext(name = "DorstPersistenceUnit")
     EntityManager entityManager;
 
-    @Resource
-    SessionContext ctx;
-
-
     int barId = -1;
-    MenuEntry menuEntry = null;
+    int menuEntryId = -1;
     Customer customer = null; //zou uit sessioncontext moeten gehaald worden
     int amount = 0;
+    float total = 0;
+    boolean ready =false;
+    String status = "No reservation set";
 
     public ReservationBean()
     {
     }
 
-    @Remove
+    public void setReservation(int barId, int menuEntryId, Customer customer, int amount)
+    {
+        Bar bar = entityManager.find(Bar.class, barId);
+        if(bar.getMenuEntryById(menuEntryId) != null && bar != null && amount > 0)
+        {
+            this.customer = customer;
+            this.barId = barId;
+            this.menuEntryId = menuEntryId;
+            this.amount = amount;
+            total = bar.getMenuEntryById(menuEntryId).getPrice() * amount;
+            if(customer.getCredit() >= total){
+                ready = true;
+                status = "Reservation set, ready to pay";
+            }
+            else
+            {
+                status = "Insufficient amount of credit";
+                reset();
+            }
+        }
+        else
+        {
+            status =  "Invalid reservation, try again";
+            reset();
+        }
+
+    }
+
+    private void reset()
+    {
+        this.barId = barId;
+        this.menuEntryId = menuEntryId;
+        this.customer = null;
+        this.amount = 0;
+        ready = false;
+    }
+
+    public String getStatus()
+    {
+        return status;
+    }
+
+    public boolean readyToPay()
+    {
+        return ready;
+    }
+
     public boolean payReservation()
     {
-        //if(!ctx.isCallerInRole("Customer")) throw new SecurityException("Only customers can do reservations");
-        if(customer == null || menuEntry == null || barInfo == null || amount <= 0) return false;
-        Bar bar = entityManager.find(Bar.class, barInfo);
-        if(bar != null && bar.getMenu().contains(menuEntry))
+        Bar bar = entityManager.find(Bar.class, barId);
+        if(bar != null && bar.getMenuEntryById(menuEntryId) != null && ready)
         {
-            float itemPrice = menuEntry.getPrice();
-            float customerCredit = customer.getCredit();
-            if(customerCredit >= itemPrice)
+            //customer = entityManager.find(Customer.class, customer.getUsername());
+            customer.setCredit(customer.getCredit() - bar.getMenuEntryById(menuEntryId).getPrice());
+            ItemReservation success = bar.addReservation(customer, menuEntryId, amount);
+            if(success != null)
             {
-                customer.setCredit(customerCredit - itemPrice);
-                boolean success = bar.addReservation(customer, menuEntry.getItem(), amount);
-                if(success) reservationCounterBean.incReservationsDone();
-                return success;
+                customer.addReservation(success);
+                entityManager.merge(customer);
+                entityManager.merge(bar);
+                reservationCounterBean.incReservationsDone();
+                status = "Reservation complete";
+                reset();
+                return true;
             }
-            else return false;
+            else
+            {
+                status = "Reservation failed";
+                reset();
+            }
         }
         return false;
     }
-*/
 }

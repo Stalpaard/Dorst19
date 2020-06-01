@@ -13,8 +13,7 @@ import java.util.Objects;
         name = "SHIFT"
 )
 public class Shift {
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     @Column(name = "id")
     private int id;
 

@@ -27,6 +27,7 @@ public class BarCreationBean {
                 Bar new_bar = new Bar(newBarInfo, capacity);
                 new_bar.addBoss(initBoss);
                 entityManager.persist(new_bar);
+                entityManager.merge(initBoss);
                 return true;
         }
         return false;

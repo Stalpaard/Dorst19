@@ -10,11 +10,11 @@ public class ItemReservation {
     @Column(name = "id")
     private int id;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "item_fk", nullable = false, updatable = false) //niet updatable vanwege stock ook
-    private Item item;
-    @Column(name = "amount", nullable = false, updatable = false) //niet updatable om bijv. stock te kunnen managen
+    @JoinColumn(name = "menuEntry_fk")
+    private MenuEntry menuEntry;
+    @Column(name = "amount")
     private int amountOfDrinks;
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(
             name = "jnd_reservation_customer",
             joinColumns = @JoinColumn(name = "reservation_fk"),
@@ -37,19 +37,24 @@ public class ItemReservation {
 
     }
 
-    protected ItemReservation(Bar bar, Item item, int amountOfDrinks)
+    protected ItemReservation(Bar bar, MenuEntry menuEntry, int amountOfDrinks, Customer customer)
     {
         this.bar = bar;
-        this.item = item;
+        this.menuEntry = menuEntry;
         this.amountOfDrinks = amountOfDrinks;
+        this.customer = customer;
     }
 
     public int getId() {
         return id;
     }
 
-    public Item getItem() {
-        return item;
+    public MenuEntry getMenuEntry() {
+        return menuEntry;
+    }
+
+    public void setMenuEntry(MenuEntry menuEntry) {
+        this.menuEntry = menuEntry;
     }
 
     public int getAmountOfDrinks() {
@@ -60,49 +65,26 @@ public class ItemReservation {
         return customer;
     }
 
-    protected boolean setCustomer(Customer customer) {
-        this.customer = customer;
-        return customer.addReservation(this);
-    }
-
     public Bar getBar() {
         return bar;
     }
 
-    protected void setBar(Bar bar)
+    public void setBar(Bar bar)
     {
         this.bar = bar;
     }
 
-    protected boolean cancelReservation()
-    {
-        this.bar = null;
-        boolean success_removal = customer.removeReservation(this);
-        if(success_removal)
-        {
-            this.bar = null;
-            this.customer = null;
-            return true;
-        }
-        else return false;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ItemReservation that = (ItemReservation) o;
         return id == that.id &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(item, that.item) &&
-                Objects.equals(amountOfDrinks, that.amountOfDrinks) &&
-                Objects.equals(customer,that.customer)&&
-                Objects.equals(bar, that.bar);
+                Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, bar, item, amountOfDrinks, customer);
+        return Objects.hash(id, menuEntry, amountOfDrinks, customer, bar);
     }
 
 }

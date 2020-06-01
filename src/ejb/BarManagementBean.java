@@ -49,7 +49,7 @@ public class BarManagementBean implements Serializable {
         Bar findBar = entityManager.find(Bar.class, managedBarId);
         if(findBar != null)
         {
-            managedBar = findBar;
+            managedBar = entityManager.merge(findBar);
             return true;
         }
         return false;
@@ -132,7 +132,14 @@ public class BarManagementBean implements Serializable {
         //if(!ctx.isCallerInRole("boss")) throw new SecurityException("Only bosses may remove cafés");
         if(managedBar != null)
         {
-            entityManager.remove(entityManager.find(Bar.class,managedBar.getId()));
+            managedBar = entityManager.find(Bar.class, managedBar.getId());
+            for(ItemReservation reservation : managedBar.getReservations())
+            {
+                Customer customer = entityManager.find(Customer.class, reservation.getCustomer().getUsername());
+                customer.removeReservation(reservation);
+                entityManager.merge(customer);
+            }
+            entityManager.remove(managedBar);
             managedBar = null;
             return true;
         }
