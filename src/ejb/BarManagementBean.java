@@ -96,6 +96,19 @@ public class BarManagementBean implements Serializable {
         }
     }
 
+    public void addStockToMenuItem(int menuEntryId, int amount)
+    {
+        if(amount > 0 && managedBar != null)
+        {
+            MenuEntry menuEntry = managedBar.getMenuEntryById(menuEntryId);
+            if(menuEntry != null)
+            {
+                menuEntry.setStock(menuEntry.getStock() + amount);
+                entityManager.merge(managedBar);
+            }
+        }
+    }
+
     public Set<MenuEntry> getMenu()
     {
         if(managedBar != null)

@@ -112,6 +112,8 @@
          <f:selectItems value="#{cafeManagedBean.mapManagedMenu()}" />
       </h:selectOneMenu>
       <h:commandButton value="Verwijder drankje" action="#{cafeManagedBean.removeDrinkFromMenu()}"/>
+      <h:inputText id="add_stock" a:placeholder="add to stock" value="#{cafeManagedBean.addToStock}"/>
+      <h:commandButton value="Add stock to drankje" action="#{cafeManagedBean.addStockToDrink()}"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
 

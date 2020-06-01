@@ -43,6 +43,8 @@ public class CafeManagedBean implements Serializable {
     int managedCafeId = -1;
     int menuEntryId = -1;
 
+    int addToStock = -1;
+
     @EJB
     BarCreationBean barCreationBean;
 
@@ -101,7 +103,7 @@ public class CafeManagedBean implements Serializable {
         Map<String, Object> menumap = new TreeMap<>();
         for(MenuEntry m : barManagementBean.getMenu())
         {
-            String key = m.getId() + m.getItem().getName();
+            String key = m.getId() + m.getItem().getName() + " " + "stock: " + m.getStock();
             menumap.put(key, m.getId());
         }
         return menumap;
@@ -159,6 +161,14 @@ public class CafeManagedBean implements Serializable {
         barManagementBean.removeMenuItem(menuEntryId);
     }
 
+    public void addStockToDrink()
+    {
+        if(addToStock > -1)
+        {
+            barManagementBean.addStockToMenuItem(menuEntryId, addToStock);
+        }
+    }
+
     public String getCafeNaam() {
         return cafeNaam;
     }
@@ -189,6 +199,14 @@ public class CafeManagedBean implements Serializable {
 
     public void setCafeCapaciteit(int cafeCapaciteit) {
         this.cafeCapaciteit = cafeCapaciteit;
+    }
+
+    public int getAddToStock() {
+        return addToStock;
+    }
+
+    public void setAddToStock(int addToStock) {
+        this.addToStock = addToStock;
     }
 
     public int getManagedCafeId() {

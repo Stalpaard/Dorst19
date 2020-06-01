@@ -16,6 +16,7 @@ import javax.faces.annotation.ManagedProperty;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -50,6 +51,8 @@ public class ReservationManagedBean implements Serializable {
     int reservationAmount = -1;
     int removeReservationId = -1;
 
+    private static DecimalFormat geldFormat = new DecimalFormat("0.00");
+
     public String getStringOfAllReservations()
     {
         String s = "";
@@ -67,7 +70,7 @@ public class ReservationManagedBean implements Serializable {
         if (reservationCafeId > -1) {
             Map<String, Object> temp = new TreeMap<>();
             for (MenuEntry m : queryBean.queryMenuFromBar(reservationCafeId))
-                temp.put(m.getId() + m.getItem().getName(), m.getId());
+                temp.put(m.getId() + m.getItem().getName() + " price: " + geldFormat.format(m.getPrice()), m.getId());
             reservationMenu = temp;
         } else
         {

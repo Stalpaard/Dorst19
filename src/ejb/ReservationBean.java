@@ -36,22 +36,31 @@ public class ReservationBean {
     public void setReservation(int barId, int menuEntryId, Customer customer, int amount)
     {
         Bar bar = entityManager.find(Bar.class, barId);
-        if(bar.getMenuEntryById(menuEntryId) != null && bar != null && amount > 0)
+        MenuEntry menuEntry = bar.getMenuEntryById(menuEntryId);
+        if(menuEntry != null && bar != null && amount > 0)
         {
             this.customer = customer;
             this.barId = barId;
             this.menuEntryId = menuEntryId;
             this.amount = amount;
             total = bar.getMenuEntryById(menuEntryId).getPrice() * amount;
-            if(customer.getCredit() >= total){
-                ready = true;
-                status = status = amount + " of " + bar.getMenuEntryById(menuEntryId).getItem().getName()
-                        + " in " + bar.getBarInfo().getName()
-                        + " with total price: " + total;
+            if(menuEntry.getStock() >= amount){
+                if(customer.getCredit() >= total)
+                {
+                    ready = true;
+                    status = status = amount + " of " + bar.getMenuEntryById(menuEntryId).getItem().getName()
+                            + " in " + bar.getBarInfo().getName()
+                            + " with total price: " + total;
+                }
+                else
+                {
+                    status = "Insufficient amount of credit (total: " + total + ")";
+                    reset();
+                }
             }
             else
             {
-                status = "Insufficient amount of credit (total: " + total + ")";
+                status = "Not enough stock in café";
                 reset();
             }
         }
@@ -85,24 +94,32 @@ public class ReservationBean {
     public boolean payReservation()
     {
         Bar bar = entityManager.find(Bar.class, barId);
-        if(bar != null && bar.getMenuEntryById(menuEntryId) != null && ready)
+        MenuEntry menuEntry = bar.getMenuEntryById(menuEntryId);
+        if(bar != null && menuEntry != null && ready)
         {
-            //customer = entityManager.find(Customer.class, customer.getUsername());
-            customer.setCredit(customer.getCredit() - (bar.getMenuEntryById(menuEntryId).getPrice()*amount));
-            ItemReservation success = bar.addReservation(customer, menuEntryId, amount);
-            if(success != null)
+            if(menuEntry.getStock() >= amount)
             {
-                customer.addReservation(success);
-                entityManager.merge(customer);
-                entityManager.merge(bar);
-                reservationCounterBean.incReservationsDone();
-                status = "Reservation complete";
-                reset();
-                return true;
+                ItemReservation success = bar.addReservation(customer, menuEntryId, amount);
+                if(success != null)
+                {
+                    customer.setCredit(customer.getCredit() - (menuEntry.getPrice()*amount));
+                    customer.addReservation(success);
+                    entityManager.merge(customer);
+                    entityManager.merge(bar);
+                    reservationCounterBean.incReservationsDone();
+                    status = "Reservation complete";
+                    reset();
+                    return true;
+                }
+                else
+                {
+                    status = "Payment failed: failed to create reservation";
+                    reset();
+                }
             }
             else
             {
-                status = "Reservation failed";
+                status = "Payment failed: out of stock now";
                 reset();
             }
         }

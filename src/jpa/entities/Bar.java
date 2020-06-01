@@ -134,8 +134,16 @@ public class Bar implements Serializable
 
     public ItemReservation addReservation(Customer customer, int menuEntryId, int amount)
     {
-        ItemReservation reservation = new ItemReservation(this, getMenuEntryById(menuEntryId), amount, customer);
-        if(reservations.add(reservation)) return  reservation;
+        MenuEntry menuEntry = getMenuEntryById(menuEntryId);
+        if(menuEntry.getStock() >= amount)
+        {
+            ItemReservation reservation = new ItemReservation(this,menuEntry, amount, customer);
+            if(reservations.add(reservation))
+            {
+                menuEntry.setStock(menuEntry.getStock() - amount);
+                return  reservation;
+            }
+        }
         return null;
     }
 
