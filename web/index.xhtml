@@ -8,110 +8,111 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
    <f:view>
-      <h:outputLabel value="Status: #{demoManagedBean.loginStatus()} "/>
+      <h:outputLabel value="Status: #{userManagedBean.loginStatus()} "/>
       <h:form>
-         <c:if test="#{demoManagedBean.isLoggedIn()}">
-            <h:commandButton value="Logout" action="#{demoManagedBean.logoutUser()}"/>
-            <h:commandButton value="Remove" action="#{demoManagedBean.removeUser()}"/>
+         <c:if test="#{userManagedBean.isLoggedIn()}">
+            <h:commandButton value="Logout" action="#{userManagedBean.logoutUser()}"/>
+            <h:commandButton value="Remove" action="#{userManagedBean.removeUser()}"/>
          </c:if>
       </h:form>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
-      <h:outputLabel value="Users in DB: #{demoManagedBean.queryUsers()} "/>
+      <h:outputLabel value="Users in DB: #{userManagedBean.queryUsers()} "/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
-      <h:outputLabel value="Cafés in DB: #{demoManagedBean.queryAllCafes()} "/>
+      <h:outputLabel value="Cafés in DB: #{cafeManagedBean.queryAllCafes()} "/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
    </f:view>
 <h:form>
-   <h:inputText id="username" a:placeholder="username" value="#{demoManagedBean.username}"/>
-   <h:inputText id="password" a:placeholder="password" value="#{demoManagedBean.password}"/>
-   <h:selectOneMenu value="#{demoManagedBean.userType}">
-      <f:selectItems value="#{demoManagedBean.userTypes}" />
-   </h:selectOneMenu>
-   <h:commandButton value="Login" action="#{demoManagedBean.loginUser()}"/>
-   <h:commandButton value="Register" action="#{demoManagedBean.createUser()}"/>
-   <h:outputText value="&lt;br/&gt;" escape="false"/>
-   <h:outputText value="&lt;br/&gt;" escape="false"/>
+   <c:if test="#{not userManagedBean.isLoggedIn()}">
+      <h:inputText id="username" a:placeholder="username" value="#{userManagedBean.username}"/>
+      <h:inputText id="password" a:placeholder="password" value="#{userManagedBean.password}"/>
+      <h:selectOneMenu value="#{userManagedBean.userType}">
+         <f:selectItems value="#{userManagedBean.userTypes}" />
+      </h:selectOneMenu>
+      <h:commandButton value="Login" action="#{userManagedBean.loginUser()}"/>
+      <h:commandButton value="Register" action="#{userManagedBean.createUser()}"/>
+      <h:outputText value="&lt;br/&gt;" escape="false"/>
+      <h:outputText value="&lt;br/&gt;" escape="false"/>
+   </c:if>
 
-   <c:if test="#{demoManagedBean.isLoggedIn() and demoManagedBean.isUserCustomer()}">
-      <h:outputText value="Reservations: #{demoManagedBean.reservationsInfo}" escape="false"/>
-      <h:outputText value="Credit: #{demoManagedBean.userCredit}" escape="false"/>
+   <f:param name="user" value="#{userManagedBean.user}"/>
+   <c:if test="#{userManagedBean.isLoggedIn() and userManagedBean.isUserCustomer()}">
+      <h:outputText value="Reservations: #{reservationManagedBean.reservationsInfo}" escape="false"/>
+      <h:outputText value="Credit: #{userManagedBean.userCredit}" escape="false"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:outputText value="Reservation Menu" escape="false"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
-      <h:selectOneMenu id="select_cafe_cus" value ="#{demoManagedBean.reservationCafeId}">
-         <f:selectItems id="select_cafe_map_cus" value="#{demoManagedBean.mapAllCafes()}" />
+      <h:selectOneMenu id="select_cafe_cus" value ="#{reservationManagedBean.reservationCafeId}">
+         <f:selectItems id="select_cafe_map_cus" value="#{cafeManagedBean.mapAllCafes()}" />
       </h:selectOneMenu>
-      <h:commandButton value="Load café menu" action="#{demoManagedBean.onReservationBarChange()}"/>
-      <h:selectOneMenu id="select_menu_cus" value ="#{demoManagedBean.reservationMenuEntryId}">
-         <f:selectItems id="select_menu_map_cus" value="#{demoManagedBean.reservationMenu}" />
+      <h:commandButton value="Load café menu" action="#{reservationManagedBean.onReservationBarChange()}"/>
+      <h:selectOneMenu id="select_menu_cus" value ="#{reservationManagedBean.reservationMenuEntryId}">
+         <f:selectItems id="select_menu_map_cus" value="#{reservationManagedBean.reservationMenu}" />
       </h:selectOneMenu>
-      <c:if test="#{demoManagedBean.isReservationMenuLoaded()}">
-         <h:inputText id="reservation_amount" a:placeholder="amount" value="#{demoManagedBean.reservationAmount}"/>
+      <c:if test="#{reservationManagedBean.isReservationMenuLoaded()}">
+         <h:inputText id="reservation_amount" a:placeholder="amount" value="#{reservationManagedBean.reservationAmount}"/>
       </c:if>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
-      <h:outputText value="status: #{demoManagedBean.reservationStatus()}" escape="false"/>
-      <c:if test="#{demoManagedBean.isReservationMenuLoaded()}">
-         <h:commandButton value="Calculate reservation" action="#{demoManagedBean.prepareReservation()}"/>
+      <h:outputText value="status: #{reservationManagedBean.reservationStatus()}" escape="false"/>
+      <c:if test="#{reservationManagedBean.isReservationMenuLoaded()}">
+         <h:commandButton value="Calculate reservation" action="#{reservationManagedBean.prepareReservation()}"/>
       </c:if>
-      <c:if test="#{demoManagedBean.readyToPay()}">
-         <h:commandButton value="Pay reservation" action="#{demoManagedBean.payReservation()}"/>
+      <c:if test="#{reservationManagedBean.readyToPay()}">
+         <h:commandButton value="Pay reservation" action="#{reservationManagedBean.payReservation()}"/>
       </c:if>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
-      <h:selectOneMenu id="select_res_cus" value ="#{demoManagedBean.removeReservationId}">
-         <f:selectItems id="select_res_map_cus" value="#{demoManagedBean.userReservations}" />
+      <h:selectOneMenu id="select_res_cus" value ="#{reservationManagedBean.removeReservationId}">
+         <f:selectItems id="select_res_map_cus" value="#{reservationManagedBean.userReservations}" />
       </h:selectOneMenu>
-      <h:commandButton value="Cancel reservation" action="#{demoManagedBean.removeReservation()}"/>
+      <h:commandButton value="Cancel reservation" action="#{reservationManagedBean.removeReservation()}"/>
 
    </c:if>
 
-   <c:if test="#{demoManagedBean.isLoggedIn() and demoManagedBean.isUserEmployee()}">
+   <c:if test="#{userManagedBean.isLoggedIn() and userManagedBean.isUserEmployee()}">
    </c:if>
 
-   <c:if test="#{demoManagedBean.isLoggedIn() and demoManagedBean.isUserBoss() and not demoManagedBean.isCafeManaged()}">
-      <h:inputText id="cafenaam" a:placeholder="cafenaam" value="#{demoManagedBean.cafeNaam}"/>
-      <h:inputText id="cafestraat" a:placeholder="cafestraat" value="#{demoManagedBean.cafeStraat}"/>
-      <h:inputText id="cafestad" a:placeholder="cafestad" value="#{demoManagedBean.cafeStad}"/>
-      <h:inputText id="cafecapacitiet" a:placeholder="cafecapaciteit" value="#{demoManagedBean.cafeCapaciteit}"/>
+   <c:if test="#{userManagedBean.isLoggedIn() and userManagedBean.isUserBoss() and not cafeManagedBean.isCafeManaged()}">
+      <h:inputText id="cafenaam" a:placeholder="cafenaam" value="#{cafeManagedBean.cafeNaam}"/>
+      <h:inputText id="cafestraat" a:placeholder="cafestraat" value="#{cafeManagedBean.cafeStraat}"/>
+      <h:inputText id="cafestad" a:placeholder="cafestad" value="#{cafeManagedBean.cafeStad}"/>
+      <h:inputText id="cafecapacitiet" a:placeholder="cafecapaciteit" value="#{cafeManagedBean.cafeCapaciteit}"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
-      <h:commandButton value="create cafe nuu" action="#{demoManagedBean.createCafe()}"/>
+      <h:commandButton value="create cafe nuu" action="#{cafeManagedBean.createCafe()}"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
          <h:outputText value="My cafés: " escape="false"/>
-         <h:selectOneMenu id="select_cafe_boss" value ="#{demoManagedBean.managedCafeId}">
-            <f:selectItems id="select_cafe_map_boss" value="#{demoManagedBean.mapOwnedCafes()}" />
+         <h:selectOneMenu id="select_cafe_boss" value ="#{cafeManagedBean.managedCafeId}">
+            <f:selectItems id="select_cafe_map_boss" value="#{cafeManagedBean.mapOwnedCafes()}" />
          </h:selectOneMenu>
          <h:outputText value="&lt;br/&gt;" escape="false"/>
-         <h:commandButton value="Manage cafe" action="#{demoManagedBean.manageCafe()}"/>
+         <h:commandButton value="Manage cafe" action="#{cafeManagedBean.manageCafe()}"/>
    </c:if>
 
-
-
-   <c:if test="#{demoManagedBean.isCafeManaged()}">
+   <c:if test="#{cafeManagedBean.isCafeManaged()}">
       <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
-      <h:outputText value="#{demoManagedBean.managedCafeNaam()} menu overview: #{demoManagedBean.queryManagedDrinks()}"/>
+      <h:outputText value="#{cafeManagedBean.managedCafeNaam()} menu overview: #{cafeManagedBean.queryManagedDrinks()}"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
-      <h:inputText id="drank_naam" a:placeholder="drank_naam" value="#{demoManagedBean.drank_name}"/>
-      <h:inputText id="drank_alc_percentage" a:placeholder="drank_alc_percentage" value="#{demoManagedBean.drank_alc}"/>
-      <h:inputText id="drank_volume" a:placeholder="drank_volume" value="#{demoManagedBean.drank_vol}"/>
-      <h:inputText id="drank_prijs" a:placeholder="drank_prijs" value="#{demoManagedBean.price}"/>
-      <h:inputText id="drank_stock" a:placeholder="drank_stock" value="#{demoManagedBean.stock}"/>
-      <h:commandButton value="Voeg drankje toe" action="#{demoManagedBean.addDrinkToMenu()}"/>
+      <h:inputText id="drank_naam" a:placeholder="drank_naam" value="#{cafeManagedBean.drank_name}"/>
+      <h:inputText id="drank_alc_percentage" a:placeholder="drank_alc_percentage" value="#{cafeManagedBean.drank_alc}"/>
+      <h:inputText id="drank_volume" a:placeholder="drank_volume" value="#{cafeManagedBean.drank_vol}"/>
+      <h:inputText id="drank_prijs" a:placeholder="drank_prijs" value="#{cafeManagedBean.price}"/>
+      <h:inputText id="drank_stock" a:placeholder="drank_stock" value="#{cafeManagedBean.stock}"/>
+      <h:commandButton value="Voeg drankje toe" action="#{cafeManagedBean.addDrinkToMenu()}"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:outputText value="Menu: " escape="false"/>
-      <h:selectOneMenu id="select_drink" value ="#{demoManagedBean.menuEntryId}">
+      <h:selectOneMenu id="select_drink" value ="#{cafeManagedBean.menuEntryId}">
          <f:ajax event="change" update="@this" />
-         <f:selectItems value="#{demoManagedBean.mapManagedMenu()}" />
+         <f:selectItems value="#{cafeManagedBean.mapManagedMenu()}" />
       </h:selectOneMenu>
-      <h:commandButton value="Verwijder drankje" action="#{demoManagedBean.removeDrinkFromMenu()}"/>
+      <h:commandButton value="Verwijder drankje" action="#{cafeManagedBean.removeDrinkFromMenu()}"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
 
 
-      <h:commandButton value="unmanage cafe" action="#{demoManagedBean.unmanageCafe()}"/>
-      <h:commandButton value="delete cafe" action="#{demoManagedBean.removeCafe()}"/>
+      <h:commandButton value="unmanage cafe" action="#{cafeManagedBean.unmanageCafe()}"/>
+      <h:commandButton value="delete cafe" action="#{cafeManagedBean.removeCafe()}"/>
    </c:if>
 
 </h:form>
