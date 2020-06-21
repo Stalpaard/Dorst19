@@ -82,7 +82,7 @@ public class UserManagedBean implements Serializable {
         return s;
     }
 
-    public void createUser()
+    public String createUser()
     {
 
         if(username != null && password != null && userType != null)
@@ -90,11 +90,11 @@ public class UserManagedBean implements Serializable {
             User new_user = userBean.createUser(username, password, userType);
             if(new_user != null)
             {
-                user = new_user;
-                loginStatus = "User " + user.getUsername() + " is logged in";
+                return attemptLogin();
             }
             else loginStatus = "User already exists";
         }
+        return "index";
     }
 
     public String removeUser()
