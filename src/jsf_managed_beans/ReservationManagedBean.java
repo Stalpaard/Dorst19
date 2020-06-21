@@ -86,9 +86,9 @@ public class ReservationManagedBean implements Serializable {
         reservationBean.setReservation(reservationCafeId, reservationMenuEntryId, ((Customer)userManagedBean.getUser()), reservationAmount);
     }
 
-    public boolean payReservation()
+    public void payReservation()
     {
-        return reservationBean.payReservation();
+        reservationBean.payReservation();
     }
 
     public Map<String, Object> getUserReservations()

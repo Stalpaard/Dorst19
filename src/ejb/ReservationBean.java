@@ -1,14 +1,13 @@
 package ejb;
 
-import jpa.embeddables.BarInfo;
 import jpa.entities.*;
+import utilities.ReservationInfo;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.*;
+import javax.jms.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
 @Stateful(name = "ReservationEJB")
@@ -19,6 +18,12 @@ public class ReservationBean {
 
     @PersistenceContext(name = "DorstPersistenceUnit")
     EntityManager entityManager;
+
+    @Resource(mappedName = "jms/reservationMsgDest")
+    private Queue reservationDest;
+
+    @Resource(mappedName = "jms/reservationMsg")
+    private ConnectionFactory queue;
 
     int barId = -1;
     int menuEntryId = -1;
@@ -90,8 +95,30 @@ public class ReservationBean {
         return ready;
     }
 
-    public boolean payReservation()
+    public void payReservation()
     {
+        //Produces ObjectMessage (needs to be serializable!) containing the ItemReservation
+
+        ReservationInfo reservationInfo = new ReservationInfo(barId, menuEntryId, customer.getUsername(), amount);
+
+        try {
+            Connection conn = queue.createConnection();
+            Session s = conn.createSession();
+            MessageProducer mp = s.createProducer(reservationDest);
+            ObjectMessage reservationMsg = s.createObjectMessage();
+            reservationMsg.setObject(reservationInfo);
+            mp.send(reservationMsg);
+            status = "Reservation sent to Bar";
+            ready = false;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e);
+            status = "Exception occurred, please try again";
+        }
+
+
+        /*
         Bar bar = entityManager.find(Bar.class, barId);
         MenuEntry menuEntry = bar.getMenuEntryById(menuEntryId);
         if(bar != null && menuEntry != null && ready)
@@ -123,5 +150,7 @@ public class ReservationBean {
             }
         }
         return false;
+        */
+
     }
 }

@@ -55,6 +55,7 @@
         </c:if>
         <h:outputText value="&lt;br/&gt;" escape="false"/>
         <h:selectOneMenu id="select_res_cus" value ="#{reservationManagedBean.removeReservationId}">
+            <f:ajax event="change" update="select_res_cus" />
             <f:selectItems id="select_res_map_cus" value="#{reservationManagedBean.userReservations}" />
         </h:selectOneMenu>
         <h:commandButton value="Cancel reservation" action="#{reservationManagedBean.cancelReservation()}"/>
