@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 
 @Stateful(name = "ReservationEJB")
 @StatefulTimeout(unit = TimeUnit.MINUTES, value = 60)
-@DependsOn("ReservationCounterBean")
 public class ReservationBean {
     @EJB
     ReservationCounterBean reservationCounterBean;

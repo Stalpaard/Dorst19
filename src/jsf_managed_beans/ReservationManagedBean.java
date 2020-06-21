@@ -8,25 +8,21 @@ import jpa.entities.Customer;
 import jpa.entities.ItemReservation;
 import jpa.entities.MenuEntry;
 
-import javax.annotation.ManagedBean;
 import javax.ejb.DependsOn;
 import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.annotation.ManagedProperty;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 @Named
-@DependsOn({
-        "UserManagedBean",
-        "ReservationBean",
-        "ReservationCounterBean",
-        "QueryBean"
-})
 @SessionScoped
 public class ReservationManagedBean implements Serializable {
 
@@ -68,13 +64,15 @@ public class ReservationManagedBean implements Serializable {
 
     public void updateReservationMenu() {
         if (reservationCafeId > -1) {
-            Map<String, Object> temp = new TreeMap<>();
-            for (MenuEntry m : queryBean.queryMenuFromBar(reservationCafeId))
-                temp.put(m.getId() + m.getItem().getName() + " price: " + geldFormat.format(m.getPrice()), m.getId());
-            reservationMenu = temp;
-        } else
-        {
-            reservationMenu = new TreeMap<>();
+            Set<MenuEntry> menu = queryBean.queryMenuFromBar(reservationCafeId);
+            if(menu != null)
+            {
+                Map<String, Object> temp = new TreeMap<>();
+                for (MenuEntry m : queryBean.queryMenuFromBar(reservationCafeId))
+                    temp.put(m.getId() + m.getItem().getName() + " price: " + geldFormat.format(m.getPrice()), m.getId());
+                reservationMenu = temp;
+            }
+
         }
     }
 
@@ -103,9 +101,9 @@ public class ReservationManagedBean implements Serializable {
         return reservationsMap;
     }
 
-    public void removeReservation()
+    public void cancelReservation()
     {
-        userBean.removeUserReservation((Customer)userManagedBean.getUser(), removeReservationId);
+        userBean.cancelUserReservation((Customer)userManagedBean.getUser(), removeReservationId);
     }
 
     public boolean isReadyToPay()

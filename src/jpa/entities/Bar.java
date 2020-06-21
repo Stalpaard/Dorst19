@@ -147,9 +147,16 @@ public class Bar implements Serializable
         return null;
     }
 
-    public boolean removeReservation(ItemReservation reservation)
+    private boolean removeReservation(ItemReservation reservation)
     {
         return reservations.remove(reservation);
+    }
+
+    public boolean cancelReservation(ItemReservation reservation)
+    {
+        MenuEntry menuEntry = getMenuEntryById(reservation.getMenuEntry().getId());
+        menuEntry.setStock(menuEntry.getStock() + reservation.getAmountOfDrinks());
+        return removeReservation(reservation);
     }
 
     public List<ItemReservation> getReservations()

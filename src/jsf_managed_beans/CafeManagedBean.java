@@ -10,8 +10,10 @@ import jpa.entities.*;
 import javax.annotation.ManagedBean;
 import javax.ejb.DependsOn;
 import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.annotation.ManagedProperty;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -21,12 +23,6 @@ import java.util.Set;
 import java.util.TreeMap;
 
 @Named
-@DependsOn({
-        "UserManagedBean",
-        "BarCreationBean",
-        "BarManagementBean",
-        "QueryBean"
-})
 @SessionScoped
 public class CafeManagedBean implements Serializable {
     String cafeNaam = null;
@@ -119,17 +115,20 @@ public class CafeManagedBean implements Serializable {
         }
     }
 
-    public void manageCafe() {
+    public String manageCafe() {
         //Om de named query te testen heb ik het zo gedaan
         if(managedCafeId > -1)
         {
-            barManagementBean.attachBar(managedCafeId);
+            if(barManagementBean.attachBar(managedCafeId)) return "cafemanagement";
         }
+        return "boss";
     }
 
-    public void unmanageCafe()
+    public String unmanageCafe()
     {
+        managedCafeId = -1;
         barManagementBean.detachBar();
+        return "boss";
     }
 
     public boolean isCafeManaged()
@@ -144,9 +143,11 @@ public class CafeManagedBean implements Serializable {
         else return "";
     }
 
-    public void removeCafe() {
+    public String removeCafe() {
         //remove attached bar
+        managedCafeId = -1;
         barManagementBean.removeBar();
+        return "boss?faces-redirect = true";
     }
 
 

@@ -69,7 +69,7 @@ public class UserBean {
         return false;
     }
 
-    public void removeUserReservation(Customer managed_customer, int reservationId)
+    public void cancelUserReservation(Customer managed_customer, int reservationId)
     {
         ItemReservation reservation = entityManager.find(ItemReservation.class, reservationId);
         if(reservation != null)
@@ -81,7 +81,7 @@ public class UserBean {
                 Bar bar = entityManager.find(Bar.class, reservation.getBar().getId());
                 if(bar != null)
                 {
-                    bar.removeReservation(reservation);
+                    bar.cancelReservation(reservation);
                     entityManager.merge(managed_customer);
                     entityManager.merge(bar);
                 }
@@ -111,6 +111,8 @@ public class UserBean {
 
     public User refreshUser(User user)
     {
-        return entityManager.find(User.class, user.getUsername());
+        User retrieved = entityManager.find(User.class, user.getUsername());
+        entityManager.refresh(retrieved);
+        return retrieved;
     }
 }

@@ -2,6 +2,7 @@ package ejb;
 
 import javax.ejb.*;
 
+@Startup
 @Singleton(name = "SingletonEJB")
 @ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
 public class ReservationCounterBean {

@@ -13,6 +13,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.annotation.ManagedProperty;
 import javax.faces.bean.ManagedBean;
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.math.RoundingMode;
@@ -21,10 +22,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Named
-@DependsOn({
-        "QueryBean",
-        "UserBean"
-})
 @SessionScoped
 public class UserManagedBean implements Serializable {
 
@@ -45,7 +42,7 @@ public class UserManagedBean implements Serializable {
 
     private static DecimalFormat geldFormat = new DecimalFormat("0.00");
 
-    public void attemptLogin()
+    public String attemptLogin()
     {
         if(username != null && password != null)
         {
@@ -54,9 +51,12 @@ public class UserManagedBean implements Serializable {
             {
                 user = login_user;
                 loginStatus = "logged in as " + login_user.getUsername();
+                if(isUserCustomer()) return "customer";
+                if(isUserBoss()) return "boss";
             }
             else loginStatus = "User doesn't exist";
         }
+        return "index";
     }
 
     public boolean isLoggedIn()
@@ -70,10 +70,10 @@ public class UserManagedBean implements Serializable {
         return loginStatus;
     }
 
-    public void logout()
+    public String logout()
     {
         user = null;
-        //if(barManagementBean.isManaged()) barManagementBean.detachBar();
+        return "index";
     }
 
     public String stringOfAllUsers(){
@@ -97,7 +97,7 @@ public class UserManagedBean implements Serializable {
         }
     }
 
-    public void removeUser()
+    public String removeUser()
     {
         if(username != null && password != null)
         {
@@ -105,6 +105,7 @@ public class UserManagedBean implements Serializable {
             user = null;
             loginStatus = "User not logged in";
         }
+        return "index";
     }
 
     public boolean isUserBoss()
@@ -116,12 +117,6 @@ public class UserManagedBean implements Serializable {
     public boolean isUserCustomer()
     {
         if(getUser() != null) return user instanceof Customer;
-        else return false;
-    }
-
-    public boolean isUserEmployee()
-    {
-        if(getUser() != null) return user instanceof BarEmployee;
         else return false;
     }
 
