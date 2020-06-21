@@ -35,10 +35,12 @@
         <h:outputText value="Reservation Menu" escape="false"/>
         <h:outputText value="&lt;br/&gt;" escape="false"/>
         <h:selectOneMenu id="select_cafe_cus" value ="#{reservationManagedBean.reservationCafeId}">
+            <f:ajax event="change" update="@this" />
             <f:selectItems id="select_cafe_map_cus" value="#{cafeManagedBean.mapAllCafes()}" />
         </h:selectOneMenu>
         <h:commandButton value="Load café menu" action="#{reservationManagedBean.updateReservationMenu()}"/>
         <h:selectOneMenu id="select_menu_cus" value ="#{reservationManagedBean.reservationMenuEntryId}">
+            <f:ajax event="change" update="@this" />
             <f:selectItems id="select_menu_map_cus" value="#{reservationManagedBean.reservationMenu}" />
         </h:selectOneMenu>
         <c:if test="#{reservationManagedBean.isReservationMenuLoaded()}">
@@ -55,7 +57,7 @@
         </c:if>
         <h:outputText value="&lt;br/&gt;" escape="false"/>
         <h:selectOneMenu id="select_res_cus" value ="#{reservationManagedBean.removeReservationId}">
-            <f:ajax event="change" update="select_res_cus" />
+            <f:ajax event="change" update="@this" />
             <f:selectItems id="select_res_map_cus" value="#{reservationManagedBean.userReservations}" />
         </h:selectOneMenu>
         <h:commandButton value="Cancel reservation" action="#{reservationManagedBean.cancelReservation()}"/>

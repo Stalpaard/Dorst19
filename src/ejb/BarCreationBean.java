@@ -5,9 +5,12 @@ import jpa.entities.Bar;
 import jpa.entities.BarBoss;
 
 import javax.ejb.Stateless;
+import javax.interceptor.Interceptor;
+import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+
 
 @Stateless(name = "BarCreationEJB")
 public class BarCreationBean {
@@ -16,7 +19,7 @@ public class BarCreationBean {
 
     public BarCreationBean() {
     }
-
+    @Interceptors(LogInterceptor.class)
     public boolean createBar(BarBoss initBoss, BarInfo newBarInfo, int capacity)
     {
         TypedQuery<Bar> barQuery = entityManager.createNamedQuery("CHECK_EXISTING_BARS", Bar.class)

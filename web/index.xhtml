@@ -27,6 +27,7 @@
          <h:inputText id="username" a:placeholder="username" value="#{userManagedBean.username}"/>
          <h:inputSecret id="password" a:placeholder="password" value="#{userManagedBean.password}"/>
          <h:selectOneMenu value="#{userManagedBean.userType}">
+            <f:ajax event="change" update="@this" />
             <f:selectItems value="#{userManagedBean.userTypes}" />
          </h:selectOneMenu>
          <h:commandButton value="Login" action="#{userManagedBean.attemptLogin()}"/>

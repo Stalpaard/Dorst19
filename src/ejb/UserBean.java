@@ -7,6 +7,7 @@ import utilities.jbcrypt.BCrypt;
 
 import javax.annotation.security.DeclareRoles;
 import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,7 +19,7 @@ public class UserBean {
 
     public UserBean() {
     }
-
+    @Interceptors(LogInterceptor.class)
     public User createUser(String username, String password, UserType type)
     {
         if(entityManager.find(User.class,username) == null && !username.isEmpty() && !password.isEmpty())
@@ -47,7 +48,7 @@ public class UserBean {
         }
         return null;
     }
-
+    @Interceptors(LogInterceptor.class)
     public boolean removeUser(String username)
     {
         User to_remove = entityManager.find(User.class, username);

@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.*;
 import javax.enterprise.context.SessionScoped;
+import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
 import javax.persistence.PersistenceContext;
@@ -137,7 +138,7 @@ public class BarManagementBean implements Serializable {
             if(managedBar.addToMenu(item, price, stock)) entityManager.merge(managedBar);
         }
     }
-
+    @Interceptors(LogInterceptor.class)
     public boolean removeBar()
     {
         //Misschien op een manier nog fixen da enkel bosses hun eigen cafés kunnen verwijderen

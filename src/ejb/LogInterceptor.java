@@ -1,9 +1,5 @@
 package ejb;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.ejb.PostActivate;
-import javax.ejb.PrePassivate;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 

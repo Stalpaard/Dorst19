@@ -5,6 +5,7 @@ import utilities.ReservationInfo;
 
 import javax.annotation.Resource;
 import javax.ejb.*;
+import javax.interceptor.Interceptors;
 import javax.jms.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -94,7 +95,7 @@ public class ReservationBean {
     {
         return ready;
     }
-
+    @Interceptors(LogInterceptor.class)
     public void payReservation()
     {
         //Produces ObjectMessage (needs to be serializable!) containing the ItemReservation
