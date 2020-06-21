@@ -1,19 +1,12 @@
 package jsf_managed_beans;
 
-import com.sun.faces.component.search.SearchKeywordResolverImplAll;
 import ejb.QueryBean;
-import ejb.ReservationBean;
-import ejb.ReservationCounterBean;
 import ejb.UserBean;
 import jpa.entities.*;
 import utilities.UserType;
 
-import javax.ejb.DependsOn;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.annotation.ManagedProperty;
-import javax.faces.bean.ManagedBean;
-import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.math.RoundingMode;

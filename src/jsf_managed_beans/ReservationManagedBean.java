@@ -1,23 +1,19 @@
 package jsf_managed_beans;
 
 import ejb.QueryBean;
-import ejb.ReservationBean;
+import ejb.PlaceReservationBean;
 import ejb.ReservationCounterBean;
 import ejb.UserBean;
 import jpa.entities.Customer;
 import jpa.entities.ItemReservation;
 import jpa.entities.MenuEntry;
 
-import javax.ejb.DependsOn;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.text.DecimalFormat;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -27,7 +23,7 @@ import java.util.TreeMap;
 public class ReservationManagedBean implements Serializable {
 
     @EJB
-    ReservationBean reservationBean;
+    PlaceReservationBean placeReservationBean;
 
     @EJB
     UserBean userBean;
@@ -83,12 +79,12 @@ public class ReservationManagedBean implements Serializable {
 
     public void prepareReservation()
     {
-        reservationBean.setReservation(reservationCafeId, reservationMenuEntryId, ((Customer)userManagedBean.getUser()), reservationAmount);
+        placeReservationBean.setReservation(reservationCafeId, reservationMenuEntryId, userManagedBean.getUser().getUsername(), reservationAmount);
     }
 
     public void payReservation()
     {
-        reservationBean.payReservation();
+        placeReservationBean.payReservation();
     }
 
     public Map<String, Object> getUserReservations()
@@ -108,12 +104,12 @@ public class ReservationManagedBean implements Serializable {
 
     public boolean isReadyToPay()
     {
-        return reservationBean.readyToPay();
+        return placeReservationBean.readyToPay();
     }
 
     public String getReservationStatus()
     {
-        return reservationBean.getStatus();
+        return placeReservationBean.getStatus();
     }
 
     public Map<String, Object> getReservationMenu() {
@@ -156,12 +152,12 @@ public class ReservationManagedBean implements Serializable {
         this.reservationAmount = reservationAmount;
     }
 
-    public ReservationBean getReservationBean() {
-        return reservationBean;
+    public PlaceReservationBean getPlaceReservationBean() {
+        return placeReservationBean;
     }
 
-    public void setReservationBean(ReservationBean reservationBean) {
-        this.reservationBean = reservationBean;
+    public void setPlaceReservationBean(PlaceReservationBean placeReservationBean) {
+        this.placeReservationBean = placeReservationBean;
     }
 
     public UserBean getUserBean() {

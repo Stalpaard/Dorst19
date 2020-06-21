@@ -34,9 +34,6 @@ public class UserBean {
                 case BOSS:
                     new_user = new BarBoss(username, hashed_pw);
                     break;
-                case EMPLOYEE:
-                    new_user = new BarEmployee(username, hashed_pw);
-                    break;
                 default:
                     new_user = null;
                     break;

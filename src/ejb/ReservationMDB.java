@@ -23,7 +23,7 @@ import javax.persistence.PersistenceContext;
                 @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue")
         }
 )
-public class ReservationConsumerBean implements MessageListener {
+public class ReservationMDB implements MessageListener {
 
     @EJB
     ReservationCounterBean reservationCounterBean;
@@ -31,7 +31,7 @@ public class ReservationConsumerBean implements MessageListener {
     @PersistenceContext(unitName = "DorstPersistenceUnit")
     EntityManager entityManager;
 
-    public ReservationConsumerBean() {
+    public ReservationMDB() {
     }
 
     @Override

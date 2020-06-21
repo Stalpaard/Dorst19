@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 @Stateful(name = "ReservationEJB")
 @StatefulTimeout(unit = TimeUnit.MINUTES, value = 60)
-public class ReservationBean {
+public class PlaceReservationBean {
     @EJB
     ReservationCounterBean reservationCounterBean;
 
@@ -28,23 +28,24 @@ public class ReservationBean {
 
     int barId = -1;
     int menuEntryId = -1;
-    Customer customer = null; //zou uit sessioncontext moeten gehaald worden
+    String customerUsername = null; //zou uit sessioncontext moeten gehaald worden
     int amount = 0;
     float total = 0;
     boolean ready =false;
     String status = "No reservation set";
 
-    public ReservationBean()
+    public PlaceReservationBean()
     {
     }
 
-    public void setReservation(int barId, int menuEntryId, Customer customer, int amount)
+    public void setReservation(int barId, int menuEntryId, String customerUsername, int amount)
     {
         Bar bar = entityManager.find(Bar.class, barId);
         MenuEntry menuEntry = bar.getMenuEntryById(menuEntryId);
-        if(menuEntry != null && bar != null && amount > 0)
+        Customer customer = entityManager.find(Customer.class, customerUsername);
+        if(menuEntry != null && bar != null && customer != null && amount > 0)
         {
-            this.customer = customer;
+            this.customerUsername = customerUsername;
             this.barId = barId;
             this.menuEntryId = menuEntryId;
             this.amount = amount;
@@ -53,7 +54,7 @@ public class ReservationBean {
                 if(customer.getCredit() >= total)
                 {
                     ready = true;
-                    status = status = amount + " of " + bar.getMenuEntryById(menuEntryId).getItem().getName()
+                    status = amount + " of " + bar.getMenuEntryById(menuEntryId).getItem().getName()
                             + " in " + bar.getBarInfo().getName()
                             + " with total price: " + total;
                 }
@@ -81,7 +82,7 @@ public class ReservationBean {
     {
         this.barId = barId;
         this.menuEntryId = menuEntryId;
-        this.customer = null;
+        this.customerUsername = null;
         this.amount = 0;
         ready = false;
     }
@@ -95,12 +96,13 @@ public class ReservationBean {
     {
         return ready;
     }
+
     @Interceptors(LogInterceptor.class)
     public void payReservation()
     {
         //Produces ObjectMessage (needs to be serializable!) containing the ItemReservation
 
-        ReservationInfo reservationInfo = new ReservationInfo(barId, menuEntryId, customer.getUsername(), amount);
+        ReservationInfo reservationInfo = new ReservationInfo(barId, menuEntryId, customerUsername, amount);
 
         try {
             Connection conn = queue.createConnection();
@@ -117,41 +119,6 @@ public class ReservationBean {
             System.out.println(e);
             status = "Exception occurred, please try again";
         }
-
-
-        /*
-        Bar bar = entityManager.find(Bar.class, barId);
-        MenuEntry menuEntry = bar.getMenuEntryById(menuEntryId);
-        if(bar != null && menuEntry != null && ready)
-        {
-            if(menuEntry.getStock() >= amount)
-            {
-                ItemReservation success = bar.addReservation(customer, menuEntryId, amount);
-                if(success != null)
-                {
-                    customer.setCredit(customer.getCredit() - (menuEntry.getPrice()*amount));
-                    customer.addReservation(success);
-                    entityManager.merge(customer);
-                    entityManager.merge(bar);
-                    reservationCounterBean.incReservationsDone();
-                    status = "Reservation complete";
-                    reset();
-                    return true;
-                }
-                else
-                {
-                    status = "Payment failed: failed to create reservation";
-                    reset();
-                }
-            }
-            else
-            {
-                status = "Payment failed: out of stock now";
-                reset();
-            }
-        }
-        return false;
-        */
 
     }
 }
