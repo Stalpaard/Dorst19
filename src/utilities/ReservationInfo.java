@@ -1,5 +1,6 @@
 package utilities;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 public class ReservationInfo implements Serializable {

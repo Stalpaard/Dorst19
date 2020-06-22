@@ -9,8 +9,11 @@ import jpa.entities.*;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +57,11 @@ public class CafeManagedBean implements Serializable {
         Set<MenuEntry> menu = barManagementBean.getMenu();
         for(MenuEntry m : menu) s = s + " " + m.getId() + m.getItem().getName();
         return s;
+    }
+
+    public void xmlMenuRedirect() throws IOException {
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        externalContext.redirect("http://localhost:8080/Dorst19/resources/menu/" + managedCafeId);
     }
 
     public String stringOfAllCafes() {

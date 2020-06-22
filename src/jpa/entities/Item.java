@@ -1,8 +1,12 @@
 package jpa.entities;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
+@XmlRootElement
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Item {
     @Id @GeneratedValue
@@ -15,7 +19,7 @@ public abstract class Item {
     {
 
     }
-
+    @XmlTransient
     public int getId() {
         return id;
     }
@@ -24,7 +28,7 @@ public abstract class Item {
     {
         this.name = name;
     }
-
+    @XmlElement
     public String getName() {
         return name;
     }
