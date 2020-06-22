@@ -17,7 +17,7 @@ public class TimerBean {
     @EJB
     QueryBean queryBean;
 
-    final static float giftAmount = 10;
+    final static float giftAmount = 10.0f;
 
     @Schedule(dayOfMonth="1", hour = "0", persistent = false)
     public void giftCredit()

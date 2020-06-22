@@ -134,6 +134,15 @@ public class UserManagedBean implements Serializable {
         if(amountToAdd > 0) userBean.addCreditToUser((Customer)getUser(), amountToAdd);
     }
 
+
+
+
+
+
+
+
+
+
     public UserType getUserType() {
         return userType;
     }

@@ -7,13 +7,8 @@ import jpa.embeddables.Address;
 import jpa.embeddables.BarInfo;
 import jpa.entities.*;
 
-import javax.annotation.ManagedBean;
-import javax.ejb.DependsOn;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.annotation.ManagedProperty;
-import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -117,10 +112,7 @@ public class CafeManagedBean implements Serializable {
 
     public String manageCafe() {
         //Om de named query te testen heb ik het zo gedaan
-        if(managedCafeId > -1)
-        {
-            if(barManagementBean.attachBar(managedCafeId)) return "cafemanagement";
-        }
+        if(barManagementBean.attachBar(managedCafeId)) return "cafemanagement";
         return "boss";
     }
 
@@ -129,11 +121,6 @@ public class CafeManagedBean implements Serializable {
         managedCafeId = -1;
         barManagementBean.detachBar();
         return "boss";
-    }
-
-    public boolean isCafeManaged()
-    {
-        return barManagementBean.isManaged();
     }
 
     public String getManagedCafeNaam()
@@ -169,6 +156,15 @@ public class CafeManagedBean implements Serializable {
             barManagementBean.addStockToMenuItem(menuEntryId, addToStock);
         }
     }
+
+
+
+
+
+
+
+
+
 
     public String getCafeNaam() {
         return cafeNaam;

@@ -1,7 +1,5 @@
 package utilities;
 
-import jpa.entities.Customer;
-
 import java.io.Serializable;
 
 public class ReservationInfo implements Serializable {

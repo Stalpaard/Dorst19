@@ -101,7 +101,6 @@ public class PlaceReservationBean {
     public void payReservation()
     {
         //Produces ObjectMessage (needs to be serializable!) containing the ItemReservation
-
         ReservationInfo reservationInfo = new ReservationInfo(barId, menuEntryId, customerUsername, amount);
 
         try {

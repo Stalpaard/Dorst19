@@ -3,12 +3,9 @@ package ejb;
 import jpa.entities.*;
 import utilities.PasswordHasher;
 import utilities.UserType;
-import utilities.jbcrypt.BCrypt;
 
-import javax.annotation.security.DeclareRoles;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -51,16 +48,6 @@ public class UserBean {
         User to_remove = entityManager.find(User.class, username);
         if(to_remove != null)
         {
-            /*
-            if(to_remove instanceof Customer)
-            {
-                for(ItemReservation reservation : ((Customer) to_remove).getReservations())
-                {
-                    if(reservation != null) removeUserReservation((Customer)to_remove, reservation.getId());
-                }
-
-            }
-            */
             entityManager.remove(to_remove);
             return true;
         }
@@ -72,7 +59,6 @@ public class UserBean {
         ItemReservation reservation = entityManager.find(ItemReservation.class, reservationId);
         if(reservation != null)
         {
-            //Customer customer = entityManager.find(Customer.class, reservation.getCustomer().getUsername());
             if(managed_customer != null)
             {
                 managed_customer.removeReservation(reservation);

@@ -10,6 +10,7 @@ import jpa.entities.MenuEntry;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -19,7 +20,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 @Named
-@SessionScoped
+@ViewScoped
 public class ReservationManagedBean implements Serializable {
 
     @EJB
@@ -111,6 +112,14 @@ public class ReservationManagedBean implements Serializable {
     {
         return placeReservationBean.getStatus();
     }
+
+
+
+
+
+
+
+
 
     public Map<String, Object> getReservationMenu() {
         return reservationMenu;

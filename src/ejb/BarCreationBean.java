@@ -5,7 +5,6 @@ import jpa.entities.Bar;
 import jpa.entities.BarBoss;
 
 import javax.ejb.Stateless;
-import javax.interceptor.Interceptor;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

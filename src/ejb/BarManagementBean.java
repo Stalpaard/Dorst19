@@ -1,16 +1,12 @@
 package ejb;
 
 import jpa.embeddables.BarInfo;
-import jpa.embeddables.TimePeriod;
 import jpa.entities.*;
 
 import javax.annotation.Resource;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.*;
-import javax.enterprise.context.SessionScoped;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
-import javax.persistence.GeneratedValue;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.io.Serializable;
@@ -26,6 +22,8 @@ public class BarManagementBean implements Serializable {
     EntityManager entityManager;
 
     private Bar managedBar = null;
+
+    private int barId = -1;
 
     @Resource
     private SessionContext ctx;
@@ -62,19 +60,25 @@ public class BarManagementBean implements Serializable {
 
 
     @PrePassivate
-    private void detachPersistenceBar()
-    {
-        if(managedBar != null) entityManager.detach(managedBar);
-    }
-
-    @PostActivate
-    private void refreshPersistenceBar()
+    private void passivateBar()
     {
         if(managedBar != null)
         {
-            managedBar = entityManager.find(Bar.class,managedBar.getId());
-            entityManager.refresh(managedBar);
+            barId = managedBar.getId();
+            entityManager.detach(managedBar);
+            managedBar = null;
         }
+        else barId = -1;
+    }
+
+    @PostActivate
+    private void activateBar()
+    {
+        if(barId > -1)
+        {
+            managedBar = entityManager.find(Bar.class, barId);
+        }
+        else managedBar = null;
     }
 
     public void removeMenuItem(int id)

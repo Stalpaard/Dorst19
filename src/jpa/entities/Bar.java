@@ -5,7 +5,6 @@ import jpa.embeddables.BarInfo;
 import utilities.DaysOfTheWeek;
 
 import javax.persistence.*;
-import java.awt.*;
 import java.io.Serializable;
 import java.util.*;
 import java.util.List;
