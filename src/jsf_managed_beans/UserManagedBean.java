@@ -1,15 +1,12 @@
 package jsf_managed_beans;
 
-import ejb.BarSoap;
 import ejb.QueryBean;
 import ejb.UserBean;
 import jpa.entities.*;
 import utilities.UserType;
-
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
-import javax.xml.ws.WebServiceRef;
 import java.io.Serializable;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;

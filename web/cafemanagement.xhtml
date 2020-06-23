@@ -20,7 +20,8 @@
     <h:form>
         <h:outputText value="&lt;br/&gt;" escape="false"/>
         <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:outputText value="#{cafeManagedBean.managedCafeNaam} menu overview: #{cafeManagedBean.stringOfManagedMenu()}"/>
+        <h:outputText value="#{cafeManagedBean.managedCafeNaam} menu overview: "/><!--#{cafeManagedBean.stringOfManagedMenu()}"/>-->
+        <h:commandButton value="XML Menu" action="#{cafeManagedBean.xmlMenuRedirect()}"/>
         <h:outputText value="&lt;br/&gt;" escape="false"/>
         <h:inputText id="drank_naam" a:placeholder="drank_naam" value="#{cafeManagedBean.drank_name}"/>
         <h:inputText id="drank_alc_percentage" a:placeholder="drank_alc_percentage" value="#{cafeManagedBean.drank_alc}"/>

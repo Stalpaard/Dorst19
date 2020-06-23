@@ -1,10 +1,13 @@
 package jpa.embeddables;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
+@XmlRootElement
 @Access(AccessType.FIELD)
 public class BarInfo implements Serializable {
     @Column(name = "name", length = 20)
@@ -22,7 +25,7 @@ public class BarInfo implements Serializable {
         this.name = name;
         this.address = address;
     }
-
+    @XmlElement
     public String getName() {
         return name;
     }
@@ -30,7 +33,7 @@ public class BarInfo implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
+    @XmlElement
     public Address getAddress() {
         return address;
     }

@@ -4,10 +4,13 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
+@XmlRootElement
 @Access(AccessType.FIELD)
 public class Address implements Serializable {
     //Huisnummer weggelaten omdat cafés meerdere huisnummers kunnen hebben => veel werk
@@ -17,7 +20,7 @@ public class Address implements Serializable {
     @Column(name = "city", length = 90)
     private String city;
 
-    protected Address()
+    public Address()
     {
 
     }
@@ -28,7 +31,7 @@ public class Address implements Serializable {
         this.street = street;
         this.city = city;
     }
-
+    @XmlElement
     public String getStreet()
     {
         return street;
@@ -38,7 +41,7 @@ public class Address implements Serializable {
     {
         this.street = street;
     }
-
+    @XmlElement
     public String getCity()
     {
         return city;
