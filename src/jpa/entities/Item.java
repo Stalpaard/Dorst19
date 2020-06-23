@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @XmlRootElement
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class Item {
+abstract public class Item {
     @Id @GeneratedValue
     @Column(name = "id")
     private int id;

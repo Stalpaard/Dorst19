@@ -25,17 +25,22 @@ public class BarSoap {
     @EJB
     QueryBean q;
 
-    public List<Item> provideMenu(int cafe)
+    public Set<MenuEntry> provideMenu(int cafe)
     {
-        List<Item> items = new ArrayList<>();
+
+
+        return  q.queryMenuFromBar(cafe);
+        /*List<Item> items = new ArrayList<>();
         Set<MenuEntry> menu = q.queryMenuFromBar(cafe);
         if (menu != null) {
             for (MenuEntry m : menu) {
                 items.add(m.getItem());
-                return items;
+
             }
+            return items;
         }
-        return null;
+        return null;*/
+
     }
 
 

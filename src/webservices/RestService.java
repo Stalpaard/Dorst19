@@ -33,7 +33,7 @@ public class RestService extends Application {
 
     @GET
     @Path("{id}")
-    @Produces(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_JSON)
     public Set<MenuEntry> getBarMenu(@PathParam("id") String id)
     {
         Bar bar = entityManager.find(Bar.class, Integer.parseInt(id));
