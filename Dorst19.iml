@@ -19,9 +19,7 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="EclipseLink" />
         <datasource-mapping>
-          <factory-entry name="Dorst19" />
           <factory-entry name="DorstPersistenceUnit" value="782ce5dc-68aa-45d2-8ab1-310901af96ff" />
-          <factory-entry name="NewPersistenceUnit" value="092daa53-731c-46a3-b353-2f8d1cfa41cb" />
         </datasource-mapping>
         <naming-strategy-map>
           <unit-entry name="DorstPersistenceUnit" />
@@ -35,6 +33,9 @@
           <root url="file://$MODULE_DIR$/src" />
         </ejbRoots>
       </configuration>
+    </facet>
+    <facet type="WebServicesClient" name="WebServices Client">
+      <configuration ws.engine="Glassfish / JAX-WS 2.2 RI / Metro 1.X / JWSDP 2.2" />
     </facet>
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
@@ -55,5 +56,6 @@
     <orderEntry type="library" exported="" name="javax.json.bind-api-1.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.201.0 - CDI: Contexts and Dependency Injection" level="application_server_libraries" />
     <orderEntry type="library" name="JBoss Weld-2.0.3" level="project" />
+    <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
   </component>
 </module>

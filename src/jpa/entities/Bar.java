@@ -5,18 +5,28 @@ import jpa.embeddables.BarInfo;
 import utilities.DaysOfTheWeek;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.*;
+import java.util.List;
 
 
 @Entity
+@NamedQueries({
+        @NamedQuery(name = "QUERY_BARS", query = "SELECT DISTINCT b FROM Bar b"),
+        @NamedQuery(name = "CHECK_EXISTING_BARS", query = "SELECT b FROM Bar b WHERE (b.barInfo = :barinfo)")
+})
 @Table(
         name = "BAR"
 )
 public class Bar implements Serializable
 {
-
-    @EmbeddedId
+    @Id @GeneratedValue
+    @Column(name = "id")
+    private int id;
+    @Embedded
     private BarInfo barInfo;
 
     @Column(name = "capacity", nullable = false)
@@ -30,32 +40,24 @@ public class Bar implements Serializable
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(
             name = "jnd_bar_boss",
-            joinColumns = {
-                    @JoinColumn(name = "name", referencedColumnName = "name"),
-                    @JoinColumn(name = "street", referencedColumnName = "street"),
-                    @JoinColumn(name = "city", referencedColumnName = "city"),
-            },
+            joinColumns = @JoinColumn(name = "bar_fk", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "boss_fk")
     )
     private List<BarBoss> bosses;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinTable(
             name = "jnd_bar_menu",
-            joinColumns = {
-                    @JoinColumn(name = "name", referencedColumnName = "name"),
-                    @JoinColumn(name = "street", referencedColumnName = "street"),
-                    @JoinColumn(name = "city", referencedColumnName = "city"),
-            },
+            joinColumns = @JoinColumn(name = "bar_fk", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "menu_entry_fk")
     )
-    private List<MenuEntry> menu;
+    private Set<MenuEntry> menu;
 
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bar")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bar", orphanRemoval = true)
     private List<Shift> shifts;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bar")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bar", orphanRemoval = true)
     private List<ItemReservation> reservations;
 
     protected Bar()
@@ -70,7 +72,7 @@ public class Bar implements Serializable
         this.bosses = new ArrayList<>();
         this.shifts = new ArrayList<>();
         this.reservations = new ArrayList<>();
-        this.menu = new ArrayList<>();
+        this.menu = new TreeSet<>();
         this.openingHours = new ArrayList<>(Collections.nCopies(7, new TimePeriod(0,0)));
         for(DaysOfTheWeek d : DaysOfTheWeek.values())
         {
@@ -132,26 +134,31 @@ public class Bar implements Serializable
         return shifts;
     }
 
-    public ItemReservation addReservation(Customer customer, Item item, int amount)
+    public ItemReservation addReservation(Customer customer, int menuEntryId, int amount)
     {
-        ItemReservation reservation = new ItemReservation(this, item, amount);
-        if(reservations.contains(reservation) == false)
+        MenuEntry menuEntry = getMenuEntryById(menuEntryId);
+        if(menuEntry.getStock() >= amount)
         {
-            boolean add_reservation_customer = reservation.setCustomer(customer);
-            boolean add_reservation = reservations.add(reservation);
-            if(add_reservation && add_reservation_customer) return reservations.get(reservations.indexOf(reservation));
+            ItemReservation reservation = new ItemReservation(this,menuEntry, amount, customer);
+            if(reservations.add(reservation))
+            {
+                menuEntry.setStock(menuEntry.getStock() - amount);
+                return  reservation;
+            }
         }
         return null;
     }
 
-    public boolean removeReservation(ItemReservation reservation)
+    private boolean removeReservation(ItemReservation reservation)
     {
-        if(reservations.contains(reservation)) {
-
-            reservation.cancelReservation();
-        }
-        else return false;
         return reservations.remove(reservation);
+    }
+
+    public boolean cancelReservation(ItemReservation reservation)
+    {
+        MenuEntry menuEntry = getMenuEntryById(reservation.getMenuEntry().getId());
+        menuEntry.setStock(menuEntry.getStock() + reservation.getAmountOfDrinks());
+        return removeReservation(reservation);
     }
 
     public List<ItemReservation> getReservations()
@@ -179,18 +186,38 @@ public class Bar implements Serializable
         return bosses.remove(boss) && remove_bar;
     }
 
-    public List<MenuEntry> getMenu() {
+    public Set<MenuEntry> getMenu() {
         return menu;
     }
 
-    public boolean addToMenu(Item item, float price, int stock) {
-        MenuEntry new_entry = new MenuEntry(item, price, stock);
-        if(menu.contains(new_entry) == false) return menu.add(new_entry);
-        else return false;
+    public MenuEntry getMenuEntryById(int id)
+    {
+        for(MenuEntry m : menu)
+        {
+            if(m.getId() == id) return m;
+        }
+        return null;
     }
 
-    public boolean removeFromMenu(MenuEntry drink) {
-        return menu.remove(drink);
+    public boolean addToMenu(Item item, float price, int stock) {
+        return menu.add(new MenuEntry(item, price, stock));
+    }
+
+    public Item removeFromMenu(int entryId) {
+
+        MenuEntry temp = getMenuEntryById(entryId);
+        if(temp != null)
+        {
+            if(menu.remove(temp))
+            {
+                return temp.getItem();
+            }
+        }
+        return null;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getCapacity() {

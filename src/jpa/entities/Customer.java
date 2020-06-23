@@ -9,7 +9,7 @@ import java.util.List;
 public class Customer extends User {
     @Column(name = "credit")
     private float credit = 0;
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "customer")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", orphanRemoval = true)
     private List<ItemReservation> reservations = new ArrayList<>();
 
     protected Customer()
@@ -32,16 +32,12 @@ public class Customer extends User {
         this.credit = credit;
     }
 
-    protected boolean addReservation(ItemReservation itemReservationEntity)
+    public boolean addReservation(ItemReservation itemReservationEntity)
     {
-        if(reservations.contains(itemReservationEntity) == false)
-        {
-            return reservations.add(itemReservationEntity);
-        }
-        return false;
+        return reservations.add(itemReservationEntity);
     }
 
-    protected boolean removeReservation(ItemReservation itemReservationEntity)
+    public boolean removeReservation(ItemReservation itemReservationEntity)
     {
         return reservations.remove(itemReservationEntity); //returns true if collection contained the reservation
     }

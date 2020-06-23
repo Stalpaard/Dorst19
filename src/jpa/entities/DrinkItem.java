@@ -4,10 +4,8 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(
-        name = "DRINK",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "alcohol_percentage", "volume"})}
-)
+@NamedQuery(name = "QUERY_DRINKS", query = "SELECT d FROM DrinkItem d WHERE (d.name = :name AND d.alcoholPercentage = :alc AND d.volume = :volume)")
+@DiscriminatorValue("D")
 public class DrinkItem extends Item{
 
     @Column(name = "alcohol_percentage", nullable = false, updatable = false) //voor existing bardrinks
@@ -39,7 +37,6 @@ public class DrinkItem extends Item{
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DrinkItem that = (DrinkItem) o;
         return  Objects.equals(name, that.name) &&

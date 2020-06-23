@@ -1,10 +1,13 @@
 package jpa.entities;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
 @Entity
 @Table(name = "USER")
+@NamedQuery(name = "QUERY_USERNAMES", query = "SELECT DISTINCT u.username FROM User u")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.CHAR)
 public abstract class User {

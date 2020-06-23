@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: eliass
+  Date: 21.06.20
+  Time: 15:43
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+
+<f:view>
+    <h:form>
+        <h:outputLabel value="Status: #{userManagedBean.loginStatus} "/>
+        <h:commandButton value="Logout" action="#{userManagedBean.logout()}"/>
+        <h:commandButton value="Remove" action="#{userManagedBean.removeUser()}"/>
+
+        <h:outputText value="&lt;br/&gt;" escape="false"/>
+
+        <h:outputText value="Reservations: #{reservationManagedBean.stringOfAllReservations}" escape="false"/>
+        <h:outputText value="&lt;br/&gt;" escape="false"/>
+        <h:outputText value="Credit: #{userManagedBean.userCredit}" escape="false"/>
+        <h:outputText value="&lt;br/&gt;" escape="false"/>
+        <h:inputText a:placeholder="add credit" value="#{userManagedBean.amountToAdd}"/>
+        <h:commandButton value="Add to credit" action="#{userManagedBean.addCredit()}"/>
+        <h:outputText value="&lt;br/&gt;" escape="false"/>
+        <h:outputText value="&lt;br/&gt;" escape="false"/>
+        <h:outputText value="Reservation Menu" escape="false"/>
+        <h:outputText value="&lt;br/&gt;" escape="false"/>
+        <h:selectOneMenu id="select_cafe_cus" value ="#{reservationManagedBean.reservationCafeId}">
+            <f:ajax event="change" update="@this" />
+            <f:selectItems id="select_cafe_map_cus" value="#{cafeManagedBean.mapAllCafes()}" />
+        </h:selectOneMenu>
+        <h:commandButton value="Load café menu" action="#{reservationManagedBean.updateReservationMenu()}"/>
+        <h:selectOneMenu id="select_menu_cus" value ="#{reservationManagedBean.reservationMenuEntryId}">
+            <f:ajax event="change" update="@this" />
+            <f:selectItems id="select_menu_map_cus" value="#{reservationManagedBean.reservationMenu}" />
+        </h:selectOneMenu>
+        <c:if test="#{reservationManagedBean.isReservationMenuLoaded()}">
+            <h:inputText id="reservation_amount" a:placeholder="amount" value="#{reservationManagedBean.reservationAmount}"/>
+        </c:if>
+        <h:outputText value="&lt;br/&gt;" escape="false"/>
+        <h:outputText value="status: #{reservationManagedBean.reservationStatus}" escape="false"/>
+        <c:if test="#{reservationManagedBean.isReservationMenuLoaded()}">
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <h:commandButton value="Prepare reservation" action="#{reservationManagedBean.prepareReservation()}"/>
+        </c:if>
+        <c:if test="#{reservationManagedBean.isReadyToPay()}">
+            <h:commandButton value="Pay reservation" action="#{reservationManagedBean.payReservation()}"/>
+        </c:if>
+        <h:outputText value="&lt;br/&gt;" escape="false"/>
+        <h:selectOneMenu id="select_res_cus" value ="#{reservationManagedBean.removeReservationId}">
+            <f:ajax event="change" update="@this" />
+            <f:selectItems id="select_res_map_cus" value="#{reservationManagedBean.userReservations}" />
+        </h:selectOneMenu>
+        <h:commandButton value="Cancel reservation" action="#{reservationManagedBean.cancelReservation()}"/>
+    </h:form>
+</f:view>
+</html>

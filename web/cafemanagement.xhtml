@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: eliass
+  Date: 21.06.20
+  Time: 16:03
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+
+<f:view>
+    <h:form>
+        <h:outputText value="&lt;br/&gt;" escape="false"/>
+        <h:outputText value="&lt;br/&gt;" escape="false"/>
+        <h:outputText value="#{cafeManagedBean.managedCafeNaam} menu overview: "/><!--#{cafeManagedBean.stringOfManagedMenu()}"/>-->
+        <h:commandButton value="XML Menu" action="#{cafeManagedBean.xmlMenuRedirect()}"/>
+        <h:outputText value="&lt;br/&gt;" escape="false"/>
+        <h:inputText id="drank_naam" a:placeholder="drank_naam" value="#{cafeManagedBean.drank_name}"/>
+        <h:inputText id="drank_alc_percentage" a:placeholder="drank_alc_percentage" value="#{cafeManagedBean.drank_alc}"/>
+        <h:inputText id="drank_volume" a:placeholder="drank_volume" value="#{cafeManagedBean.drank_vol}"/>
+        <h:inputText id="drank_prijs" a:placeholder="drank_prijs" value="#{cafeManagedBean.price}"/>
+        <h:inputText id="drank_stock" a:placeholder="drank_stock" value="#{cafeManagedBean.stock}"/>
+        <h:commandButton value="Voeg drankje toe" action="#{cafeManagedBean.addDrinkToMenu()}"/>
+        <h:outputText value="&lt;br/&gt;" escape="false"/>
+        <h:outputText value="&lt;br/&gt;" escape="false"/>
+        <h:outputText value="Menu: " escape="false"/>
+        <h:selectOneMenu id="select_drink" value ="#{cafeManagedBean.menuEntryId}">
+            <f:ajax event="change" update="@this" />
+            <f:selectItems value="#{cafeManagedBean.mapManagedMenu()}" />
+        </h:selectOneMenu>
+        <h:commandButton value="Verwijder drankje" action="#{cafeManagedBean.removeDrinkFromMenu()}"/>
+        <h:inputText id="add_stock" a:placeholder="add to stock" value="#{cafeManagedBean.addToStock}"/>
+        <h:commandButton value="Add stock to drankje" action="#{cafeManagedBean.addStockToDrink()}"/>
+        <h:outputText value="&lt;br/&gt;" escape="false"/>
+        <h:outputText value="&lt;br/&gt;" escape="false"/>
+        <h:commandButton value="unmanage cafe" action="#{cafeManagedBean.unmanageCafe()}"/>
+        <h:commandButton value="delete cafe" action="#{cafeManagedBean.removeCafe()}"/>
+    </h:form>
+</f:view>
+
+
+</html>
