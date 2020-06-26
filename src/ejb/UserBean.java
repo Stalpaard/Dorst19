@@ -63,6 +63,7 @@ public class UserBean {
             {
                 managed_customer.removeReservation(reservation);
                 Bar bar = entityManager.find(Bar.class, reservation.getBar().getId());
+                entityManager.refresh(bar);
                 if(bar != null)
                 {
                     bar.cancelReservation(reservation);
