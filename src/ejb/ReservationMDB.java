@@ -40,7 +40,6 @@ public class ReservationMDB implements MessageListener {
         try {
             ReservationInfo reservationMsg = (ReservationInfo) msg.getObject();
             Bar bar = entityManager.find(Bar.class, reservationMsg.barId);
-            entityManager.refresh(bar);
             MenuEntry menuEntry = bar.getMenuEntryById(reservationMsg.menuEntryId);
             Customer customer = entityManager.find(Customer.class, reservationMsg.customerUsername);
             if(bar != null && menuEntry != null) {
@@ -51,6 +50,7 @@ public class ReservationMDB implements MessageListener {
                         customer.addReservation(success);
                         entityManager.merge(customer);
                         entityManager.merge(bar);
+                        entityManager.flush();
                         reservationCounterBean.incReservationsDone();
                     }
                 }
