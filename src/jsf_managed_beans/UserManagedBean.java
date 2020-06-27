@@ -7,6 +7,7 @@ import utilities.UserType;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
+import java.awt.event.ActionEvent;
 import java.io.Serializable;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -48,7 +49,7 @@ public class UserManagedBean implements Serializable {
             }
             else loginStatus = "User doesn't exist";
         }
-        return "/index.xhtml";
+        return "login";
     }
 
     public boolean isLoggedIn()
@@ -62,10 +63,9 @@ public class UserManagedBean implements Serializable {
         return loginStatus;
     }
 
-    public String logout()
+    public void logout()
     {
         user = null;
-        return "/index.xhtml";
     }
 
 
@@ -81,10 +81,10 @@ public class UserManagedBean implements Serializable {
             }
             else loginStatus = "User already exists";
         }
-        return "/index.xhtml";
+        return "login";
     }
 
-    public String removeUser()
+    public void removeUser()
     {
         if(username != null && password != null)
         {
@@ -92,7 +92,6 @@ public class UserManagedBean implements Serializable {
             user = null;
             loginStatus = "User not logged in";
         }
-        return "/index.xhtml";
     }
 
     public boolean isUserBoss()

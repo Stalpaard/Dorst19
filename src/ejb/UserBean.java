@@ -96,6 +96,7 @@ public class UserBean {
 
     public User refreshUser(User user)
     {
+        if(user == null) return null;
         User retrieved = entityManager.find(User.class, user.getUsername());
         entityManager.refresh(retrieved);
         return retrieved;

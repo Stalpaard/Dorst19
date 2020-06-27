@@ -5,10 +5,8 @@
     http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
 
     <flow-definition id="customer">
-        <flow-return id="returnFromCustomerFlow">
-            <from-outcome>
-                #{userManagedBean.logout()}
-            </from-outcome>
+        <flow-return id="returnFromCustomer">
+            <from-outcome>/login.xhtml</from-outcome>
         </flow-return>
     </flow-definition>
 
