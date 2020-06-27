@@ -57,7 +57,7 @@
     <orderEntry type="library" scope="PROVIDED" name="GlassFish 5.201.0 - CDI: Contexts and Dependency Injection" level="application_server_libraries" />
     <orderEntry type="library" name="JBoss Weld-2.0.3" level="project" />
     <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
-    <orderEntry type="library" name="PrimeFaces-6.1" level="project" />
-    <orderEntry type="library" name="Validation API-2.0.1.Final" level="project" />
+    <orderEntry type="library" exported="" name="PrimeFaces-6.1" level="project" />
+    <orderEntry type="library" exported="" name="Validation API-2.0.1.Final" level="project" />
   </component>
 </module>
