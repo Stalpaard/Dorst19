@@ -18,6 +18,8 @@
 
 <f:view>
     <h:form>
+        <h:outputText value="Customerpage"/>
+        <h:outputText value="&lt;br/&gt;" escape="false"/>
         <h:outputLabel value="Status: #{userManagedBean.loginStatus} "/>
         <h:commandButton value="Logout" action="#{userManagedBean.logout()}"/>
         <h:commandButton value="Remove" action="#{userManagedBean.removeUser()}"/>

@@ -60,5 +60,6 @@
     <orderEntry type="library" name="PrimeFaces-6.1" level="project" />
     <orderEntry type="library" name="PrimeFaces-6.1" level="project" />
     <orderEntry type="library" name="PrimeFaces-6.1 (2)" level="project" />
+    <orderEntry type="library" name="Validation API-2.0.1.Final" level="project" />
   </component>
 </module>

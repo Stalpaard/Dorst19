@@ -17,6 +17,7 @@
           <element id="library" level="project" name="Mojarra-2.4.0" />
           <element id="library" level="project" name="Java EE 6-Java EE 6" />
           <element id="library" level="project" name="PrimeFaces-6.1" />
+          <element id="library" level="project" name="Validation API-2.0.1.Final" />
         </element>
       </element>
     </root>
