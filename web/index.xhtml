@@ -9,6 +9,8 @@
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 <f:view>
    <h:form>
+      <h:outputText value="indexpage"/>
+      <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:outputLabel value="Status: #{userManagedBean.loginStatus} "/>
       <c:if test="#{userManagedBean.isLoggedIn()}">
          <h:commandButton value="Logout" action="#{userManagedBean.logout()}"/>
