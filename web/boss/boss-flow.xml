@@ -6,7 +6,7 @@
 
     <flow-definition id="boss">
                 <flow-return id="returnFromBoss">
-                    <from-outcome>/login.xhtml</from-outcome>
+                    <from-outcome>/index.xhtml</from-outcome>
                 </flow-return>
     </flow-definition>
 
