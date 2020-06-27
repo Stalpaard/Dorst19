@@ -142,24 +142,5 @@ public class BarManagementBean implements Serializable {
             if(managedBar.addToMenu(item, price, stock)) entityManager.merge(managedBar);
         }
     }
-    @Interceptors(LogInterceptor.class)
-    public boolean removeBar()
-    {
-        //Misschien op een manier nog fixen da enkel bosses hun eigen cafés kunnen verwijderen
-        //if(!ctx.isCallerInRole("boss")) throw new SecurityException("Only bosses may remove cafés");
-        if(managedBar != null)
-        {
-            managedBar = entityManager.find(Bar.class, managedBar.getId());
-            for(ItemReservation reservation : managedBar.getReservations())
-            {
-                Customer customer = entityManager.find(Customer.class, reservation.getCustomer().getUsername());
-                customer.removeReservation(reservation);
-                entityManager.merge(customer);
-            }
-            entityManager.remove(managedBar);
-            managedBar = null;
-            return true;
-        }
-        return false;
-    }
+
 }

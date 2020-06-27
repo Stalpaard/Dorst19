@@ -43,8 +43,8 @@ public class CafeManagedBean implements Serializable {
     @PositiveOrZero
     int newDrinkStock = 0;
 
-    int managedCafeId = -1;
     int menuEntryId = -1;
+
     @PositiveOrZero
     int addToStock = 0;
 
@@ -60,23 +60,13 @@ public class CafeManagedBean implements Serializable {
     @Inject
     UserManagedBean userManagedBean;
 
-    public void xmlMenuRedirect() throws IOException {
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        externalContext.redirect("http://localhost:8080/Dorst19/resources/menu/" + managedCafeId);
-    }
-
-    public Map<String, Object> mapOwnedCafes()
+    public List<Bar> getOwnedCafes()
     {
-        Map<String,Object> ownedBarsMap = new TreeMap<>();
         BarBoss boss = null;
         List<Bar> ownedBars = null;
         if(userManagedBean != null) boss = ((BarBoss)userManagedBean.getUser());
         if(boss != null)ownedBars = boss.getOwnedBars();
-        if(ownedBars != null)
-        {
-            for(Bar owned : ownedBars) ownedBarsMap.put(owned.getBarInfo().getName(),owned.getId());
-        }
-        return ownedBarsMap;
+        return  ownedBars;
     }
 
     public Map<String, Object> mapManagedMenu()
@@ -84,10 +74,15 @@ public class CafeManagedBean implements Serializable {
         Map<String, Object> menumap = new TreeMap<>();
         for(MenuEntry m : barManagementBean.getMenu())
         {
-            String key = m.getId() + m.getItem().getName() + " " + "stock: " + m.getStock();
+            String key = m.getId() + " " + m.getItem().getName();
             menumap.put(key, m.getId());
         }
         return menumap;
+    }
+
+    public Set<MenuEntry> getManagedMenu()
+    {
+        return barManagementBean.getMenu();
     }
 
     public void createCafe() {
@@ -100,15 +95,14 @@ public class CafeManagedBean implements Serializable {
         }
     }
 
-    public String manageCafe() {
+    public String manageCafe(int cafeId) {
         //Om de named query te testen heb ik het zo gedaan
-        if(barManagementBean.attachBar(managedCafeId)) return "boss-management";
+        if(barManagementBean.attachBar(cafeId)) return "boss-management";
         return "";
     }
 
     public String unmanageCafe()
     {
-        managedCafeId = -1;
         barManagementBean.detachBar();
         return "boss";
     }
@@ -120,11 +114,8 @@ public class CafeManagedBean implements Serializable {
         else return "";
     }
 
-    public String removeCafe() {
-        //remove attached bar
-        managedCafeId = -1;
-        barManagementBean.removeBar();
-        return "boss";
+    public void removeCafe(int cafeId) {
+        barCreationBean.removeBar(cafeId);
     }
 
 
@@ -134,9 +125,9 @@ public class CafeManagedBean implements Serializable {
         barManagementBean.addMenuItem(drinkItem, newDrinkPrice, newDrinkStock);
     }
 
-    public void removeDrinkFromMenu()
+    public void removeDrinkFromMenu(int menuEntry)
     {
-        barManagementBean.removeMenuItem(menuEntryId);
+        barManagementBean.removeMenuItem(menuEntry);
     }
 
     public void addStockToDrink()
@@ -191,14 +182,6 @@ public class CafeManagedBean implements Serializable {
 
     public void setAddToStock(int addToStock) {
         this.addToStock = addToStock;
-    }
-
-    public int getManagedCafeId() {
-        return managedCafeId;
-    }
-
-    public void setManagedCafeId(int managedCafeId) {
-        this.managedCafeId = managedCafeId;
     }
 
     public String getNewDrinkName() {
