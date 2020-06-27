@@ -16,6 +16,7 @@
           <element id="library" level="project" name="javax.json.processing-1.1.4" />
           <element id="library" level="project" name="Mojarra-2.4.0" />
           <element id="library" level="project" name="Java EE 6-Java EE 6" />
+          <element id="library" level="project" name="PrimeFaces-6.1" />
         </element>
       </element>
     </root>
