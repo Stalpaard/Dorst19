@@ -6,7 +6,25 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:form>
+   <p:growl id="messages"/>
+
+   <p:menubar>
+      <p:submenu label="File" icon="pi pi-file">
+         <p:submenu label="New" icon="pi pi-briefcase">
+            <p:menuitem value="Project" url="#" />
+            <p:menuitem value="Other" url="#" />
+         </p:submenu>
+         <p:menuitem value="Open" url="#" />
+         <p:separator />
+         <p:menuitem value="Quit" url="#" />
+      </p:submenu>
+   </p:menubar>
+</h:form>
+
 <f:view>
    <h:form>
       <h:outputText value="indexpage"/>
