@@ -2,6 +2,7 @@ package jsf_managed_beans;
 
 import ejb.QueryBean;
 import ejb.ReservationCounterBean;
+import ejb.TimerBean;
 import jpa.embeddables.BarInfo;
 import jpa.entities.Bar;
 import jpa.entities.MenuEntry;
@@ -19,6 +20,9 @@ public class UtilityManagedBean {
 
     @EJB
     QueryBean queryBean;
+
+    @EJB
+    TimerBean timerBean;
 
     @EJB
     ReservationCounterBean reservationCounterBean;
@@ -66,6 +70,16 @@ public class UtilityManagedBean {
     public int getGlobalAmountOfReservations()
     {
         return reservationCounterBean.getReservationsDone();
+    }
+
+    public String giftDatesString()
+    {
+        String giftDates = "";
+        for(Date d : timerBean.getNextGiftDates())
+        {
+            giftDates = giftDates + d.toString() + "\t";
+        }
+        return giftDates;
     }
 
     public List<Bar> queryBars()
