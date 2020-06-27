@@ -31,7 +31,6 @@ public class QueryBean {
         Bar findBar = entityManager.find(Bar.class, barId);
         if(findBar != null)
         {
-            //entityManager.detach(findBar);
             return findBar.getMenu();
         }
         return null;

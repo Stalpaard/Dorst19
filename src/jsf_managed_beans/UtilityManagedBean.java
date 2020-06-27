@@ -1,6 +1,7 @@
 package jsf_managed_beans;
 
 import ejb.QueryBean;
+import ejb.ReservationCounterBean;
 import jpa.embeddables.BarInfo;
 import jpa.entities.Bar;
 import jpa.entities.MenuEntry;
@@ -18,6 +19,9 @@ public class UtilityManagedBean {
 
     @EJB
     QueryBean queryBean;
+
+    @EJB
+    ReservationCounterBean reservationCounterBean;
 
     public Map<String, Object> mapAllCafes() {
         Map<String, Object> cafeMap = new TreeMap<>();
@@ -57,6 +61,11 @@ public class UtilityManagedBean {
         String s = "";
         for(String u : queryBean.queryUsers()) s = s + " " + u;
         return s;
+    }
+
+    public int getGlobalAmountOfReservations()
+    {
+        return reservationCounterBean.getReservationsDone();
     }
 
     public List<Bar> queryBars()
