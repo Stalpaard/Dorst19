@@ -11,7 +11,6 @@ import java.util.Objects;
         name = "MENU_ENTRY"
 )
 @NamedQuery(name = "CHECK_DRINK_REF", query = "SELECT m FROM MenuEntry m WHERE m.item.id = :id")
-//@NamedQuery(name = "CHECK_EXISTING_MENU", query = "SELECT m FROM MenuEntry m WHERE (b.barInfo = :barinfo)")
 @XmlRootElement
 public class MenuEntry {
     @Id @GeneratedValue

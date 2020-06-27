@@ -68,6 +68,7 @@ public class UserBean {
                     bar.cancelReservation(reservation);
                     entityManager.merge(managed_customer);
                     entityManager.merge(bar);
+                    entityManager.flush();
                 }
             }
         }
