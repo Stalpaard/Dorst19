@@ -38,11 +38,11 @@ public class LoginFilter implements Filter {
             // the user is already logged in and he's trying to login again
             // then forwards to the admin's homepage
             if (userManagedBean.isUserCustomer()) {
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/customer.xhtml");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/customer");
                 dispatcher.forward(request, response);
             }
             if (userManagedBean.isUserBoss()) {
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/boss.xhtml");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/boss");
                 dispatcher.forward(request, response);
             }
 
