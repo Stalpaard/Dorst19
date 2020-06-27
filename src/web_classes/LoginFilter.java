@@ -34,17 +34,18 @@ public class LoginFilter implements Filter {
 
         boolean isLoginRequest = httpRequest.getRequestURI().equals(loginURI);
 
-        boolean isLoginPage = httpRequest.getRequestURI().endsWith("login.xhtml");
+        boolean isLoginPage = httpRequest.getRequestURI().endsWith("/login.xhtml");
 
         if (userManagedBean.isLoggedIn() && (isLoginRequest || isLoginPage)) {
             // the user is already logged in and he's trying to login again
             // then forwards to the admin's homepage
             if (userManagedBean.isUserCustomer()) {
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/customer");
+
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/customer.xhtml");
                 dispatcher.forward(request, response);
             }
             if (userManagedBean.isUserBoss()) {
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/boss");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/boss/boss.xhtml");
                 dispatcher.forward(request, response);
             }
 

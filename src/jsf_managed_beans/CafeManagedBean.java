@@ -69,8 +69,8 @@ public class CafeManagedBean implements Serializable {
     {
         Map<String,Object> ownedBarsMap = new TreeMap<>();
         BarBoss boss = null;
-        if(userManagedBean != null) boss = ((BarBoss)userManagedBean.getUser());
         List<Bar> ownedBars = null;
+        if(userManagedBean != null) boss = ((BarBoss)userManagedBean.getUser());
         if(boss != null)ownedBars = boss.getOwnedBars();
         if(ownedBars != null)
         {
