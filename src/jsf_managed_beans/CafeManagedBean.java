@@ -13,6 +13,8 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Positive;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -29,6 +31,7 @@ public class CafeManagedBean implements Serializable {
     int cafeCapaciteit = 0;
 
     String drank_name;
+    @Positive @Max(value = 100 , message = "MAX 100%")
     float drank_alc;
     float drank_vol;
     float price;
