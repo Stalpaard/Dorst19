@@ -50,6 +50,7 @@ public class ReservationMDB implements MessageListener {
                         customer.addReservation(success);
                         entityManager.merge(customer);
                         entityManager.merge(bar);
+                        entityManager.flush();
                         reservationCounterBean.incReservationsDone();
                     }
                 }

@@ -6,14 +6,15 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
 <f:view>
    <h:form>
       <h:outputText value="indexpage"/>
       <h:outputText value="&lt;br/&gt;" escape="false"/>
       <h:outputLabel value="Status: #{userManagedBean.loginStatus} "/>
       <c:if test="#{userManagedBean.isLoggedIn()}">
-         <h:commandButton value="Logout" action="#{userManagedBean.logout()}"/>
+         <p:commandButton value="Logout" action="#{userManagedBean.logout()}"/>
          <h:commandButton value="Remove" action="#{userManagedBean.removeUser()}"/>
       </c:if>
    </h:form>
@@ -32,7 +33,7 @@
             <f:ajax event="change" update="@this" />
             <f:selectItems value="#{userManagedBean.userTypes}" />
          </h:selectOneMenu>
-         <h:commandButton value="Login" action="#{userManagedBean.attemptLogin()}"/>
+         <p:commandButton value="Login" action="#{userManagedBean.attemptLogin()}"/>
          <h:commandButton value="Register" action="#{userManagedBean.createUser()}"/>
          <h:outputText value="&lt;br/&gt;" escape="false"/>
          <h:outputText value="&lt;br/&gt;" escape="false"/>
