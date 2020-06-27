@@ -14,6 +14,7 @@ import javax.faces.flow.FlowScoped;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.validation.constraints.Positive;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.Map;
@@ -42,7 +43,8 @@ public class ReservationManagedBean implements Serializable {
     int reservationCafeId = -1;
     Map<String,Object> reservationMenu;
     int reservationMenuEntryId = -1;
-    int reservationAmount = -1;
+    @Positive
+    int reservationAmount = 1;
     int removeReservationId = -1;
 
     private static DecimalFormat geldFormat = new DecimalFormat("0.00");

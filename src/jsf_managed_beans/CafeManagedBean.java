@@ -14,6 +14,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.flow.FlowScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -27,18 +30,23 @@ public class CafeManagedBean implements Serializable {
     String newCafeName = null;
     String newCafeStreet = null;
     String newCafeCity = null;
+    @PositiveOrZero
     int newCafeCapacity = 0;
 
     String newDrinkName;
-    float newDrinkAlc;
-    float newDrinkVol;
-    float newDrinkPrice;
-    int newDrinkStock;
+    @PositiveOrZero @Max(value = 100 , message = "MAX 100%")
+    float newDrinkAlc = 0;
+    @PositiveOrZero
+    float newDrinkVol = 0;
+    @PositiveOrZero
+    float newDrinkPrice= 0;
+    @PositiveOrZero
+    int newDrinkStock = 0;
 
     int managedCafeId = -1;
     int menuEntryId = -1;
-
-    int addToStock = -1;
+    @PositiveOrZero
+    int addToStock = 0;
 
     @EJB
     BarCreationBean barCreationBean;
@@ -133,10 +141,7 @@ public class CafeManagedBean implements Serializable {
 
     public void addStockToDrink()
     {
-        if(addToStock > -1)
-        {
-            barManagementBean.addStockToMenuItem(menuEntryId, addToStock);
-        }
+        barManagementBean.addStockToMenuItem(menuEntryId, addToStock);
     }
 
 

@@ -43,7 +43,7 @@ public class PlaceReservationBean {
         Bar bar = entityManager.find(Bar.class, barId);
         MenuEntry menuEntry = bar.getMenuEntryById(menuEntryId);
         Customer customer = entityManager.find(Customer.class, customerUsername);
-        if(menuEntry != null && bar != null && customer != null && amount > 0)
+        if(menuEntry != null && bar != null && customer != null)
         {
             this.customerUsername = customerUsername;
             this.barId = barId;

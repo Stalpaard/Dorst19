@@ -25,6 +25,7 @@
         <h:outputText value="&lt;br/&gt;" escape="false"/>
         <h:inputText id="drank_naam" a:placeholder="drank_naam" value="#{cafeManagedBean.newDrinkName}"/>
         <h:inputText id="drank_alc_percentage" a:placeholder="drank_alc_percentage" value="#{cafeManagedBean.newDrinkAlc}"/>
+        <h:message for="drank_alc_percentage" style="color: red"></h:message>
         <h:inputText id="drank_volume" a:placeholder="drank_volume" value="#{cafeManagedBean.newDrinkVol}"/>
         <h:inputText id="drank_prijs" a:placeholder="drank_prijs" value="#{cafeManagedBean.newDrinkPrice}"/>
         <h:inputText id="drank_stock" a:placeholder="drank_stock" value="#{cafeManagedBean.newDrinkStock}"/>
