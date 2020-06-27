@@ -48,7 +48,7 @@ public class UserManagedBean implements Serializable {
             }
             else loginStatus = "User doesn't exist";
         }
-        return "index";
+        return "/index.xhtml";
     }
 
     public boolean isLoggedIn()
@@ -65,14 +65,9 @@ public class UserManagedBean implements Serializable {
     public String logout()
     {
         user = null;
-        return "index";
+        return "/index.xhtml";
     }
 
-    public String stringOfAllUsers(){
-        String s = "";
-        for(String u : queryBean.queryUsers()) s = s + " " + u;
-        return s;
-    }
 
     public String createUser()
     {
@@ -86,7 +81,7 @@ public class UserManagedBean implements Serializable {
             }
             else loginStatus = "User already exists";
         }
-        return "index";
+        return "/index.xhtml";
     }
 
     public String removeUser()
@@ -97,7 +92,7 @@ public class UserManagedBean implements Serializable {
             user = null;
             loginStatus = "User not logged in";
         }
-        return "index";
+        return "/index.xhtml";
     }
 
     public boolean isUserBoss()
@@ -110,16 +105,6 @@ public class UserManagedBean implements Serializable {
     {
         if(getUser() != null) return user instanceof Customer;
         else return false;
-    }
-
-    public Map<String, Object> getUserTypes()
-    {
-        Map<String,Object> userTypes = new LinkedHashMap<>();
-        for(UserType type : UserType.values())
-        {
-            userTypes.put(type.name(), type);
-        }
-        return userTypes;
     }
 
     public String getUserCredit()

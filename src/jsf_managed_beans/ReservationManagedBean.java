@@ -10,6 +10,7 @@ import jpa.entities.MenuEntry;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.flow.FlowScoped;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -20,7 +21,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 @Named
-@ViewScoped
+@FlowScoped("customer")
 public class ReservationManagedBean implements Serializable {
 
     @EJB

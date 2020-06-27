@@ -11,6 +11,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.flow.FlowScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.IOException;
@@ -21,18 +22,18 @@ import java.util.Set;
 import java.util.TreeMap;
 
 @Named
-@SessionScoped
+@FlowScoped("boss")
 public class CafeManagedBean implements Serializable {
-    String cafeNaam = null;
-    String cafeStraat = null;
-    String cafeStad = null;
-    int cafeCapaciteit = 0;
+    String newCafeName = null;
+    String newCafeStreet = null;
+    String newCafeCity = null;
+    int newCafeCapacity = 0;
 
-    String drank_name;
-    float drank_alc;
-    float drank_vol;
-    float price;
-    int stock;
+    String newDrinkName;
+    float newDrinkAlc;
+    float newDrinkVol;
+    float newDrinkPrice;
+    int newDrinkStock;
 
     int managedCafeId = -1;
     int menuEntryId = -1;
@@ -51,36 +52,9 @@ public class CafeManagedBean implements Serializable {
     @Inject
     UserManagedBean userManagedBean;
 
-    public String stringOfManagedMenu()
-    {
-        String s = "";
-        Set<MenuEntry> menu = barManagementBean.getMenu();
-        for(MenuEntry m : menu) s = s + " " + m.getId() + m.getItem().getName();
-        return s;
-    }
-
     public void xmlMenuRedirect() throws IOException {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         externalContext.redirect("http://localhost:8080/Dorst19/resources/menu/" + managedCafeId);
-    }
-
-    public String stringOfAllCafes() {
-        String s = "";
-        for (Bar b : queryBean.queryBars()) {
-            BarInfo info = b.getBarInfo();
-            s = s + info.getName() + " in " + info.getAddress().getStreet() + ", " + info.getAddress().getCity() + " | ";
-        }
-        return s;
-    }
-
-    public Map<String, Object> mapAllCafes() {
-        Map<String, Object> cafeMap = new TreeMap<>();
-        for (Bar b : queryBean.queryBars()) {
-            BarInfo barInfo = b.getBarInfo();
-            String key = barInfo.getName() + barInfo.getAddress().getCity() + barInfo.getAddress().getStreet();
-            cafeMap.put(key, b.getId());
-        }
-        return cafeMap;
     }
 
     public Map<String, Object> mapOwnedCafes()
@@ -112,16 +86,16 @@ public class CafeManagedBean implements Serializable {
         User user = null;
         if(userManagedBean != null) user = userManagedBean.getUser();
         if(user != null) {
-            Address address = new Address(cafeStraat, cafeStad);
-            BarInfo barInfo = new BarInfo(cafeNaam, address);
-            barCreationBean.createBar((BarBoss)userManagedBean.getUser(), barInfo, cafeCapaciteit);
+            Address address = new Address(newCafeStreet, newCafeCity);
+            BarInfo barInfo = new BarInfo(newCafeName, address);
+            barCreationBean.createBar((BarBoss)userManagedBean.getUser(), barInfo, newCafeCapacity);
         }
     }
 
     public String manageCafe() {
         //Om de named query te testen heb ik het zo gedaan
-        if(barManagementBean.attachBar(managedCafeId)) return "cafemanagement";
-        return "boss";
+        if(barManagementBean.attachBar(managedCafeId)) return "boss-management";
+        return "";
     }
 
     public String unmanageCafe()
@@ -142,14 +116,14 @@ public class CafeManagedBean implements Serializable {
         //remove attached bar
         managedCafeId = -1;
         barManagementBean.removeBar();
-        return "boss?faces-redirect = true";
+        return "boss";
     }
 
 
     public void addDrinkToMenu()
     {
-        DrinkItem drinkItem = new DrinkItem(drank_name, drank_alc, drank_vol);
-        barManagementBean.addMenuItem(drinkItem, price, stock);
+        DrinkItem drinkItem = new DrinkItem(newDrinkName, newDrinkAlc, newDrinkVol);
+        barManagementBean.addMenuItem(drinkItem, newDrinkPrice, newDrinkStock);
     }
 
     public void removeDrinkFromMenu()
@@ -174,36 +148,36 @@ public class CafeManagedBean implements Serializable {
 
 
 
-    public String getCafeNaam() {
-        return cafeNaam;
+    public String getNewCafeName() {
+        return newCafeName;
     }
 
-    public void setCafeNaam(String cafeNaam) {
-        this.cafeNaam = cafeNaam;
+    public void setNewCafeName(String newCafeName) {
+        this.newCafeName = newCafeName;
     }
 
-    public String getCafeStraat() {
-        return cafeStraat;
+    public String getNewCafeStreet() {
+        return newCafeStreet;
     }
 
-    public void setCafeStraat(String cafeStraat) {
-        this.cafeStraat = cafeStraat;
+    public void setNewCafeStreet(String newCafeStreet) {
+        this.newCafeStreet = newCafeStreet;
     }
 
-    public String getCafeStad() {
-        return cafeStad;
+    public String getNewCafeCity() {
+        return newCafeCity;
     }
 
-    public void setCafeStad(String cafeStad) {
-        this.cafeStad = cafeStad;
+    public void setNewCafeCity(String newCafeCity) {
+        this.newCafeCity = newCafeCity;
     }
 
-    public int getCafeCapaciteit() {
-        return cafeCapaciteit;
+    public int getNewCafeCapacity() {
+        return newCafeCapacity;
     }
 
-    public void setCafeCapaciteit(int cafeCapaciteit) {
-        this.cafeCapaciteit = cafeCapaciteit;
+    public void setNewCafeCapacity(int newCafeCapacity) {
+        this.newCafeCapacity = newCafeCapacity;
     }
 
     public int getAddToStock() {
@@ -222,28 +196,28 @@ public class CafeManagedBean implements Serializable {
         this.managedCafeId = managedCafeId;
     }
 
-    public String getDrank_name() {
-        return drank_name;
+    public String getNewDrinkName() {
+        return newDrinkName;
     }
 
-    public void setDrank_name(String drank_name) {
-        this.drank_name = drank_name;
+    public void setNewDrinkName(String newDrinkName) {
+        this.newDrinkName = newDrinkName;
     }
 
-    public float getDrank_alc() {
-        return drank_alc;
+    public float getNewDrinkAlc() {
+        return newDrinkAlc;
     }
 
-    public void setDrank_alc(float drank_alc) {
-        this.drank_alc = drank_alc;
+    public void setNewDrinkAlc(float newDrinkAlc) {
+        this.newDrinkAlc = newDrinkAlc;
     }
 
-    public float getDrank_vol() {
-        return drank_vol;
+    public float getNewDrinkVol() {
+        return newDrinkVol;
     }
 
-    public void setDrank_vol(float drank_vol) {
-        this.drank_vol = drank_vol;
+    public void setNewDrinkVol(float newDrinkVol) {
+        this.newDrinkVol = newDrinkVol;
     }
 
     public int getMenuEntryId() {
@@ -254,20 +228,20 @@ public class CafeManagedBean implements Serializable {
         this.menuEntryId = menuEntryId;
     }
 
-    public float getPrice() {
-        return price;
+    public float getNewDrinkPrice() {
+        return newDrinkPrice;
     }
 
-    public void setPrice(float price) {
-        this.price = price;
+    public void setNewDrinkPrice(float newDrinkPrice) {
+        this.newDrinkPrice = newDrinkPrice;
     }
 
-    public int getStock() {
-        return stock;
+    public int getNewDrinkStock() {
+        return newDrinkStock;
     }
 
-    public void setStock(int stock) {
-        this.stock = stock;
+    public void setNewDrinkStock(int newDrinkStock) {
+        this.newDrinkStock = newDrinkStock;
     }
 
     public BarCreationBean getBarCreationBean() {

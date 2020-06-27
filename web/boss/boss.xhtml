@@ -24,10 +24,10 @@
 
         <h:outputText value="&lt;br/&gt;" escape="false"/>
 
-        <h:inputText id="cafenaam" a:placeholder="cafenaam" value="#{cafeManagedBean.cafeNaam}"/>
-        <h:inputText id="cafestraat" a:placeholder="cafestraat" value="#{cafeManagedBean.cafeStraat}"/>
-        <h:inputText id="cafestad" a:placeholder="cafestad" value="#{cafeManagedBean.cafeStad}"/>
-        <h:inputText id="cafecapacitiet" a:placeholder="cafecapaciteit" value="#{cafeManagedBean.cafeCapaciteit}"/>
+        <h:inputText id="cafenaam" a:placeholder="cafenaam" value="#{cafeManagedBean.newCafeName}"/>
+        <h:inputText id="cafestraat" a:placeholder="cafestraat" value="#{cafeManagedBean.newCafeStreet}"/>
+        <h:inputText id="cafestad" a:placeholder="cafestad" value="#{cafeManagedBean.newCafeCity}"/>
+        <h:inputText id="cafecapacitiet" a:placeholder="cafecapaciteit" value="#{cafeManagedBean.newCafeCapacity}"/>
         <h:outputText value="&lt;br/&gt;" escape="false"/>
         <h:commandButton value="create cafe nuu" action="#{cafeManagedBean.createCafe()}"/>
         <h:outputText value="&lt;br/&gt;" escape="false"/>
