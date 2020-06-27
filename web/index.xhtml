@@ -9,21 +9,15 @@
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
 
-<h:form>
-   <p:growl id="messages"/>
+<p:dataTable var="car" value="#{cafeManagedBean.cars}">
+   <p:column headerText="Id">
+      <h:outputText value="#{car.id}" />
+   </p:column>
 
-   <p:menubar>
-      <p:submenu label="File" icon="pi pi-file">
-         <p:submenu label="New" icon="pi pi-briefcase">
-            <p:menuitem value="Project" url="#" />
-            <p:menuitem value="Other" url="#" />
-         </p:submenu>
-         <p:menuitem value="Open" url="#" />
-         <p:separator />
-         <p:menuitem value="Quit" url="#" />
-      </p:submenu>
-   </p:menubar>
-</h:form>
+   <p:column headerText="Year">
+      <h:outputText value="#{car.year}" />
+   </p:column>
+</p:dataTable>
 
 <f:view>
    <h:form>
