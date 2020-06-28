@@ -18,8 +18,13 @@
         <h:outputText value="Bosspage"/>
         <h:outputText value="&lt;br/&gt;" escape="false"/>
         <h:outputLabel value="Status: #{userManagedBean.loginStatus} "/>
-        <h:commandButton value="Logout" action="#{userManagedBean.logout()}"/>
-        <h:commandButton value="Remove" action="#{userManagedBean.removeUser()}"/>
+        <h:commandButton value="Logout" action="returnFromBoss">
+            <f:actionListener binding="#{userManagedBean.logout()}"/>
+        </h:commandButton>
+
+        <h:commandButton value="Remove" action="returnFromBoss">
+            <f:actionListener binding="#{userManagedBean.removeUser()}"/>
+        </h:commandButton>
 
         <h:outputText value="&lt;br/&gt;" escape="false"/>
 

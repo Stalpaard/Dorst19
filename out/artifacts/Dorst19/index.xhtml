@@ -9,46 +9,26 @@
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
 
-<p:dataTable var="car" value="#{cafeManagedBean.cars}">
-   <p:column headerText="Id">
-      <h:outputText value="#{car.id}" />
-   </p:column>
-
-   <p:column headerText="Year">
-      <h:outputText value="#{car.year}" />
-   </p:column>
-</p:dataTable>
-
 <f:view>
-   <h:form>
-      <h:outputText value="indexpage"/>
-      <h:outputText value="&lt;br/&gt;" escape="false"/>
-      <h:outputLabel value="Status: #{userManagedBean.loginStatus} "/>
-      <c:if test="#{userManagedBean.isLoggedIn()}">
-         <h:commandButton value="Logout" action="#{userManagedBean.logout()}"/>
-         <h:commandButton value="Remove" action="#{userManagedBean.removeUser()}"/>
-      </c:if>
-   </h:form>
+   <h:head>
 
+   </h:head>
+   <h:body>
+      <p:dataTable var="bar" value="#{utilityManagedBean.getAllCafes()}">
+         <p:column headerText="Id">
+            <h:outputText value="#{bar.id}" />
+         </p:column>
 
-   <h:form>
-      <h:outputText value="&lt;br/&gt;" escape="false"/>
-      <h:outputLabel value="Users in DB: #{utilityManagedBean.stringOfAllUsers()} "/>
-      <h:outputText value="&lt;br/&gt;" escape="false"/>
-      <h:outputLabel value="Cafés in DB: #{utilityManagedBean.stringOfAllCafes()} "/>
-      <h:outputText value="&lt;br/&gt;" escape="false"/>
-      <c:if test="#{not userManagedBean.isLoggedIn()}">
-         <h:inputText id="username" a:placeholder="username" value="#{userManagedBean.username}"/>
-         <h:inputSecret id="password" a:placeholder="password" value="#{userManagedBean.password}"/>
-         <h:selectOneMenu value="#{userManagedBean.userType}">
-            <f:ajax event="change" update="@this" />
-            <f:selectItems value="#{utilityManagedBean.userTypes}" />
-         </h:selectOneMenu>
-         <h:commandButton value="Login" action="#{userManagedBean.attemptLogin()}"/>
-         <h:commandButton value="Register" action="#{userManagedBean.createUser()}"/>
+         <p:column headerText="Capacity">
+            <h:outputText value="#{bar.capacity}" />
+         </p:column>
+      </p:dataTable>
+
+      <h:form>
+         <h:outputText value="indexpage"/>
          <h:outputText value="&lt;br/&gt;" escape="false"/>
-         <h:outputText value="&lt;br/&gt;" escape="false"/>
-      </c:if>
-   </h:form>
+         <h:outputLabel value="Status: #{userManagedBean.loginStatus} "/>
+      </h:form>
+   </h:body>
 </f:view>
 </html>
