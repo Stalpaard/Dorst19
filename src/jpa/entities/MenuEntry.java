@@ -20,9 +20,8 @@ public class MenuEntry {
     @Column(name = "id", updatable = false, nullable = false)
     private int id;
 
-    @NotNull(message = "has to have an item linked to it")
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "item_fk", nullable = false)
+    @JoinColumn(name = "item_fk")
     private Item item;
 
     @PositiveOrZero(message = "cannot be negative")
