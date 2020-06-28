@@ -38,7 +38,9 @@
                 <p:outputLabel style=" font-size: 15px" value="No user is logged in" rendered="#{!userManagedBean.loggedIn}"/>
             </div>
         </div>
-        <h:form>
+        <h:form id="bossform">
+            <p:growl id="growl" showDetail="true" life="2500" />
+
             <h:outputText value="Bosspage"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
 
@@ -57,7 +59,7 @@
                 <p:inputText label = "cafeCapacity" value="#{cafeManagedBean.newCafeCapacity}"/>
                 <p:commandButton value="Create cafe" action="#{cafeManagedBean.createCafe()}"
                                  oncomplete="if (args &amp;&amp; !args.validationFailed) PF('cafeDialog').hide()"
-                                 update="cafeDataScroller"/>
+                                 update="bossform"/>
             </p:dialog>
 
 
@@ -93,7 +95,7 @@
                         <p:commandButton value="Manage" action="#{cafeManagedBean.manageCafe(cafe.id)}"/>
                     </p:outputPanel>
                     <p:outputPanel>
-                        <p:commandButton value="Delete" action="#{cafeManagedBean.removeCafe(cafe.id)}" update="cafeDataScroller">
+                        <p:commandButton value="Delete" action="#{cafeManagedBean.removeCafe(cafe.id)}" update="bossform">
                             <p:confirm header="Delete Café" message="Delete #{cafe.barInfo.name}?"/>
                         </p:commandButton>
                     </p:outputPanel>
