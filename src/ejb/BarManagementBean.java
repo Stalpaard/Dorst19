@@ -81,7 +81,7 @@ public class BarManagementBean implements Serializable {
         else managedBar = null;
     }
 
-    public void removeMenuItem(int id)
+    public boolean removeMenuItem(int id)
     {
         if(managedBar != null)
         {
@@ -96,11 +96,14 @@ public class BarManagementBean implements Serializable {
                 {
                     if(removed instanceof DrinkItem) entityManager.remove(entityManager.find(DrinkItem.class, removed_id));
                 }
+                return true;
             }
+            return false;
         }
+        return false;
     }
 
-    public void addStockToMenuItem(int menuEntryId, int amount)
+    public boolean addStockToMenuItem(int menuEntryId, int amount)
     {
         if(amount > 0 && managedBar != null)
         {
@@ -109,8 +112,10 @@ public class BarManagementBean implements Serializable {
             {
                 menuEntry.setStock(menuEntry.getStock() + amount);
                 entityManager.merge(managedBar);
+                return true;
             }
         }
+        return false;
     }
 
     public Set<MenuEntry> getMenu()
@@ -122,7 +127,7 @@ public class BarManagementBean implements Serializable {
         return null;
     }
 
-    public void addMenuItem(Item item, float price, int stock)
+    public boolean addMenuItem(Item item, float price, int stock)
     {
         if(managedBar != null)
         {
@@ -139,8 +144,14 @@ public class BarManagementBean implements Serializable {
                     if(item instanceof DrinkItem) item = entityManager.find(DrinkItem.class, resultList.get(0).getId());
                 }
             }
-            if(managedBar.addToMenu(item, price, stock)) entityManager.merge(managedBar);
+            if(managedBar.addToMenu(item, price, stock))
+            {
+                entityManager.merge(managedBar);
+                return true;
+            }
+            else return false;
         }
+        return false;
     }
 
 }
