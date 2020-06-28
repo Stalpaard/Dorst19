@@ -60,9 +60,9 @@
          </h:panelGrid>
       </p:dataScroller>
       -->
-      <div style="height: 200px; overflow: auto;">
+      <div class="cafeTable">
          <h:form>
-            <p:dataTable lazy="false" var="bar" value="#{utilityManagedBean.getAllCafes()}" widgetVar="barsTable"
+            <p:dataTable lazy="false" var="bar" value="#{utilityManagedBean.getAllCafes()}" widgetVar="barsTable" stickyHeader="true" stickyTopAt=".layout-topbar"
                          emptyMessage="No bars found with given criteria"> <!-- filteredValue="#{dtFilterView.filteredBars}" globalFilterFunction="#{dtFilterView.globalFilterFunction}" value="#{dtFilterView.bars}"> -->
                <f:facet name="header">
                   <p:outputPanel>

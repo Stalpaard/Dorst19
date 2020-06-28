@@ -6,3 +6,8 @@
     display:none;
     visibility:hidden;
 }
+.cafeTable
+{
+    height: 620px;
+    overflow: auto;
+}
