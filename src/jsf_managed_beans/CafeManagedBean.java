@@ -45,8 +45,8 @@ public class CafeManagedBean implements Serializable {
 
     int menuEntryId = -1;
 
-    @PositiveOrZero
-    int addToStock = 0;
+    @Positive(message = "Stock additions have to be greater than zero")
+    int addToStock = 1;
 
     @EJB
     BarCreationBean barCreationBean;

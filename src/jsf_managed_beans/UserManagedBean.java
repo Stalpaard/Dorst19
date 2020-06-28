@@ -65,6 +65,8 @@ public class UserManagedBean implements Serializable {
 
     public void logout()
     {
+        username = null;
+        password = null;
         user = null;
     }
 
