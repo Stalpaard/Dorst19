@@ -32,6 +32,7 @@
             <p:outputLabel style=" font-size: 15px" value="No user is logged in" rendered="#{!userManagedBean.loggedIn}"/>
          </div>
       </div>
+      <!--
       <p:dataScroller value="#{utilityManagedBean.getAllCafes()}" var="bar" chunkSize="10">
          <f:facet name="header">
             Scroll Down to Load More Bars
@@ -58,21 +59,31 @@
             </p:outputPanel>
          </h:panelGrid>
       </p:dataScroller>
-      <p:dataTable var="bar" value="#{utilityManagedBean.getAllCafes()}">
-         <p:column headerText="Id">
-            <h:outputText value="#{bar.id}" />
-         </p:column>
+      -->
+      <div style="height: 200px; overflow: auto;">
+         <h:form>
+            <p:dataTable lazy="false" var="bar" value="#{utilityManagedBean.getAllCafes()}" widgetVar="barsTable"
+                         emptyMessage="No bars found with given criteria"> <!-- filteredValue="#{dtFilterView.filteredBars}" globalFilterFunction="#{dtFilterView.globalFilterFunction}" value="#{dtFilterView.bars}"> -->
+               <f:facet name="header">
+                  <p:outputPanel>
+                     <h:outputText value="Search all:" />
+                     <p:inputText id="globalFilter" onkeyup="PF('barsTable').filter()" style="width:150px" placeholder="Enter keyword"/>
+                  </p:outputPanel>
+               </f:facet>
+               <p:column headerText="Name" filterBy="#{bar.barInfo.name}" filterStyleClass="hide">
+                  <h:outputText value="#{bar.barInfo.name}" />
+               </p:column>
 
-         <p:column headerText="Capacity">
-            <h:outputText value="#{bar.capacity}" />
-         </p:column>
-      </p:dataTable>
+               <p:column headerText="Address" filterBy="#{bar.barInfo.address.street}, #{bar.barInfo.address.city}" filterStyleClass="hide">
+                  <h:outputText value="#{bar.barInfo.address.street}, #{bar.barInfo.address.city}" />
+               </p:column>
 
-      <h:form>
-         <h:outputText value="indexpage"/>
-         <h:outputText value="&lt;br/&gt;" escape="false"/>
-         <h:outputLabel value="Status: #{userManagedBean.loginStatus} "/>
-      </h:form>
+               <p:column headerText="Capacity" filterBy="#{bar.capacity}" filterStyleClass="hide">
+                  <h:outputText value="#{bar.capacity}" />
+               </p:column>
+            </p:dataTable>
+         </h:form>
+      </div>
    </h:body>
 </f:view>
 </html>
