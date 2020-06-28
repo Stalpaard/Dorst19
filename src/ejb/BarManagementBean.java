@@ -122,7 +122,7 @@ public class BarManagementBean implements Serializable {
         return null;
     }
 
-    public void addMenuItem(Item item, float price, int stock)
+    public boolean addMenuItem(Item item, float price, int stock)
     {
         if(managedBar != null)
         {
@@ -139,8 +139,14 @@ public class BarManagementBean implements Serializable {
                     if(item instanceof DrinkItem) item = entityManager.find(DrinkItem.class, resultList.get(0).getId());
                 }
             }
-            if(managedBar.addToMenu(item, price, stock)) entityManager.merge(managedBar);
+            if(managedBar.addToMenu(item, price, stock))
+            {
+                entityManager.merge(managedBar);
+                return true;
+            }
+            else return false;
         }
+        return false;
     }
 
 }

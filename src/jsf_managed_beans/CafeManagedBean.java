@@ -8,8 +8,7 @@ import jpa.embeddables.BarInfo;
 import jpa.entities.*;
 
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
-import javax.faces.context.ExternalContext;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.flow.FlowScoped;
 import javax.inject.Inject;
@@ -17,7 +16,6 @@ import javax.inject.Named;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +40,8 @@ public class CafeManagedBean implements Serializable {
     float newDrinkPrice= 0;
     @PositiveOrZero(message = "Stock can't be negative")
     int newDrinkStock = 0;
+
+    private boolean menuNotEmpty = true;
 
     int menuEntryId = -1;
 
@@ -72,10 +72,14 @@ public class CafeManagedBean implements Serializable {
     public Map<String, Object> mapManagedMenu()
     {
         Map<String, Object> menumap = new TreeMap<>();
-        for(MenuEntry m : barManagementBean.getMenu())
+        Set<MenuEntry> barMenu = barManagementBean.getMenu();
+        if(!(barMenu.isEmpty()) && barMenu != null)
         {
-            String key = m.getId() + " " + m.getItem().getName();
-            menumap.put(key, m.getId());
+            for(MenuEntry m : barMenu)
+            {
+                String key = m.getId() + " " + m.getItem().getName();
+                menumap.put(key, m.getId());
+            }
         }
         return menumap;
     }
@@ -83,6 +87,14 @@ public class CafeManagedBean implements Serializable {
     public Set<MenuEntry> getManagedMenu()
     {
         return barManagementBean.getMenu();
+    }
+
+    public void checkMenuEmpty()
+    {
+        if(barManagementBean.getMenu().isEmpty())
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Stock", "Menu is empty"));
+        }
     }
 
     public void createCafe() {
@@ -97,7 +109,12 @@ public class CafeManagedBean implements Serializable {
 
     public String manageCafe(int cafeId) {
         //Om de named query te testen heb ik het zo gedaan
-        if(barManagementBean.attachBar(cafeId)) return "boss-management";
+        if(barManagementBean.attachBar(cafeId))
+        {
+            if(barManagementBean.getMenu().isEmpty()) menuNotEmpty = false;
+            else menuNotEmpty = true;
+            return "boss-management";
+        }
         return "";
     }
 
@@ -122,12 +139,14 @@ public class CafeManagedBean implements Serializable {
     public void addDrinkToMenu()
     {
         DrinkItem drinkItem = new DrinkItem(newDrinkName, newDrinkAlc, newDrinkVol);
-        barManagementBean.addMenuItem(drinkItem, newDrinkPrice, newDrinkStock);
+        if(barManagementBean.addMenuItem(drinkItem, newDrinkPrice, newDrinkStock) && !menuNotEmpty) menuNotEmpty = true;
     }
 
     public void removeDrinkFromMenu(int menuEntry)
     {
         barManagementBean.removeMenuItem(menuEntry);
+        if(barManagementBean.getMenu().isEmpty()) menuNotEmpty = false;
+        else menuNotEmpty = true;
     }
 
     public void addStockToDrink()
@@ -135,14 +154,19 @@ public class CafeManagedBean implements Serializable {
         barManagementBean.addStockToMenuItem(menuEntryId, addToStock);
     }
 
+    public void resetAddToStock()
+    {
+        addToStock = 1;
+    }
 
 
+    public boolean isMenuNotEmpty() {
+        return menuNotEmpty;
+    }
 
-
-
-
-
-
+    public void setMenuNotEmpty(boolean menuNotEmpty) {
+        this.menuNotEmpty = menuNotEmpty;
+    }
 
     public String getNewCafeName() {
         return newCafeName;
