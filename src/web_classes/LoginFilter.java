@@ -16,7 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 
-@WebFilter("/*")
+//@WebFilter(urlPatterns = {"/Dorst19/boss/*", "/Dorst19/customer/*"})
+//@WebFilter("/Dorst19/boss/*")
+//@WebFilter("/*")
 public class LoginFilter implements Filter {
 
     @Inject

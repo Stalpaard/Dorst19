@@ -40,6 +40,13 @@ public class UtilityManagedBean {
         return cafeMap;
     }
 
+    public List<Bar> getAllCafes() {
+        List<Bar> bars = new ArrayList<Bar>();
+        bars.addAll(queryBean.queryBars());
+        return bars;
+    }
+
+
     public String menuRedirect(int barId)
     {
         return "menuDemo.xhtml?faces-redirect=true&barId=" + barId;
