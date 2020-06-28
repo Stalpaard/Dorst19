@@ -19,7 +19,7 @@
 <f:view>
     <h:head>
         <h:outputStylesheet library="CSS_files" name="header.css"  />
-        <title>Café Management Page</title>
+        <title>#{cafeManagedBean.managedCafeNaam} Management Page</title>
     </h:head>
     <h:body>
         <div id="header" >
@@ -42,8 +42,6 @@
         <h:form id="bossform">
             <p:growl id="growl" showDetail="true" life="2500" />
 
-            <h:outputText value="#{cafeManagedBean.managedCafeNaam} Management"/>
-            <h:outputText value="&lt;br/&gt;" escape="false"/>
             <p:commandButton value="unmanage cafe" action="#{cafeManagedBean.unmanageCafe()}"/>
 
             <h:outputText value="&lt;br/&gt;" escape="false"/>
@@ -51,11 +49,23 @@
 
             <p:commandButton value="Add drink to menu" onclick="PF('drinkDialog').show();"/>
             <p:dialog header="Add a new drink" modal="true" widgetVar="drinkDialog">
-                <p:inputText label="drinkName" value="#{cafeManagedBean.newDrinkName}"/>
-                <p:inputNumber label = "drinkPercentage" decimalPlaces="1" minValue="0.0" maxValue="100.0" value="#{cafeManagedBean.newDrinkAlc}"/>
-                <p:inputNumber label = "drinkVolume" value="#{cafeManagedBean.newDrinkVol}"/>
-                <p:inputNumber label = "drinkPrice" decimalPlaces="2" minValue="0.00" value="#{cafeManagedBean.newDrinkPrice}"/>
-                <p:inputNumber label = "drinkStock" minValue="0" maxValue="2147483647" decimalPlaces="0"  value="#{cafeManagedBean.newDrinkStock}"/>
+                <p:panelGrid columns="2">
+                    <p:outputLabel value="Name: "/>
+                    <p:inputText label="drinkName" value="#{cafeManagedBean.newDrinkName}"/>
+
+                    <p:outputLabel value="Alcohol Percentage: "/>
+                    <p:inputNumber label = "drinkPercentage" decimalPlaces="1" minValue="0.0" maxValue="100.0" value="#{cafeManagedBean.newDrinkAlc}"/>
+
+                    <p:outputLabel value="Volume: "/>
+                    <p:inputNumber label = "drinkVolume" value="#{cafeManagedBean.newDrinkVol}"/>
+
+                    <p:outputLabel value="Price: "/>
+                    <p:inputNumber label = "drinkPrice" decimalPlaces="2" minValue="0.00" value="#{cafeManagedBean.newDrinkPrice}"/>
+
+                    <p:outputLabel value="Initial stock: "/>
+                    <p:inputNumber label = "drinkStock" minValue="0" maxValue="2147483647" decimalPlaces="0"  value="#{cafeManagedBean.newDrinkStock}"/>
+                </p:panelGrid>
+
                 <p:commandButton value="Add drink" action="#{cafeManagedBean.addDrinkToMenu()}" update="bossform"/>
             </p:dialog>
 

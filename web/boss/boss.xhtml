@@ -55,10 +55,19 @@
             <p:messages showDetail="true"/>
 
             <p:dialog header="Add a new cafe" modal="true" widgetVar="cafeDialog">
-                <p:inputText label="cafeName" value="#{cafeManagedBean.newCafeName}"/>
-                <p:inputText label = "cafeStreet" value="#{cafeManagedBean.newCafeStreet}"/>
-                <p:inputText label = "cafeCity" value="#{cafeManagedBean.newCafeCity}"/>
-                <p:inputNumber label = "cafeCapacity" minValue="0" maxValue="2147483647" decimalPlaces="0" value="#{cafeManagedBean.newCafeCapacity}"/>
+                <p:panelGrid columns="2">
+                    <p:outputLabel value="Name: "/>
+                    <p:inputText label="cafeName" value="#{cafeManagedBean.newCafeName}"/>
+
+                    <p:outputLabel value="Street: "/>
+                    <p:inputText label = "cafeStreet" value="#{cafeManagedBean.newCafeStreet}"/>
+
+                    <p:outputLabel value="City: "/>
+                    <p:inputText label = "cafeCity" value="#{cafeManagedBean.newCafeCity}"/>
+
+                    <p:outputLabel value="Capacity: "/>
+                    <p:inputNumber label = "cafeCapacity" minValue="1" maxValue="2147483647" decimalPlaces="0" value="#{cafeManagedBean.newCafeCapacity}"/>
+                </p:panelGrid>
                 <p:commandButton value="Create cafe" action="#{cafeManagedBean.createCafe()}" update="bossform"/>
             </p:dialog>
 
