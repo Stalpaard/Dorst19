@@ -41,7 +41,6 @@
         <h:form>
             <h:outputText value="Bosspage"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
-            <h:outputLabel value="Status: #{userManagedBean.loginStatus} "/>
 
             <p:commandButton value="Remove" action="returnFromBoss" ajax="false">
                 <f:actionListener binding="#{userManagedBean.removeUser()}"/>

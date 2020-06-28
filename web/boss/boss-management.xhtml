@@ -42,7 +42,7 @@
         <h:form>
             <h:outputText value="#{cafeManagedBean.managedCafeNaam} Management"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
-            <p:commandButton value="unmanage cafe" action="#{cafeManagedBean.unmanageCafe()}"/>
+            <p:commandButton value="unmanage cafe" action="#{cafeManagedBean.unmanageCafe()}" />
 
             <h:outputText value="&lt;br/&gt;" escape="false"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
@@ -104,7 +104,7 @@
                         </p:panelGrid>
                     </p:outputPanel>
                     <p:outputPanel>
-                        <p:commandButton value="Delete drink" action="#{cafeManagedBean.removeDrinkFromMenu(entry.id)}"/>
+                        <p:commandButton value="Delete drink" action="#{cafeManagedBean.removeDrinkFromMenu(entry.id)}" update="menuDataScroller"/>
                     </p:outputPanel>
                 </p:panelGrid>
                 <p:separator/>
