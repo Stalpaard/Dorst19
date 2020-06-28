@@ -30,17 +30,17 @@ public class CafeManagedBean implements Serializable {
     String newCafeName = null;
     String newCafeStreet = null;
     String newCafeCity = null;
-    @PositiveOrZero
+    @PositiveOrZero(message = "Cafe capacity can't be negative")
     int newCafeCapacity = 0;
 
     String newDrinkName;
-    @PositiveOrZero @Max(value = 100 , message = "MAX 100%")
+    @PositiveOrZero(message = "Alcohol percentage can't be negative") @Max(value = 100 , message = "Alcohol percentage is max 100%")
     float newDrinkAlc = 0;
-    @PositiveOrZero
-    float newDrinkVol = 0;
-    @PositiveOrZero
+    @Positive(message = "Drink volume has to be greater than 0")
+    float newDrinkVol = 1;
+    @PositiveOrZero(message = "Price can't be negative")
     float newDrinkPrice= 0;
-    @PositiveOrZero
+    @PositiveOrZero(message = "Stock can't be negative")
     int newDrinkStock = 0;
 
     int menuEntryId = -1;
