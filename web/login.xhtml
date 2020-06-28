@@ -7,34 +7,49 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 <f:view>
-    <h:head/>
+    <h:head>
+        <h:outputStylesheet library="CSS_files" name="header.css"  />
+        <title>Login/Register Page</title>
+    </h:head>
     <h:body>
+        <div id="header" >
+            <div class="header">
+                <h1>Login/Register Page</h1>
+                <p>Eentje is geentje!</p>
+            </div>
+
+            <div class="button">
+                <h:form>
+                    <p:commandButton ajax="false" action="/index?faces-redirect=true" value="Back"/>
+                </h:form>
+            </div>
+        </div>
+
         <h:form id="loginform">
-            <h:outputText value="Loginpage"/>
-            <h:outputText value="&lt;br/&gt;" escape="false"/>
             <h:outputText value="reservations done: #{utilityManagedBean.globalAmountOfReservations}"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
-            <h:outputLabel value="Status: #{userManagedBean.loginStatus} "/>
-            <c:if test="#{userManagedBean.isLoggedIn()}">
-                <h:commandButton value="Logout" action="#{userManagedBean.logout()}"/>
-                <h:commandButton value="Remove" action="#{userManagedBean.removeUser()}"/>
-            </c:if>
-
             <h:outputText value="&lt;br/&gt;" escape="false"/>
             <h:outputLabel value="Users in DB: #{utilityManagedBean.stringOfAllUsers()} "/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
             <p:messages showDetail="true"/>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
             <c:if test="#{not userManagedBean.isLoggedIn()}">
-                <h:inputText id="username" a:placeholder="username" value="#{userManagedBean.username}"/>
+                <p:inputText id="username" a:placeholder="username" value="#{userManagedBean.username}"/>
                 <h:inputSecret id="password" a:placeholder="password" value="#{userManagedBean.password}"/>
-                <h:selectOneMenu value="#{userManagedBean.userType}">
-                    <f:selectItems value="#{utilityManagedBean.userTypes}" />
-                </h:selectOneMenu>
                 <p:commandButton value="Login" action="#{userManagedBean.attemptLogin()}" update="loginform"/>
-                <p:commandButton value="Register" action="#{userManagedBean.createUser()}" update="loginform"/>
+                <p:commandButton value="Register" onclick="PF('userDialog').show();"/>
                 <h:outputText value="&lt;br/&gt;" escape="false"/>
                 <h:outputText value="&lt;br/&gt;" escape="false"/>
             </c:if>
+
+            <p:dialog header="What type of user are you registering?" modal="true" widgetVar="userDialog">
+                <p:panelGrid columns="1">
+                    <p:selectOneMenu value="#{userManagedBean.userType}">
+                        <f:selectItems value="#{utilityManagedBean.userTypes}" />
+                    </p:selectOneMenu>
+                    <p:commandButton value="Create user" action="#{userManagedBean.createUser()}" update="loginform"/>
+                </p:panelGrid>
+            </p:dialog>
         </h:form>
     </h:body>
 </f:view>
