@@ -17,72 +17,101 @@
 
 
 <f:view>
+    <h:head>
+        <h:outputStylesheet library="CSS_files" name="header.css"  />
+        <title>Café Management Page</title>
+    </h:head>
+    <h:body>
+        <div id="header" >
+            <div class="header">
+                <h1>Café Management Page</h1>
+                <p>Eentje is geentje!</p>
+            </div>
 
-    <h:form>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:outputText value="#{cafeManagedBean.managedCafeNaam} Management"/>
+            <div class="button">
+                <h:form>
+                    <p:commandButton ajax="false" actionListener="#{userManagedBean.logout()}" value="Logout" action="returnFromBoss" rendered="#{userManagedBean.loggedIn}"/>
+                    <p:commandButton ajax="false" actionListener="#{userManagedBean.attemptLogin()}" value="Login"  rendered="#{!userManagedBean.loggedIn}"/>
+                    <p:commandButton ajax="false" actionListener="#{userManagedBean.createUser()}" value="Register" rendered="#{!userManagedBean.loggedIn}"/>
+                </h:form>
 
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
+                <p:outputLabel style=" font-size: 15px" value="Status: #{userManagedBean.loginStatus}" rendered="#{userManagedBean.loggedIn}"/>
+                <p:outputLabel style=" font-size: 15px" value="No user is logged in" rendered="#{!userManagedBean.loggedIn}"/>
+            </div>
+        </div>
+        <h:form>
+            <h:outputText value="#{cafeManagedBean.managedCafeNaam} Management"/>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <p:commandButton value="unmanage cafe" action="#{cafeManagedBean.unmanageCafe()}"/>
 
-        <h:outputText value="Add a drink item to menu:"/>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:inputText label="drank naam" value="#{cafeManagedBean.newDrinkName}"/>
-        <h:inputText id="drank_alc_percentage" a:placeholder="drank_alc_percentage" value="#{cafeManagedBean.newDrinkAlc}"/>
-        <h:message for="drank_alc_percentage" style="color: red"></h:message>
-        <h:inputText id="drank_volume" a:placeholder="drank_volume" value="#{cafeManagedBean.newDrinkVol}"/>
-        <h:inputText id="drank_prijs" a:placeholder="drank_prijs" value="#{cafeManagedBean.newDrinkPrice}"/>
-        <h:inputText id="drank_stock" a:placeholder="drank_stock" value="#{cafeManagedBean.newDrinkStock}"/>
-        <h:commandButton value="Voeg drankje toe" action="#{cafeManagedBean.addDrinkToMenu()}"/>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
 
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <p:commandButton value="Add drink to menu" onclick="PF('drinkDialog').show();"/>
+            <p:dialog header="Add a new drink" widgetVar="drinkDialog">
+                <p:messages autoUpdate="true"/>
+                <p:inputText label="drinkName" value="#{cafeManagedBean.newDrinkName}"/>
+                <p:inputText label = "drinkPercentage" value="#{cafeManagedBean.newDrinkAlc}"/>
+                <p:inputText label = "drinkVolume" value="#{cafeManagedBean.newDrinkVol}"/>
+                <p:inputText label = "drinkPrice" value="#{cafeManagedBean.newDrinkPrice}"/>
+                <p:inputText label = "drinkStock" value="#{cafeManagedBean.newDrinkStock}"/>
+                <p:commandButton value="Add drink" action="#{cafeManagedBean.addDrinkToMenu()}"
+                                 oncomplete="if (args &amp;&amp; !args.validationFailed) PF('drinkDialog').hide()"
+                                 update="menuDataScroller,selectOneStock"/>
+            </p:dialog>
 
-        <h:selectOneMenu id="select_drink" value ="#{cafeManagedBean.menuEntryId}">
-            <f:ajax event="change" update="@this" />
-            <f:selectItems value="#{cafeManagedBean.mapManagedMenu()}" />
-        </h:selectOneMenu>
-        <h:inputText id="add_stock" a:placeholder="add to stock" value="#{cafeManagedBean.addToStock}"/>
-        <h:commandButton value="Add stock to item" action="#{cafeManagedBean.addStockToDrink()}"/>
 
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
 
-        <h:outputText value="Menu: " escape="false"/>
-        <p:dataScroller value="#{cafeManagedBean.managedMenu}" var="entry" chunkSize="10">
-            <h:panelGrid columns="4" style="width:100%">
-                <p:outputPanel>
-                    <h:panelGrid columns="2">
-                        <h:outputText value="Id:" />
-                        <h:outputText value="#{entry.id}" style="font-weight: bold"/>
-                    </h:panelGrid>
-                </p:outputPanel>
-                <p:outputPanel>
-                    <h:panelGrid columns="2">
-                        <h:outputText value="Name:" />
-                        <h:outputText value="#{entry.item.name}"/>
+            <p:commandButton value="Add stock to item" onclick="PF('stockDialog').show();"/>
+            <p:dialog header="Add stock to item" widgetVar="stockDialog">
+                <p:messages autoUpdate="true"/>
+                <p:selectOneMenu id="selectOneStock" value ="#{cafeManagedBean.menuEntryId}" filter="true" filterMatchMode="contains">
+                    <f:selectItems value="#{cafeManagedBean.mapManagedMenu()}" />
+                </p:selectOneMenu>
+                <p:inputText id="addToStock" value="#{cafeManagedBean.addToStock}"/>
+                <p:commandButton value="Add stock to item" action="#{cafeManagedBean.addStockToDrink()}"
+                                 oncomplete="if (args &amp;&amp; !args.validationFailed) PF('stockDialog').hide()"
+                                 update="menuDataScroller,selectOneStock"/>
+            </p:dialog>
 
-                        <h:outputText value="Price:" />
-                        <h:outputText value="#{entry.price}"/>
-                    </h:panelGrid>
-                </p:outputPanel>
-                <p:outputPanel>
-                    <h:panelGrid columns="2">
-                        <h:outputText value="Stock:" />
-                        <h:outputText value="#{entry.stock}"/>
-                    </h:panelGrid>
-                </p:outputPanel>
-                <p:outputPanel>
-                    <h:commandButton value="Delete drink" action="#{cafeManagedBean.removeDrinkFromMenu(entry.id)}"/>
-                </p:outputPanel>
-            </h:panelGrid>
-            <p:separator/>
-        </p:dataScroller>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
 
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:commandButton value="unmanage cafe" action="#{cafeManagedBean.unmanageCafe()}"/>
-    </h:form>
+            <h:outputText value="Menu: " escape="false"/>
+            <p:dataScroller id="menuDataScroller" value="#{cafeManagedBean.managedMenu}" var="entry" chunkSize="10">
+                <p:panelGrid columns="4" style="width:100%">
+                    <p:outputPanel>
+                        <p:panelGrid columns="2">
+                            <h:outputText value="Id:" />
+                            <h:outputText value="#{entry.id}" style="font-weight: bold"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                    <p:outputPanel>
+                        <p:panelGrid columns="2">
+                            <h:outputText value="Name:" />
+                            <h:outputText value="#{entry.item.name}"/>
+
+                            <h:outputText value="Price:" />
+                            <h:outputText value="#{entry.price}"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                    <p:outputPanel>
+                        <p:panelGrid columns="2">
+                            <h:outputText value="Stock:"/>
+                            <h:outputText value="#{entry.stock}" style="#{entry.stock eq 0 ? 'color: red;font-weight: bold;':'color: black;'}"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                    <p:outputPanel>
+                        <p:commandButton value="Delete drink" action="#{cafeManagedBean.removeDrinkFromMenu(entry.id)}"/>
+                    </p:outputPanel>
+                </p:panelGrid>
+                <p:separator/>
+            </p:dataScroller>
+        </h:form>
+    </h:body>
+
 </f:view>
 
 

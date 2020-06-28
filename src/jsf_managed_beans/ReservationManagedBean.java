@@ -17,6 +17,7 @@ import javax.inject.Named;
 import javax.validation.constraints.Positive;
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -91,7 +92,7 @@ public class ReservationManagedBean implements Serializable {
         placeReservationBean.payReservation();
     }
 
-    public Map<String, Object> getUserReservations()
+    public Map<String, Object> getUserReservationsMap()
     {
         Map<String, Object> reservationsMap = new TreeMap<>();
         for(ItemReservation r : ((Customer)userManagedBean.getUser()).getReservations())
@@ -99,6 +100,11 @@ public class ReservationManagedBean implements Serializable {
             reservationsMap.put(Integer.toString(r.getId()), r.getId());
         }
         return reservationsMap;
+    }
+
+    public List<ItemReservation> getUserReservations()
+    {
+        return ((Customer)userManagedBean.getUser()).getReservations();
     }
 
     public void cancelReservation()
