@@ -1,9 +1,6 @@
 package jsf_managed_beans;
 
-import ejb.QueryBean;
-import ejb.PlaceReservationBean;
-import ejb.ReservationCounterBean;
-import ejb.UserBean;
+import ejb.*;
 import jpa.entities.Customer;
 import jpa.entities.ItemReservation;
 import jpa.entities.MenuEntry;
@@ -76,7 +73,7 @@ public class ReservationManagedBean implements Serializable {
             placeReservationBean.addReservation(reservationCafeId, reservationMenuEntryId, userManagedBean.getUser().getUsername(), reservationAmount);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Reservation sent to Bar", "Refresh to see the new reservation"));
         }
-        catch (EJBException e)
+        catch (DorstException e)
         {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Reservation Failed", e.getMessage()));
         }

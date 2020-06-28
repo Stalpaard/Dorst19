@@ -60,7 +60,7 @@ public class BarCreationBean {
         else return false;
     }
 
-    private void validateBar(Bar bar) throws EJBException
+    private void validateBar(Bar bar) throws DorstException
     {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
@@ -81,7 +81,7 @@ public class BarCreationBean {
                 violationMessages.add(constraintViolation.getPropertyPath() + ": " + constraintViolation.getMessage() + "\t|\t");
             }
 
-            throw new EJBException(String.join("\n",violationMessages));
+            throw new DorstException(String.join("\n",violationMessages));
         }
     }
 }

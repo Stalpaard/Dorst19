@@ -161,7 +161,7 @@ public class BarManagementBean implements Serializable {
         return false;
     }
 
-    private void validateDrinkItem(DrinkItem drinkItem) throws EJBException
+    private void validateDrinkItem(DrinkItem drinkItem) throws DorstException
     {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
@@ -174,11 +174,11 @@ public class BarManagementBean implements Serializable {
                 violationMessages.add(constraintViolation.getPropertyPath() + ": " + constraintViolation.getMessage() + "\t|\t");
             }
 
-            throw new EJBException(String.join("\n",violationMessages));
+            throw new DorstException(String.join("\n",violationMessages));
         }
     }
 
-    private void validateMenuEntry(MenuEntry menuEntry) throws EJBException
+    private void validateMenuEntry(MenuEntry menuEntry) throws DorstException
     {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
@@ -191,8 +191,9 @@ public class BarManagementBean implements Serializable {
                 violationMessages.add(constraintViolation.getPropertyPath() + ": " + constraintViolation.getMessage() + "\t|\t");
             }
 
-            throw new EJBException(String.join("\n",violationMessages));
+            throw new DorstException(String.join("\n",violationMessages));
         }
     }
 
 }
+

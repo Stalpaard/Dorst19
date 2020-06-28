@@ -1,5 +1,6 @@
 package jsf_managed_beans;
 
+import ejb.DorstException;
 import ejb.QueryBean;
 import ejb.UserBean;
 import jpa.entities.*;
@@ -82,7 +83,7 @@ public class UserManagedBean implements Serializable {
             else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Failed to create user", "User already exists"));
             return "login";
         }
-        catch(EJBException e)
+        catch(DorstException e)
         {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Invalid credentials", e.getMessage()));
             return "login";

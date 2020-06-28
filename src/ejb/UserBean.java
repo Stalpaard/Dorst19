@@ -79,7 +79,7 @@ public class UserBean {
         }
     }
 
-    private void validateCustomer(Customer customer) throws RuntimeException
+    private void validateCustomer(Customer customer) throws DorstException
     {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Customer>> constraintViolations = validator.validate(customer);
@@ -91,11 +91,11 @@ public class UserBean {
                 violationMessages.add(constraintViolation.getPropertyPath() + ": " + constraintViolation.getMessage() + "\t|\t");
             }
 
-            throw new RuntimeException(String.join("\n",violationMessages));
+            throw new DorstException(String.join("\n",violationMessages));
         }
     }
 
-    private void validateBoss(BarBoss boss) throws RuntimeException
+    private void validateBoss(BarBoss boss) throws DorstException
     {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<BarBoss>> constraintViolations = validator.validate(boss);
@@ -107,11 +107,11 @@ public class UserBean {
                 violationMessages.add(constraintViolation.getPropertyPath() + ": " + constraintViolation.getMessage() + "\t|\t");
             }
 
-            throw new RuntimeException(String.join("\n",violationMessages));
+            throw new DorstException(String.join("\n",violationMessages));
         }
     }
 
-    private void validateUser(User user) throws RuntimeException
+    private void validateUser(User user) throws DorstException
     {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<User>> constraintViolations = validator.validate(user);
@@ -123,19 +123,19 @@ public class UserBean {
                 violationMessages.add(constraintViolation.getPropertyPath() + ": " + constraintViolation.getMessage() + "\t|\t");
             }
 
-            throw new RuntimeException(String.join("\n",violationMessages));
+            throw new DorstException(String.join("\n",violationMessages));
         }
     }
 
-    public User authenticateUser(String username, String password) throws EJBException
+    public User authenticateUser(String username, String password) throws DorstException
     {
-        if(username == null || password == null) throw new RuntimeException("Please fill in the credentials form");
+        if(username == null || password == null) throw new DorstException("Please fill in the credentials form");
         User user = entityManager.find(User.class, username);
         if(user != null)
         {
             if(PasswordHasher.checkPw(password, user.getPassword())) return user;
         }
-        else throw new EJBException("User not found");
+        else throw new DorstException("User not found");
         return null;
     }
 

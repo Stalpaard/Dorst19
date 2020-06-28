@@ -35,7 +35,7 @@ public class PlaceReservationBean {
     {
     }
 
-    public void addReservation(int barId, int menuEntryId, String customerUsername, int amount) throws EJBException
+    public void addReservation(int barId, int menuEntryId, String customerUsername, int amount) throws DorstException
     {
         Bar bar = entityManager.find(Bar.class, barId);
         MenuEntry menuEntry = bar.getMenuEntryById(menuEntryId);
@@ -54,23 +54,23 @@ public class PlaceReservationBean {
                 }
                 else
                 {
-                    throw new EJBException("Insufficient amount of credit (total: " + total + ")");
+                    throw new DorstException("Insufficient amount of credit (total: " + total + ")");
                 }
             }
             else
             {
-                throw new EJBException("Not enough stock in café");
+                throw new DorstException("Not enough stock in café");
             }
         }
         else
         {
-            throw new EJBException("Invalid reservation, try again");
+            throw new DorstException("Invalid reservation, try again");
         }
 
     }
 
     @Interceptors(LogInterceptor.class)
-    private void payReservation() throws EJBException
+    private void payReservation() throws DorstException
     {
         //Produces ObjectMessage (needs to be serializable!) containing the ItemReservation
         ReservationInfo reservationInfo = new ReservationInfo(barId, menuEntryId, customerUsername, amount);
@@ -85,7 +85,7 @@ public class PlaceReservationBean {
         }
         catch (Exception e)
         {
-            throw new EJBException(e.getMessage());
+            throw new DorstException(e.getMessage());
         }
 
     }

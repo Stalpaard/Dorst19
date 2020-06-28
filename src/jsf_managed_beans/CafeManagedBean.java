@@ -2,6 +2,7 @@ package jsf_managed_beans;
 
 import ejb.BarCreationBean;
 import ejb.BarManagementBean;
+import ejb.DorstException;
 import ejb.QueryBean;
 import jpa.embeddables.Address;
 import jpa.embeddables.BarInfo;
@@ -115,7 +116,7 @@ public class CafeManagedBean implements Serializable {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Bar already exists", "Unique name/street/city combination required"));
                 }
             }
-            catch(EJBException e)
+            catch(DorstException e)
             {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid bar details", e.getMessage()));
             }
@@ -166,7 +167,7 @@ public class CafeManagedBean implements Serializable {
             }
             else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Failed to add item","Item already in menu"));
         }
-        catch (EJBException e)
+        catch (DorstException e)
         {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Invalid item details",e.getMessage()));
         }
