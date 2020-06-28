@@ -8,6 +8,7 @@ import jpa.embeddables.BarInfo;
 import jpa.entities.*;
 
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.flow.FlowScoped;
@@ -41,7 +42,7 @@ public class CafeManagedBean implements Serializable {
     @PositiveOrZero(message = "Stock can't be negative")
     int newDrinkStock = 0;
 
-    private boolean menuNotEmpty = true;
+    private boolean menuNotEmpty = false;
 
     int menuEntryId = -1;
 
@@ -103,12 +104,21 @@ public class CafeManagedBean implements Serializable {
         if(user != null) {
             Address address = new Address(newCafeStreet, newCafeCity);
             BarInfo barInfo = new BarInfo(newCafeName, address);
-            if(barCreationBean.createBar((BarBoss)userManagedBean.getUser(), barInfo, newCafeCapacity))
-            {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Café " + newCafeName + " created",
-                        "Street: " + newCafeStreet + " City: " + newCafeCity + " Capacity: " + newCafeCapacity));
+            try{
+                if(barCreationBean.createBar((BarBoss)userManagedBean.getUser(), barInfo, newCafeCapacity))
+                {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Café " + newCafeName + " created",
+                            "Street: " + newCafeStreet + " City: " + newCafeCity + " Capacity: " + newCafeCapacity));
+                }
+                else
+                {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Bar already exists", "Unique name/street/city combination required"));
+                }
             }
-            else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "CREATE ERROR", "Internal server error"));
+            catch(EJBException e)
+            {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid bar details", e.getMessage()));
+            }
         }
     }
 
@@ -148,12 +158,19 @@ public class CafeManagedBean implements Serializable {
     public void addDrinkToMenu()
     {
         DrinkItem drinkItem = new DrinkItem(newDrinkName, newDrinkAlc, newDrinkVol);
-        if(barManagementBean.addMenuItem(drinkItem, newDrinkPrice, newDrinkStock))
-        {
-            if(!menuNotEmpty) menuNotEmpty = true;
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(newDrinkName + " added to menu"));
+        try {
+            if(barManagementBean.addMenuItem(drinkItem, newDrinkPrice, newDrinkStock))
+            {
+                if(!menuNotEmpty) menuNotEmpty = true;
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(newDrinkName + " added to menu"));
+            }
+            else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Failed to add item","Item already in menu"));
         }
-        else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"Failed to add item","Item already in menu"));
+        catch (EJBException e)
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Invalid item details",e.getMessage()));
+        }
+
     }
 
     public void removeDrinkFromMenu(int menuEntry)
@@ -172,12 +189,6 @@ public class CafeManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"STOCK ERROR", "Internal server error"));
         else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Stock added",addToStock + " added to menu entry with id: " + menuEntryId));
     }
-
-    public void resetAddToStock()
-    {
-        addToStock = 1;
-    }
-
 
     public boolean isMenuNotEmpty() {
         return menuNotEmpty;

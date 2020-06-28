@@ -1,12 +1,14 @@
 package jpa.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @DiscriminatorValue("C")
 public class Customer extends User {
+    @PositiveOrZero(message = "can't be negative")
     @Column(name = "credit")
     private float credit = 0;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", orphanRemoval = true)

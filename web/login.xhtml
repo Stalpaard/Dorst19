@@ -1,42 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:c="http://java.sun.com/jsp/jstl/core"
+<html xmlns:c="http://java.sun.com/jsp/jstl/core"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 <f:view>
-    <h:form>
-        <h:outputText value="Loginpage"/>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:outputText value="reservations done: #{utilityManagedBean.globalAmountOfReservations}"/>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:outputLabel value="Status: #{userManagedBean.loginStatus} "/>
-        <c:if test="#{userManagedBean.isLoggedIn()}">
-            <h:commandButton value="Logout" action="#{userManagedBean.logout()}"/>
-            <h:commandButton value="Remove" action="#{userManagedBean.removeUser()}"/>
-        </c:if>
-    </h:form>
-
-
-    <h:form>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:outputLabel value="Users in DB: #{utilityManagedBean.stringOfAllUsers()} "/>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <c:if test="#{not userManagedBean.isLoggedIn()}">
-            <h:inputText id="username" a:placeholder="username" value="#{userManagedBean.username}"/>
-            <h:inputSecret id="password" a:placeholder="password" value="#{userManagedBean.password}"/>
-            <h:selectOneMenu value="#{userManagedBean.userType}">
-                <f:ajax event="change" update="@this" />
-                <f:selectItems value="#{utilityManagedBean.userTypes}" />
-            </h:selectOneMenu>
-            <h:commandButton value="Login" action="#{userManagedBean.attemptLogin()}"/>
-            <h:commandButton value="Register" action="#{userManagedBean.createUser()}"/>
+    <h:head/>
+    <h:body>
+        <h:form id="loginform">
+            <h:outputText value="Loginpage"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <h:outputText value="reservations done: #{utilityManagedBean.globalAmountOfReservations}"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
-        </c:if>
-    </h:form>
+            <h:outputLabel value="Status: #{userManagedBean.loginStatus} "/>
+            <c:if test="#{userManagedBean.isLoggedIn()}">
+                <h:commandButton value="Logout" action="#{userManagedBean.logout()}"/>
+                <h:commandButton value="Remove" action="#{userManagedBean.removeUser()}"/>
+            </c:if>
+
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <h:outputLabel value="Users in DB: #{utilityManagedBean.stringOfAllUsers()} "/>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <p:messages showDetail="true"/>
+            <c:if test="#{not userManagedBean.isLoggedIn()}">
+                <h:inputText id="username" a:placeholder="username" value="#{userManagedBean.username}"/>
+                <h:inputSecret id="password" a:placeholder="password" value="#{userManagedBean.password}"/>
+                <h:selectOneMenu value="#{userManagedBean.userType}">
+                    <f:selectItems value="#{utilityManagedBean.userTypes}" />
+                </h:selectOneMenu>
+                <p:commandButton value="Login" action="#{userManagedBean.attemptLogin()}" update="loginform"/>
+                <p:commandButton value="Register" action="#{userManagedBean.createUser()}" update="loginform"/>
+                <h:outputText value="&lt;br/&gt;" escape="false"/>
+                <h:outputText value="&lt;br/&gt;" escape="false"/>
+            </c:if>
+        </h:form>
+    </h:body>
 </f:view>
 </html>

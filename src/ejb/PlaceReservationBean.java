@@ -9,6 +9,8 @@ import javax.interceptor.Interceptors;
 import javax.jms.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Stateful(name = "ReservationEJB")
@@ -36,7 +38,7 @@ public class PlaceReservationBean {
     {
     }
 
-    public void setReservation(int barId, int menuEntryId, String customerUsername, int amount)
+    public void addReservation(int barId, int menuEntryId, String customerUsername, int amount) throws EJBException
     {
         Bar bar = entityManager.find(Bar.class, barId);
         MenuEntry menuEntry = bar.getMenuEntryById(menuEntryId);
@@ -52,26 +54,27 @@ public class PlaceReservationBean {
                 if(customer.getCredit() >= total)
                 {
                     ready = true;
+                    payReservation();
                     status = amount + " of " + bar.getMenuEntryById(menuEntryId).getItem().getName()
                             + " in " + bar.getBarInfo().getName()
                             + " with total price: " + total;
                 }
                 else
                 {
-                    status = "Insufficient amount of credit (total: " + total + ")";
                     reset();
+                    //throw new EJBException("Insufficient amount of credit (total: " + total + ")");
                 }
             }
             else
             {
-                status = "Not enough stock in café";
                 reset();
+                //throw new EJBException("Not enough stock in café");
             }
         }
         else
         {
-            status =  "Invalid reservation, try again";
             reset();
+            //throw new EJBException("Invalid reservation, try again");
         }
 
     }
@@ -96,7 +99,7 @@ public class PlaceReservationBean {
     }
 
     @Interceptors(LogInterceptor.class)
-    public void payReservation()
+    private void payReservation() throws EJBException
     {
         //Produces ObjectMessage (needs to be serializable!) containing the ItemReservation
         ReservationInfo reservationInfo = new ReservationInfo(barId, menuEntryId, customerUsername, amount);
@@ -113,8 +116,7 @@ public class PlaceReservationBean {
         }
         catch (Exception e)
         {
-            System.out.println(e);
-            status = "Exception occurred, please try again";
+            throw new EJBException(e.getMessage());
         }
 
     }

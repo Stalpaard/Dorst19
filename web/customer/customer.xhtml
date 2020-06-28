@@ -17,11 +17,6 @@
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
 
-
-
-
-
-
 <f:view>
     <h:head>
         <h:outputStylesheet library="CSS_files" name="header.css"  />
@@ -46,57 +41,54 @@
                 <p:outputLabel style=" font-size: 15px" value="No user is logged in" rendered="#{!userManagedBean.loggedIn}"/>
             </div>
         </div>
-    </h:body>
-    <h:form>
-        <h:outputText value="Customerpage"/>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:outputLabel value="Status: #{userManagedBean.loginStatus} "/>
-        <h:commandButton value="Logout" action="returnFromCustomer">
-            <f:actionListener binding="#{userManagedBean.logout()}"/>
-        </h:commandButton>
-        <h:commandButton value="Remove" action="returnFromCustomer">
-            <f:actionListener binding="#{userManagedBean.removeUser()}"/>
-        </h:commandButton>
+        <h:form id="customerform">
+            <p:growl id="growl" life="2500" />
 
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <h:outputText value="Customerpage"/>
 
-        <h:outputText value="Reservations: #{reservationManagedBean.stringOfAllReservations}" escape="false"/>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:outputText value="Credit: #{userManagedBean.userCredit}" escape="false"/>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:inputText a:placeholder="add credit" value="#{userManagedBean.amountToAdd}"/>
-        <h:commandButton value="Add to credit" action="#{userManagedBean.addCredit()}"/>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:outputText value="Reservation Menu" escape="false"/>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:selectOneMenu id="select_cafe_cus" value ="#{reservationManagedBean.reservationCafeId}">
-            <f:ajax event="change" update="@this" />
-            <f:selectItems id="select_cafe_map_cus" value="#{utilityManagedBean.mapAllCafes()}" />
-        </h:selectOneMenu>
-        <h:commandButton value="Load café menu" action="#{reservationManagedBean.updateReservationMenu()}"/>
-        <h:selectOneMenu id="select_menu_cus" value ="#{reservationManagedBean.reservationMenuEntryId}">
-            <f:ajax event="change" update="@this" />
-            <f:selectItems id="select_menu_map_cus" value="#{reservationManagedBean.reservationMenu}" />
-        </h:selectOneMenu>
-        <c:if test="#{reservationManagedBean.isReservationMenuLoaded()}">
-            <h:inputText id="reservation_amount" a:placeholder="amount" value="#{reservationManagedBean.reservationAmount}"/>
-        </c:if>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:outputText value="status: #{reservationManagedBean.reservationStatus}" escape="false"/>
-        <c:if test="#{reservationManagedBean.isReservationMenuLoaded()}">
             <h:outputText value="&lt;br/&gt;" escape="false"/>
-            <h:commandButton value="Prepare reservation" action="#{reservationManagedBean.prepareReservation()}"/>
-        </c:if>
-        <c:if test="#{reservationManagedBean.isReadyToPay()}">
-            <h:commandButton value="Pay reservation" action="#{reservationManagedBean.payReservation()}"/>
-        </c:if>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:selectOneMenu id="select_res_cus" value ="#{reservationManagedBean.removeReservationId}">
-            <f:ajax event="change" update="@this" />
-            <f:selectItems id="select_res_map_cus" value="#{reservationManagedBean.userReservationsMap}" />
-        </h:selectOneMenu>
-        <h:commandButton value="Cancel reservation" action="#{reservationManagedBean.cancelReservation()}"/>
-    </h:form>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+
+            <h:outputText value="Reservations: #{reservationManagedBean.stringOfAllReservations}" escape="false"/>
+
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+
+            <h:outputText id="currentCredit" value="Credit: #{userManagedBean.userCredit}" escape="false"/>
+
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+
+            <p:inputNumber minValue="0.00" decimalPlaces="2" value="#{userManagedBean.amountToAdd}" update="customerform"/>
+            <p:commandButton value="Add to credit" action="#{userManagedBean.addCredit()}"/>
+
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+
+            <h:outputText value="Reservation Menu" escape="false"/>
+            <p:messages showDetail="true"/>
+
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+
+            <p:selectOneMenu id="select_cafe_cus" value ="#{reservationManagedBean.reservationCafeId}">
+                <f:selectItems id="select_cafe_map_cus" value="#{utilityManagedBean.mapAllCafes()}" />
+            </p:selectOneMenu>
+            <p:commandButton value="Load café menu" action="#{reservationManagedBean.updateReservationMenu()}" update="customerform"/>
+            <p:selectOneMenu id="select_menu_cus" value ="#{reservationManagedBean.reservationMenuEntryId}">
+                <f:selectItems id="select_menu_map_cus" value="#{reservationManagedBean.reservationMenu}" />
+            </p:selectOneMenu>
+            <c:if test="#{reservationManagedBean.isReservationMenuLoaded()}">
+                <p:inputText id="reservation_amount" a:placeholder="amount" value="#{reservationManagedBean.reservationAmount}"/>
+            </c:if>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <c:if test="#{reservationManagedBean.isReservationMenuLoaded()}">
+                <h:outputText value="&lt;br/&gt;" escape="false"/>
+                <p:commandButton value="Place reservation" action="#{reservationManagedBean.addReservation()}" update="customerform" ajax="false"/>
+            </c:if>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <p:selectOneMenu id="select_res_cus" value ="#{reservationManagedBean.removeReservationId}">
+                <f:selectItems id="select_res_map_cus" value="#{reservationManagedBean.userReservationsMap}" />
+            </p:selectOneMenu>
+            <p:commandButton value="Cancel reservation" action="#{reservationManagedBean.cancelReservation()}" update="customerform"/>
+        </h:form>
+    </h:body>
 </f:view>
 </html>

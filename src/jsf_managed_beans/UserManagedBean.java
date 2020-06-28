@@ -5,14 +5,14 @@ import ejb.UserBean;
 import jpa.entities.*;
 import utilities.UserType;
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import java.awt.event.ActionEvent;
 import java.io.Serializable;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @Named
 @SessionScoped
@@ -37,17 +37,16 @@ public class UserManagedBean implements Serializable {
 
     public String attemptLogin()
     {
-        if(username != null && password != null)
-        {
-            User login_user = userBean.validateUser(username, password);
-            if(login_user != null)
-            {
-                user = login_user;
-                loginStatus = "logged in as " + login_user.getUsername();
-                if(isUserCustomer()) return "customer";
-                if(isUserBoss()) return "boss";
-            }
-            else loginStatus = "User doesn't exist";
+        try {
+            User login_user = userBean.authenticateUser(username, password);
+            user = login_user;
+            loginStatus = "logged in as " + login_user.getUsername();
+            if(isUserCustomer()) return "customer";
+            if(isUserBoss()) return "boss";
+        }
+        catch (EJBException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Login failed", e.getMessage()));
+            return "login";
         }
         return "login";
     }
@@ -74,17 +73,20 @@ public class UserManagedBean implements Serializable {
 
     public String createUser()
     {
-
-        if(username != null && password != null && userType != null)
-        {
+        try{
             User new_user = userBean.createUser(username, password, userType);
             if(new_user != null)
             {
                 return attemptLogin();
             }
-            else loginStatus = "User already exists";
+            else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Failed to create user", "User already exists"));
+            return "login";
         }
-        return "login";
+        catch(EJBException e)
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Invalid credentials", e.getMessage()));
+            return "login";
+        }
     }
 
     public void removeUser()
@@ -93,7 +95,6 @@ public class UserManagedBean implements Serializable {
         {
             userBean.removeUser(getUser().getUsername());
             user = null;
-            loginStatus = "User not logged in";
         }
     }
 

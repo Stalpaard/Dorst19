@@ -1,6 +1,9 @@
 package jpa.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.Objects;
 
 @Entity
@@ -8,9 +11,12 @@ import java.util.Objects;
 @DiscriminatorValue("D")
 public class DrinkItem extends Item{
 
-    @Column(name = "alcohol_percentage", nullable = false, updatable = false) //voor existing bardrinks
-    private float alcoholPercentage = 200;
-    @Column(name = "volume", nullable = false, updatable = false) //voor existing bardrinks
+    @PositiveOrZero(message = "can't be negative")
+    @Column(name = "alcohol_percentage") //voor existing bardrinks
+    private float alcoholPercentage;
+
+    @Positive(message = "has to be greater than 0")
+    @Column(name = "volume") //voor existing bardrinks
     private float volume;
 
     protected DrinkItem()

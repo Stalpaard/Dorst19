@@ -1,6 +1,9 @@
 package jpa.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -16,11 +19,17 @@ public class MenuEntry {
     @Id @GeneratedValue
     @Column(name = "id", updatable = false, nullable = false)
     private int id;
+
+    @NotNull(message = "has to have an item linked to it")
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "item_fk")
+    @JoinColumn(name = "item_fk", nullable = false)
     private Item item;
+
+    @PositiveOrZero(message = "cannot be negative")
     @Column(name = "price", nullable = false)
     private float price;
+
+    @PositiveOrZero(message = "cannot be negative")
     @Column(name = "stock", nullable = false)
     private int stock;
 
@@ -29,7 +38,7 @@ public class MenuEntry {
 
     }
 
-    protected MenuEntry(Item item, float price, int stock)
+    public MenuEntry(Item item, float price, int stock)
     {
         this.item = item;
         this.price = price;

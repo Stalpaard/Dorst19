@@ -1,10 +1,13 @@
 package jpa.entities;
 
+import com.sun.istack.NotNull;
 import jpa.embeddables.TimePeriod;
 import jpa.embeddables.BarInfo;
 import utilities.DaysOfTheWeek;
 
 import javax.persistence.*;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -26,9 +29,11 @@ public class Bar implements Serializable
     @Id @GeneratedValue
     @Column(name = "id")
     private int id;
+
     @Embedded
     private BarInfo barInfo;
 
+    @PositiveOrZero(message = "can't be negative")
     @Column(name = "capacity", nullable = false)
     private int capacity;
 
@@ -141,11 +146,9 @@ public class Bar implements Serializable
         if(menuEntry.getStock() >= amount)
         {
             ItemReservation reservation = new ItemReservation(this,menuEntry, amount, customer);
-            if(reservations.add(reservation))
-            {
-                menuEntry.setStock(menuEntry.getStock() - amount);
-                return  reservation;
-            }
+            reservations.add(reservation);
+            menuEntry.setStock(menuEntry.getStock() - amount);
+            return reservation;
         }
         return null;
     }
@@ -200,8 +203,8 @@ public class Bar implements Serializable
         return null;
     }
 
-    public boolean addToMenu(Item item, float price, int stock) {
-        return menu.add(new MenuEntry(item, price, stock));
+    public boolean addToMenu(MenuEntry menuEntry) {
+        return menu.add(menuEntry);
     }
 
     public Item removeFromMenu(int entryId) {

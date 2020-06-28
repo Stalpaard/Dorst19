@@ -39,7 +39,7 @@
             </div>
         </div>
         <h:form id="bossform">
-            <p:growl id="growl" showDetail="true" life="2500" />
+            <p:growl id="growl" life="2500" />
 
             <h:outputText value="Bosspage"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
@@ -51,15 +51,15 @@
             <h:outputText value="&lt;br/&gt;" escape="false"/>
 
             <p:commandButton value="Create new cafe" onclick="PF('cafeDialog').show();"/>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <p:messages showDetail="true"/>
+
             <p:dialog header="Add a new cafe" modal="true" widgetVar="cafeDialog">
-                <p:messages autoUpdate="true"/>
                 <p:inputText label="cafeName" value="#{cafeManagedBean.newCafeName}"/>
                 <p:inputText label = "cafeStreet" value="#{cafeManagedBean.newCafeStreet}"/>
                 <p:inputText label = "cafeCity" value="#{cafeManagedBean.newCafeCity}"/>
-                <p:inputText label = "cafeCapacity" value="#{cafeManagedBean.newCafeCapacity}"/>
-                <p:commandButton value="Create cafe" action="#{cafeManagedBean.createCafe()}"
-                                 oncomplete="if (args &amp;&amp; !args.validationFailed) PF('cafeDialog').hide()"
-                                 update="bossform"/>
+                <p:inputNumber label = "cafeCapacity" minValue="0" decimalPlaces="0" value="#{cafeManagedBean.newCafeCapacity}"/>
+                <p:commandButton value="Create cafe" action="#{cafeManagedBean.createCafe()}" update="bossform"/>
             </p:dialog>
 
 

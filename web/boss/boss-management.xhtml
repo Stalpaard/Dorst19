@@ -24,7 +24,7 @@
     <h:body>
         <div id="header" >
             <div class="header">
-                <h1>Café Management Page</h1>
+                <h1>#{cafeManagedBean.managedCafeNaam} Management Page</h1>
                 <p>Eentje is geentje!</p>
             </div>
 
@@ -50,15 +50,13 @@
             <h:outputText value="&lt;br/&gt;" escape="false"/>
 
             <p:commandButton value="Add drink to menu" onclick="PF('drinkDialog').show();"/>
-            <p:dialog header="Add a new drink" modal="true" widgetVar="drinkDialog">
+            <p:dialog header="Add a new drink" widgetVar="drinkDialog">
                 <p:inputText label="drinkName" value="#{cafeManagedBean.newDrinkName}"/>
                 <p:inputNumber label = "drinkPercentage" decimalPlaces="1" minValue="0.0" maxValue="100.0" value="#{cafeManagedBean.newDrinkAlc}"/>
                 <p:inputNumber label = "drinkVolume" value="#{cafeManagedBean.newDrinkVol}"/>
                 <p:inputNumber label = "drinkPrice" decimalPlaces="2" minValue="0.00" value="#{cafeManagedBean.newDrinkPrice}"/>
                 <p:inputNumber label = "drinkStock" decimalPlaces="0" minValue="0" value="#{cafeManagedBean.newDrinkStock}"/>
-                <p:commandButton value="Add drink" action="#{cafeManagedBean.addDrinkToMenu()}"
-                                 oncomplete="if (args &amp;&amp; !args.validationFailed) PF('drinkDialog').hide()"
-                                 update="bossform"/>
+                <p:commandButton value="Add drink" action="#{cafeManagedBean.addDrinkToMenu()}" update="bossform"/>
             </p:dialog>
 
 
@@ -72,9 +70,7 @@
                     <f:selectItems value="#{cafeManagedBean.mapManagedMenu()}" />
                 </p:selectOneMenu>
                 <p:inputNumber id="addToStock" minValue="1" decimalPlaces="0" value="#{cafeManagedBean.addToStock}"/>
-                <p:commandButton value="Add stock to item" action="#{cafeManagedBean.addStockToDrink()}"
-                                 oncomplete="if (args &amp;&amp; !args.validationFailed) PF('stockDialog').hide()}"
-                                 update="bossform"/>
+                <p:commandButton value="Add stock to item" action="#{cafeManagedBean.addStockToDrink()}" update="bossform"/>
             </p:dialog>
 
             <h:outputText value="&lt;br/&gt;" escape="false"/>

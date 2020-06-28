@@ -1,16 +1,26 @@
 package jpa.embeddables;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.Objects;
 
 @Embeddable
 @Access(AccessType.FIELD)
 public class TimePeriod {
+
+    @Min(value = 0, message = "minimum is 0")
+    @Max(value = 23, message = "maximum is 23")
     @Column(name = "begin_hour", nullable = false)
     private int beginHour;
+
+    @Min(value = 0, message = "minimum is 0")
+    @Max(value = 23, message = "maximum is 23")
     @Column(name = "end_hour", nullable = false)
     private int endHour;
 
