@@ -15,8 +15,28 @@
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 
 <f:view>
-    <h:head/>
+    <h:head>
+        <h:outputStylesheet library="CSS_files" name="header.css"  />
+        <title>Boss Page</title>
+    </h:head>
     <h:body>
+        <div id="header" >
+            <div class="header">
+                <h1>Boss Page</h1>
+                <p>Eentje is geentje!</p>
+            </div>
+
+            <div class="button">
+                <h:form>
+                    <p:commandButton ajax="false" actionListener="#{userManagedBean.logout()}" value="Logout" action="returnFromCustomer" rendered="#{userManagedBean.loggedIn}"/>
+                    <p:commandButton ajax="false" actionListener="#{userManagedBean.attemptLogin()}" value="Login"  rendered="#{!userManagedBean.loggedIn}"/>
+                    <p:commandButton ajax="false" actionListener="#{userManagedBean.createUser()}" value="Register" rendered="#{!userManagedBean.loggedIn}"/>
+                </h:form>
+
+                <p:outputLabel style=" font-size: 15px" value="Status: #{userManagedBean.loginStatus}" rendered="#{userManagedBean.loggedIn}"/>
+                <p:outputLabel style=" font-size: 15px" value="No user is logged in" rendered="#{!userManagedBean.loggedIn}"/>
+            </div>
+        </div>
         <h:form>
             <h:outputText value="Bosspage"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
