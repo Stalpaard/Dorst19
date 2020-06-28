@@ -94,7 +94,7 @@
         <h:outputText value="&lt;br/&gt;" escape="false"/>
         <h:selectOneMenu id="select_res_cus" value ="#{reservationManagedBean.removeReservationId}">
             <f:ajax event="change" update="@this" />
-            <f:selectItems id="select_res_map_cus" value="#{reservationManagedBean.userReservations}" />
+            <f:selectItems id="select_res_map_cus" value="#{reservationManagedBean.userReservationsMap}" />
         </h:selectOneMenu>
         <h:commandButton value="Cancel reservation" action="#{reservationManagedBean.cancelReservation()}"/>
     </h:form>
