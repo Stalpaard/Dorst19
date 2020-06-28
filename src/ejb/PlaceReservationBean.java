@@ -14,8 +14,6 @@ import java.util.concurrent.TimeUnit;
 @Stateful(name = "ReservationEJB")
 @StatefulTimeout(unit = TimeUnit.MINUTES, value = 60)
 public class PlaceReservationBean {
-    @EJB
-    ReservationCounterBean reservationCounterBean;
 
     @PersistenceContext(name = "DorstPersistenceUnit")
     EntityManager entityManager;

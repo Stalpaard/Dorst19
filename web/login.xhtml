@@ -7,19 +7,10 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
-<head>
-    <style type="text/css">
-        .text{
-            color: black;  /* Fallback: assume this color ON TOP of image */
-            background: url(yellow.jpg) no-repeat;
-            //**-webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;**/
-        }
-    </style>
-</head>
 <f:view>
     <h:form>
-        <h:outputText value="Loginpage" styleClass="text"/>
+        <h:outputText value="Loginpage"/>
+        <h:outputText value="reservations done: #{utilityManagedBean.globalAmountOfReservations}"/>
         <h:outputText value="&lt;br/&gt;" escape="false"/>
         <h:outputLabel value="Status: #{userManagedBean.loginStatus} "/>
         <c:if test="#{userManagedBean.isLoggedIn()}">

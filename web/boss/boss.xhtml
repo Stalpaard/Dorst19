@@ -11,6 +11,7 @@
 
 <html xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 
 <f:view>
@@ -37,12 +38,39 @@
         <h:outputText value="&lt;br/&gt;" escape="false"/>
         <h:outputText value="&lt;br/&gt;" escape="false"/>
         <h:outputText value="My cafés: " escape="false"/>
-        <h:selectOneMenu id="select_cafe_boss" value ="#{cafeManagedBean.managedCafeId}">
-            <f:ajax event="change" update="@this" />
-            <f:selectItems id="select_cafe_map_boss" value="#{cafeManagedBean.mapOwnedCafes()}" />
-        </h:selectOneMenu>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:commandButton value="Manage cafe" action="#{cafeManagedBean.manageCafe()}"/>
+
+        <p:dataScroller value="#{cafeManagedBean.ownedCafes}" var="cafe" chunkSize="10">
+            <h:panelGrid columns="5" style="width:100%">
+                <p:outputPanel>
+                    <h:panelGrid columns="2">
+                        <h:outputText value="Id:" />
+                        <h:outputText value="#{cafe.id}" style="font-weight: bold"/>
+                    </h:panelGrid>
+                </p:outputPanel>
+                <p:outputPanel>
+                    <h:panelGrid columns="2">
+                        <h:outputText value="Name:" />
+                        <h:outputText value="#{cafe.barInfo.name}"/>
+                    </h:panelGrid>
+                </p:outputPanel>
+                <p:outputPanel>
+                    <h:panelGrid columns="2">
+                        <h:outputText value="City:" />
+                        <h:outputText value="#{cafe.barInfo.address.city}"/>
+                        <h:outputText value="Street:" />
+                        <h:outputText value="#{cafe.barInfo.address.street}"/>
+                    </h:panelGrid>
+                </p:outputPanel>
+                <p:outputPanel>
+                    <h:commandButton value="Manage #{cafe.barInfo.name}" action="#{cafeManagedBean.manageCafe(cafe.id)}"/>
+                </p:outputPanel>
+                <p:outputPanel>
+                    <h:commandButton value="Delete #{cafe.barInfo.name}" action="#{cafeManagedBean.removeCafe(cafe.id)}"/>
+                </p:outputPanel>
+            </h:panelGrid>
+            <p:separator/>
+        </p:dataScroller>
+
     </h:form>
 </f:view>
 

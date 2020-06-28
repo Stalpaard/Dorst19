@@ -1,6 +1,8 @@
 package jsf_managed_beans;
 
 import ejb.QueryBean;
+import ejb.ReservationCounterBean;
+import ejb.TimerBean;
 import jpa.embeddables.BarInfo;
 import jpa.entities.Bar;
 import jpa.entities.MenuEntry;
@@ -8,7 +10,10 @@ import utilities.UserType;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.ApplicationScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
@@ -18,6 +23,12 @@ public class UtilityManagedBean {
 
     @EJB
     QueryBean queryBean;
+
+    @EJB
+    TimerBean timerBean;
+
+    @EJB
+    ReservationCounterBean reservationCounterBean;
 
     public Map<String, Object> mapAllCafes() {
         Map<String, Object> cafeMap = new TreeMap<>();
@@ -39,6 +50,11 @@ public class UtilityManagedBean {
     public String menuRedirect(int barId)
     {
         return "menuDemo.xhtml?faces-redirect=true&barId=" + barId;
+    }
+
+    public void xmlMenuRedirect(int cafeId) throws IOException {
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        externalContext.redirect("http://localhost:8080/Dorst19/resources/menu/" + cafeId);
     }
 
     public String stringOfAllCafes() {
@@ -64,6 +80,21 @@ public class UtilityManagedBean {
         String s = "";
         for(String u : queryBean.queryUsers()) s = s + " " + u;
         return s;
+    }
+
+    public int getGlobalAmountOfReservations()
+    {
+        return reservationCounterBean.getReservationsDone();
+    }
+
+    public String giftDatesString()
+    {
+        String giftDates = "";
+        for(Date d : timerBean.getNextGiftDates())
+        {
+            giftDates = giftDates + d.toString() + "\t";
+        }
+        return giftDates;
     }
 
     public List<Bar> queryBars()

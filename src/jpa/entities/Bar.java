@@ -51,6 +51,7 @@ public class Bar implements Serializable
             joinColumns = @JoinColumn(name = "bar_fk", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "menu_entry_fk")
     )
+    @OrderBy("id ASC")
     private Set<MenuEntry> menu;
 
 
