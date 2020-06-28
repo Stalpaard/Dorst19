@@ -1,5 +1,6 @@
 package ejb;
 
+import jpa.embeddables.Address;
 import jpa.embeddables.BarInfo;
 import jpa.entities.*;
 
@@ -9,7 +10,11 @@ import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -81,26 +86,25 @@ public class BarManagementBean implements Serializable {
         else managedBar = null;
     }
 
-    public void removeMenuItem(int id)
+    public boolean removeMenuItem(int id)
     {
         if(managedBar != null)
         {
             Item removed = managedBar.removeFromMenu(id);
             int removed_id = removed.getId();
-            if(removed != null)
+            entityManager.merge(managedBar);
+            TypedQuery<MenuEntry> removeDrinkQuery = entityManager.createNamedQuery("CHECK_DRINK_REF", MenuEntry.class)
+                    .setParameter("id", removed_id);
+            if(removeDrinkQuery.getResultList().size() <= 0)
             {
-                entityManager.merge(managedBar);
-                TypedQuery<MenuEntry> removeDrinkQuery = entityManager.createNamedQuery("CHECK_DRINK_REF", MenuEntry.class)
-                        .setParameter("id", removed_id);
-                if(removeDrinkQuery.getResultList().size() <= 0)
-                {
-                    if(removed instanceof DrinkItem) entityManager.remove(entityManager.find(DrinkItem.class, removed_id));
-                }
+                if(removed instanceof DrinkItem) entityManager.remove(entityManager.find(DrinkItem.class, removed_id));
             }
+            return true;
         }
+        return false;
     }
 
-    public void addStockToMenuItem(int menuEntryId, int amount)
+    public boolean addStockToMenuItem(int menuEntryId, int amount)
     {
         if(amount > 0 && managedBar != null)
         {
@@ -109,8 +113,10 @@ public class BarManagementBean implements Serializable {
             {
                 menuEntry.setStock(menuEntry.getStock() + amount);
                 entityManager.merge(managedBar);
+                return true;
             }
         }
+        return false;
     }
 
     public Set<MenuEntry> getMenu()
@@ -122,7 +128,7 @@ public class BarManagementBean implements Serializable {
         return null;
     }
 
-    public void addMenuItem(Item item, float price, int stock)
+    public boolean addMenuItem(Item item, float price, int stock)
     {
         if(managedBar != null)
         {
@@ -133,14 +139,61 @@ public class BarManagementBean implements Serializable {
                         .setParameter("alc", ((DrinkItem) item).getAlcoholPercentage())
                         .setParameter("volume", ((DrinkItem) item).getVolume());
                 List<DrinkItem> resultList = drinkQuery.getResultList();
-                if(resultList.size() <= 0) entityManager.persist(item);
+                if(resultList.size() <= 0)
+                {
+                    validateDrinkItem((DrinkItem) item);
+                    entityManager.persist(item);
+                }
                 else
                 {
-                    if(item instanceof DrinkItem) item = entityManager.find(DrinkItem.class, resultList.get(0).getId());
+                    item = entityManager.find(DrinkItem.class, resultList.get(0).getId());
                 }
             }
-            if(managedBar.addToMenu(item, price, stock)) entityManager.merge(managedBar);
+            MenuEntry menuEntry = new MenuEntry(item, price, stock);
+            validateMenuEntry(menuEntry);
+            if(managedBar.addToMenu(menuEntry))
+            {
+                entityManager.merge(managedBar);
+                return true;
+            }
+            else return false;
+        }
+        return false;
+    }
+
+    private void validateDrinkItem(DrinkItem drinkItem) throws DorstException
+    {
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
+        Set<ConstraintViolation<DrinkItem>> constraintViolations = validator.validate(drinkItem);
+
+        if (constraintViolations.size() > 0) {
+
+            Set<String> violationMessages = new HashSet<>();
+            for (ConstraintViolation<DrinkItem> constraintViolation : constraintViolations) {
+                violationMessages.add(constraintViolation.getPropertyPath() + ": " + constraintViolation.getMessage() + "\t|\t");
+            }
+
+            throw new DorstException(String.join("\n",violationMessages));
+        }
+    }
+
+    private void validateMenuEntry(MenuEntry menuEntry) throws DorstException
+    {
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
+        Set<ConstraintViolation<MenuEntry>> constraintViolations = validator.validate(menuEntry);
+
+        if (constraintViolations.size() > 0) {
+
+            Set<String> violationMessages = new HashSet<>();
+            for (ConstraintViolation<MenuEntry> constraintViolation : constraintViolations) {
+                violationMessages.add(constraintViolation.getPropertyPath() + ": " + constraintViolation.getMessage() + "\t|\t");
+            }
+
+            throw new DorstException(String.join("\n",violationMessages));
         }
     }
 
 }
+

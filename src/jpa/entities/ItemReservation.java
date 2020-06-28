@@ -1,6 +1,7 @@
 package jpa.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.Positive;
 import java.util.Objects;
 
 @Entity
@@ -12,8 +13,11 @@ public class ItemReservation {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "menuEntry_fk")
     private MenuEntry menuEntry;
+
+    @Positive(message = "has to be greater than 0")
     @Column(name = "amount")
     private int amountOfDrinks;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(
             name = "jnd_reservation_customer",
@@ -37,7 +41,7 @@ public class ItemReservation {
 
     }
 
-    protected ItemReservation(Bar bar, MenuEntry menuEntry, int amountOfDrinks, Customer customer)
+    public ItemReservation(Bar bar, MenuEntry menuEntry, int amountOfDrinks, Customer customer)
     {
         this.bar = bar;
         this.menuEntry = menuEntry;

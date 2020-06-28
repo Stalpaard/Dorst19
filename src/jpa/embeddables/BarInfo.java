@@ -1,6 +1,10 @@
 package jpa.embeddables;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
@@ -10,8 +14,13 @@ import java.util.Objects;
 @XmlRootElement
 @Access(AccessType.FIELD)
 public class BarInfo implements Serializable {
-    @Column(name = "name", length = 20)
+
+
+    @Size(max = 20, message = "limited to 20 characters")
+    @NotBlank(message = "cannot be blank")
+    @Column(name = "name", length = 20, nullable = false)
     private String name;
+
     @Embedded
     private Address address;
 

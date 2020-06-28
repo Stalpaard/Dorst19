@@ -1,17 +1,15 @@
 package jsf_managed_beans;
 
-import ejb.QueryBean;
-import ejb.PlaceReservationBean;
-import ejb.ReservationCounterBean;
-import ejb.UserBean;
+import ejb.*;
 import jpa.entities.Customer;
 import jpa.entities.ItemReservation;
 import jpa.entities.MenuEntry;
 
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
+import javax.ejb.EJBException;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.flow.FlowScoped;
-import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.Positive;
@@ -50,19 +48,6 @@ public class ReservationManagedBean implements Serializable {
 
     private static DecimalFormat geldFormat = new DecimalFormat("0.00");
 
-    public String getStringOfAllReservations()
-    {
-        String s = "";
-        for(ItemReservation reservation : ((Customer)userManagedBean.getUser()).getReservations())
-        {
-            s = s + reservation.getId() + ": " + reservation.getAmountOfDrinks()
-                    + " " + reservation.getMenuEntry().getItem().getName()
-                    + " in " + reservation.getBar().getBarInfo().getName()
-                    + " | ";
-        }
-        return s;
-    }
-
     public void updateReservationMenu() {
         if (reservationCafeId > -1) {
             Set<MenuEntry> menu = queryBean.queryMenuFromBar(reservationCafeId);
@@ -82,15 +67,18 @@ public class ReservationManagedBean implements Serializable {
         return reservationMenu != null;
     }
 
-    public void prepareReservation()
+    public void addReservation()
     {
-        placeReservationBean.setReservation(reservationCafeId, reservationMenuEntryId, userManagedBean.getUser().getUsername(), reservationAmount);
+        try {
+            placeReservationBean.addReservation(reservationCafeId, reservationMenuEntryId, userManagedBean.getUser().getUsername(), reservationAmount);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Reservation sent to Bar", "Refresh to see the new reservation"));
+        }
+        catch (DorstException e)
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Reservation Failed", e.getMessage()));
+        }
     }
 
-    public void payReservation()
-    {
-        placeReservationBean.payReservation();
-    }
 
     public Map<String, Object> getUserReservationsMap()
     {
@@ -111,19 +99,6 @@ public class ReservationManagedBean implements Serializable {
     {
         userBean.cancelUserReservation((Customer)userManagedBean.getUser(), removeReservationId);
     }
-
-    public boolean isReadyToPay()
-    {
-        return placeReservationBean.readyToPay();
-    }
-
-    public String getReservationStatus()
-    {
-        return placeReservationBean.getStatus();
-    }
-
-
-
 
 
 

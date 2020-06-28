@@ -1,5 +1,6 @@
 package jpa.entities;
 
+import com.sun.istack.NotNull;
 import jpa.embeddables.TimePeriod;
 import utilities.DaysOfTheWeek;
 
@@ -36,6 +37,7 @@ public class Shift {
 
     @Embedded
     private TimePeriod timePeriod;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "day", updatable = false, nullable = false)
     private DaysOfTheWeek dayOfTheWeek;

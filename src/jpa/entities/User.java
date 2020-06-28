@@ -1,6 +1,13 @@
 package jpa.entities;
 
+import ch.qos.cal10n.IMessageConveyor;
+
+import javax.management.remote.JMXServerErrorException;
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
@@ -12,8 +19,12 @@ import java.util.Objects;
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.CHAR)
 public abstract class User {
     @Id
-    @Column(name = "username")
+    @NotBlank(message = "cannot be blank")
+    @Size(max = 20, message = "Username is limited to 20 characters")
+    @Column(name = "username", length=20, nullable = false)
     protected String username;
+
+    @NotBlank(message = "cannot be blank")
     @Column(name = "password", nullable = false)
     protected String password;
 

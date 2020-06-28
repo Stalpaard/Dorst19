@@ -1,9 +1,13 @@
 package jpa.embeddables;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
@@ -15,9 +19,15 @@ import java.util.Objects;
 public class Address implements Serializable {
     //Huisnummer weggelaten omdat cafés meerdere huisnummers kunnen hebben => veel werk
     //Velden worden updatable gehouden opdat bars kunnen verhuizen
-    @Column(name = "street", length = 90)
+
+    @Size(max = 90, message = "limited to 90 characters")
+    @NotBlank(message = "cannot be blank")
+    @Column(name = "street", length = 90, nullable = false)
     private String street;
-    @Column(name = "city", length = 90)
+
+    @Size(max = 90, message = "limited to 90 characters")
+    @NotBlank(message = "cannot be blank")
+    @Column(name = "city", length = 90, nullable = false)
     private String city;
 
     public Address()

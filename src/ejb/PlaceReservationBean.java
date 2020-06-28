@@ -9,10 +9,11 @@ import javax.interceptor.Interceptors;
 import javax.jms.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-@Stateful(name = "ReservationEJB")
-@StatefulTimeout(unit = TimeUnit.MINUTES, value = 60)
+@Stateless(name = "ReservationEJB")
 public class PlaceReservationBean {
 
     @PersistenceContext(name = "DorstPersistenceUnit")
@@ -29,14 +30,12 @@ public class PlaceReservationBean {
     String customerUsername = null; //zou uit sessioncontext moeten gehaald worden
     int amount = 0;
     float total = 0;
-    boolean ready =false;
-    String status = "No reservation set";
 
     public PlaceReservationBean()
     {
     }
 
-    public void setReservation(int barId, int menuEntryId, String customerUsername, int amount)
+    public void addReservation(int barId, int menuEntryId, String customerUsername, int amount) throws DorstException
     {
         Bar bar = entityManager.find(Bar.class, barId);
         MenuEntry menuEntry = bar.getMenuEntryById(menuEntryId);
@@ -51,52 +50,27 @@ public class PlaceReservationBean {
             if(menuEntry.getStock() >= amount){
                 if(customer.getCredit() >= total)
                 {
-                    ready = true;
-                    status = amount + " of " + bar.getMenuEntryById(menuEntryId).getItem().getName()
-                            + " in " + bar.getBarInfo().getName()
-                            + " with total price: " + total;
+                    payReservation();
                 }
                 else
                 {
-                    status = "Insufficient amount of credit (total: " + total + ")";
-                    reset();
+                    throw new DorstException("Insufficient amount of credit (total: " + total + ")");
                 }
             }
             else
             {
-                status = "Not enough stock in café";
-                reset();
+                throw new DorstException("Not enough stock in café");
             }
         }
         else
         {
-            status =  "Invalid reservation, try again";
-            reset();
+            throw new DorstException("Invalid reservation, try again");
         }
 
     }
 
-    private void reset()
-    {
-        this.barId = barId;
-        this.menuEntryId = menuEntryId;
-        this.customerUsername = null;
-        this.amount = 0;
-        ready = false;
-    }
-
-    public String getStatus()
-    {
-        return status;
-    }
-
-    public boolean readyToPay()
-    {
-        return ready;
-    }
-
     @Interceptors(LogInterceptor.class)
-    public void payReservation()
+    private void payReservation() throws DorstException
     {
         //Produces ObjectMessage (needs to be serializable!) containing the ItemReservation
         ReservationInfo reservationInfo = new ReservationInfo(barId, menuEntryId, customerUsername, amount);
@@ -108,13 +82,10 @@ public class PlaceReservationBean {
             ObjectMessage reservationMsg = s.createObjectMessage();
             reservationMsg.setObject(reservationInfo);
             mp.send(reservationMsg);
-            status = "Reservation sent to Bar";
-            ready = false;
         }
         catch (Exception e)
         {
-            System.out.println(e);
-            status = "Exception occurred, please try again";
+            throw new DorstException(e.getMessage());
         }
 
     }

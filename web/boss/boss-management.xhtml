@@ -24,7 +24,7 @@
     <h:body>
         <div id="header" >
             <div class="header">
-                <h1>Café Management Page</h1>
+                <h1>#{cafeManagedBean.managedCafeNaam} Management Page</h1>
                 <p>Eentje is geentje!</p>
             </div>
 
@@ -39,41 +39,38 @@
                 <p:outputLabel style=" font-size: 15px" value="No user is logged in" rendered="#{!userManagedBean.loggedIn}"/>
             </div>
         </div>
-        <h:form>
+        <h:form id="bossform">
+            <p:growl id="growl" showDetail="true" life="2500" />
+
             <h:outputText value="#{cafeManagedBean.managedCafeNaam} Management"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
-            <p:commandButton value="unmanage cafe" action="#{cafeManagedBean.unmanageCafe()}" />
+            <p:commandButton value="unmanage cafe" action="#{cafeManagedBean.unmanageCafe()}"/>
 
             <h:outputText value="&lt;br/&gt;" escape="false"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
 
             <p:commandButton value="Add drink to menu" onclick="PF('drinkDialog').show();"/>
             <p:dialog header="Add a new drink" widgetVar="drinkDialog">
-                <p:messages autoUpdate="true"/>
                 <p:inputText label="drinkName" value="#{cafeManagedBean.newDrinkName}"/>
-                <p:inputText label = "drinkPercentage" value="#{cafeManagedBean.newDrinkAlc}"/>
-                <p:inputText label = "drinkVolume" value="#{cafeManagedBean.newDrinkVol}"/>
-                <p:inputText label = "drinkPrice" value="#{cafeManagedBean.newDrinkPrice}"/>
-                <p:inputText label = "drinkStock" value="#{cafeManagedBean.newDrinkStock}"/>
-                <p:commandButton value="Add drink" action="#{cafeManagedBean.addDrinkToMenu()}"
-                                 oncomplete="if (args &amp;&amp; !args.validationFailed) PF('drinkDialog').hide()"
-                                 update="menuDataScroller,selectOneStock"/>
+                <p:inputNumber label = "drinkPercentage" decimalPlaces="1" minValue="0.0" maxValue="100.0" value="#{cafeManagedBean.newDrinkAlc}"/>
+                <p:inputNumber label = "drinkVolume" value="#{cafeManagedBean.newDrinkVol}"/>
+                <p:inputNumber label = "drinkPrice" decimalPlaces="2" minValue="0.00" value="#{cafeManagedBean.newDrinkPrice}"/>
+                <p:inputNumber label = "drinkStock" decimalPlaces="0" minValue="0" value="#{cafeManagedBean.newDrinkStock}"/>
+                <p:commandButton value="Add drink" action="#{cafeManagedBean.addDrinkToMenu()}" update="bossform"/>
             </p:dialog>
 
 
             <h:outputText value="&lt;br/&gt;" escape="false"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
 
-            <p:commandButton value="Add stock to item" onclick="PF('stockDialog').show();"/>
-            <p:dialog header="Add stock to item" widgetVar="stockDialog">
-                <p:messages autoUpdate="true"/>
+            <p:commandButton id="addToStockButton" value="Add stock to item" actionListener="#{cafeManagedBean.checkMenuEmpty}"
+                             oncomplete="if (#{cafeManagedBean.menuNotEmpty}) { PF('stockDialog').show() }" update="@this,bossform"/>
+            <p:dialog closeOnEscape="true" header="Add stock to item" modal="true" widgetVar="stockDialog" >
                 <p:selectOneMenu id="selectOneStock" value ="#{cafeManagedBean.menuEntryId}" filter="true" filterMatchMode="contains">
                     <f:selectItems value="#{cafeManagedBean.mapManagedMenu()}" />
                 </p:selectOneMenu>
-                <p:inputText id="addToStock" value="#{cafeManagedBean.addToStock}"/>
-                <p:commandButton value="Add stock to item" action="#{cafeManagedBean.addStockToDrink()}"
-                                 oncomplete="if (args &amp;&amp; !args.validationFailed) PF('stockDialog').hide()"
-                                 update="menuDataScroller,selectOneStock"/>
+                <p:inputNumber id="addToStock" minValue="1" decimalPlaces="0" value="#{cafeManagedBean.addToStock}"/>
+                <p:commandButton value="Add stock to item" action="#{cafeManagedBean.addStockToDrink()}" update="bossform"/>
             </p:dialog>
 
             <h:outputText value="&lt;br/&gt;" escape="false"/>
@@ -104,11 +101,18 @@
                         </p:panelGrid>
                     </p:outputPanel>
                     <p:outputPanel>
-                        <p:commandButton value="Delete drink" action="#{cafeManagedBean.removeDrinkFromMenu(entry.id)}" update="menuDataScroller"/>
+                        <p:commandButton value="Delete" action="#{cafeManagedBean.removeDrinkFromMenu(entry.id)}" update="bossform">
+                            <p:confirm header="Delete item" message="Delete #{entry.item.name} with id: #{entry.id}?"/>
+                        </p:commandButton>
                     </p:outputPanel>
                 </p:panelGrid>
                 <p:separator/>
             </p:dataScroller>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes"/>
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no"/>
+            </p:confirmDialog>
         </h:form>
     </h:body>
 
