@@ -17,11 +17,6 @@
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
 
-
-
-
-
-
 <f:view>
     <h:head>
         <h:outputStylesheet library="CSS_files" name="header.css"  />
@@ -47,55 +42,46 @@
             </div>
         </div>
 
-
-        <h:outputText style="font-weight: bold" value="Credit: #{userManagedBean.userCredit}" escape="false"/>
-        <h:outputText value="&lt;br/&gt;" escape="false"/>
-        <h:commandButton value="Add credit" onclick="PF('dlg').show()"/>
-        <p:dialog header="Credit" widgetVar="dlg" modal="true" height="100">
-            <h:form>
-                <h:outputText value="Enter the amount to add" />
-                <h:inputText a:placeholder="add credit" value="#{userManagedBean.amountToAdd}"/>
-                <h:commandButton ajax="false" value="Add to credit" action="#{userManagedBean.addCredit()}"/>
-            </h:form>
-        </p:dialog>
-
-
         <style type="text/css">
             .formButton{
                 margin-right: 10px;
             }
         </style>
 
-        <h:form>
+        <h:form id="customerform">
+            <p:growl id="growl" life="2500" />
+
+            <h:outputText style="font-weight: bold" value="Credit: #{userManagedBean.userCredit}" escape="false"/>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <p:commandButton value="Add credit" onclick="PF('dlg').show()"/>
+            <p:dialog header="Credit" widgetVar="dlg" modal="true" height="100">
+                    <h:outputText value="Enter the amount to add" />
+                    <p:inputNumber minValue="0" value="#{userManagedBean.amountToAdd}"/>
+                    <p:commandButton value="Add to credit" action="#{userManagedBean.addCredit()}" update="customerform"/>
+            </p:dialog>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
             <h:outputText value="Reservation Menu" escape="false"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
-            <h:selectOneMenu id="select_cafe_cus" value ="#{reservationManagedBean.reservationCafeId}">
-                <f:ajax event="change" update="@this" />
+            <p:selectOneMenu id="select_cafe_cus" value ="#{reservationManagedBean.reservationCafeId}">
                 <f:selectItems id="select_cafe_map_cus" value="#{utilityManagedBean.mapAllCafes()}" />
-            </h:selectOneMenu>
-            <h:commandButton styleClass="formButton" value="Load café menu" action="#{reservationManagedBean.updateReservationMenu()}"/>
-            <h:selectOneMenu styleClass="formButton" id="select_menu_cus" value ="#{reservationManagedBean.reservationMenuEntryId}">
-                <f:ajax event="change" update="@this" />
+            </p:selectOneMenu>
+            <p:commandButton styleClass="formButton" value="Load café menu" action="#{reservationManagedBean.updateReservationMenu()}" update="customerform"/>
+            <p:selectOneMenu styleClass="formButton" id="select_menu_cus" value ="#{reservationManagedBean.reservationMenuEntryId}">
                 <f:selectItems id="select_menu_map_cus" value="#{reservationManagedBean.reservationMenu}" />
-            </h:selectOneMenu>
+            </p:selectOneMenu>
             <c:if test="#{reservationManagedBean.isReservationMenuLoaded()}">
                 <h:inputText id="reservation_amount" a:placeholder="amount" value="#{reservationManagedBean.reservationAmount}"/>
             </c:if>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
-            <h:outputText value="status: #{reservationManagedBean.reservationStatus}" escape="false"/>
             <c:if test="#{reservationManagedBean.isReservationMenuLoaded()}">
                 <h:outputText value="&lt;br/&gt;" escape="false"/>
-                <h:commandButton styleClass="formButton" value="Prepare reservation" action="#{reservationManagedBean.prepareReservation()}"/>
-            </c:if>
-            <c:if test="#{reservationManagedBean.isReadyToPay()}">
-                <h:commandButton styleClass="formButton" value="Pay reservation" action="#{reservationManagedBean.payReservation()}"/>
+                <p:commandButton styleClass="formButton" value="Pay reservation" action="#{reservationManagedBean.addReservation()}" update="customerform"/>
             </c:if>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
-            <h:selectOneMenu styleClass="formButton" id="select_res_cus" value ="#{reservationManagedBean.removeReservationId}">
-                <f:ajax event="change" update="@this" />
+            <p:selectOneMenu styleClass="formButton" id="select_res_cus" value ="#{reservationManagedBean.removeReservationId}">
                 <f:selectItems id="select_res_map_cus" value="#{reservationManagedBean.userReservationsMap}" />
-            </h:selectOneMenu>
-            <h:commandButton styleClass="formButton" value="Cancel reservation" action="#{reservationManagedBean.cancelReservation()}"/>
+            </p:selectOneMenu>
+            <p:commandButton styleClass="formButton" value="Cancel reservation" action="#{reservationManagedBean.cancelReservation()}" update="customerform"/>
         </h:form>
 
 
@@ -132,10 +118,10 @@
                 Scroll Down to Load More Reservations
             </f:facet>
 
-            <h:panelGrid columns="3" columnClasses="logo,detail,detail">
+            <p:panelGrid columns="3" columnClasses="logo,detail,detail">
                 <h:graphicImage width="200"  library="images" name="#{reservation.menuEntry.item.name}.jpg"/>
                 <p:outputPanel>
-                    <h:panelGrid columns="2">
+                    <p:panelGrid columns="2">
                         <h:outputText value="Amount:" />
                         <h:outputText value="#{reservation.amountOfDrinks}" style="font-weight: bold"/>
 
@@ -144,7 +130,7 @@
 
                         <h:outputText value="Cafe:" />
                         <h:outputText value="#{reservation.bar.barInfo.name}" style="font-weight: bold"/>
-                    </h:panelGrid>
+                    </p:panelGrid>
                 </p:outputPanel>
                 <p:outputPanel>
                     <p:panelGrid columns="2" >
@@ -152,9 +138,7 @@
                         <h:outputText value="#{reservation.id}" style="font-weight: bold"/>
                     </p:panelGrid>
                 </p:outputPanel>
-            </h:panelGrid>
-
-
+            </p:panelGrid>
         </p:dataScroller>
 
     </h:body>

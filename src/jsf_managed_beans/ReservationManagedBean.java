@@ -51,19 +51,6 @@ public class ReservationManagedBean implements Serializable {
 
     private static DecimalFormat geldFormat = new DecimalFormat("0.00");
 
-    public String getStringOfAllReservations()
-    {
-        String s = "";
-        for(ItemReservation reservation : ((Customer)userManagedBean.getUser()).getReservations())
-        {
-            s = s + reservation.getId() + ": " + reservation.getAmountOfDrinks()
-                    + " " + reservation.getMenuEntry().getItem().getName()
-                    + " in " + reservation.getBar().getBarInfo().getName()
-                    + " | ";
-        }
-        return s;
-    }
-
     public void updateReservationMenu() {
         if (reservationCafeId > -1) {
             Set<MenuEntry> menu = queryBean.queryMenuFromBar(reservationCafeId);
@@ -87,6 +74,7 @@ public class ReservationManagedBean implements Serializable {
     {
         try {
             placeReservationBean.addReservation(reservationCafeId, reservationMenuEntryId, userManagedBean.getUser().getUsername(), reservationAmount);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Reservation sent to Bar", "Refresh to see the new reservation"));
         }
         catch (EJBException e)
         {
@@ -114,7 +102,6 @@ public class ReservationManagedBean implements Serializable {
     {
         userBean.cancelUserReservation((Customer)userManagedBean.getUser(), removeReservationId);
     }
-
 
 
 

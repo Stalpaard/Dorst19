@@ -13,8 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-@Stateful(name = "ReservationEJB")
-@StatefulTimeout(unit = TimeUnit.MINUTES, value = 60)
+@Stateless(name = "ReservationEJB")
 public class PlaceReservationBean {
 
     @PersistenceContext(name = "DorstPersistenceUnit")
@@ -31,8 +30,6 @@ public class PlaceReservationBean {
     String customerUsername = null; //zou uit sessioncontext moeten gehaald worden
     int amount = 0;
     float total = 0;
-    boolean ready =false;
-    String status = "No reservation set";
 
     public PlaceReservationBean()
     {
@@ -53,49 +50,23 @@ public class PlaceReservationBean {
             if(menuEntry.getStock() >= amount){
                 if(customer.getCredit() >= total)
                 {
-                    ready = true;
                     payReservation();
-                    status = amount + " of " + bar.getMenuEntryById(menuEntryId).getItem().getName()
-                            + " in " + bar.getBarInfo().getName()
-                            + " with total price: " + total;
                 }
                 else
                 {
-                    reset();
-                    //throw new EJBException("Insufficient amount of credit (total: " + total + ")");
+                    throw new EJBException("Insufficient amount of credit (total: " + total + ")");
                 }
             }
             else
             {
-                reset();
-                //throw new EJBException("Not enough stock in café");
+                throw new EJBException("Not enough stock in café");
             }
         }
         else
         {
-            reset();
-            //throw new EJBException("Invalid reservation, try again");
+            throw new EJBException("Invalid reservation, try again");
         }
 
-    }
-
-    private void reset()
-    {
-        this.barId = barId;
-        this.menuEntryId = menuEntryId;
-        this.customerUsername = null;
-        this.amount = 0;
-        ready = false;
-    }
-
-    public String getStatus()
-    {
-        return status;
-    }
-
-    public boolean readyToPay()
-    {
-        return ready;
     }
 
     @Interceptors(LogInterceptor.class)
@@ -111,8 +82,6 @@ public class PlaceReservationBean {
             ObjectMessage reservationMsg = s.createObjectMessage();
             reservationMsg.setObject(reservationInfo);
             mp.send(reservationMsg);
-            status = "Reservation sent to Bar";
-            ready = false;
         }
         catch (Exception e)
         {
