@@ -16,12 +16,12 @@ public class TimePeriod {
 
     @Min(value = 0, message = "minimum is 0")
     @Max(value = 23, message = "maximum is 23")
-    @Column(name = "begin_hour", nullable = false)
+    @Column(name = "begin_hour")
     private int beginHour;
 
     @Min(value = 0, message = "minimum is 0")
     @Max(value = 23, message = "maximum is 23")
-    @Column(name = "end_hour", nullable = false)
+    @Column(name = "end_hour")
     private int endHour;
 
     protected TimePeriod()

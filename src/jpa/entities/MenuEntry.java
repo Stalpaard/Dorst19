@@ -25,11 +25,11 @@ public class MenuEntry {
     private Item item;
 
     @PositiveOrZero(message = "cannot be negative")
-    @Column(name = "price", nullable = false)
+    @Column(name = "price")
     private float price;
 
     @PositiveOrZero(message = "cannot be negative")
-    @Column(name = "stock", nullable = false)
+    @Column(name = "stock")
     private int stock;
 
     protected MenuEntry()

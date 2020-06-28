@@ -21,9 +21,7 @@ public class Shift {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(
             name = "jnd_shift_bar",
-            joinColumns = {
-                    @JoinColumn(name = "shift_fk")
-            },
+            joinColumns = @JoinColumn(name = "shift_fk"),
             inverseJoinColumns = @JoinColumn(name = "bar_fk", referencedColumnName = "id")
     )
     private Bar bar;
@@ -39,7 +37,7 @@ public class Shift {
     private TimePeriod timePeriod;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "day", updatable = false, nullable = false)
+    @Column(name = "day")
     private DaysOfTheWeek dayOfTheWeek;
 
     protected Shift()

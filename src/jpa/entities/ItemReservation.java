@@ -10,6 +10,7 @@ public class ItemReservation {
     @Id @GeneratedValue
     @Column(name = "id")
     private int id;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "menuEntry_fk")
     private MenuEntry menuEntry;

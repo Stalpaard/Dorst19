@@ -34,7 +34,7 @@ public class Bar implements Serializable
     private BarInfo barInfo;
 
     @PositiveOrZero(message = "can't be negative")
-    @Column(name = "capacity", nullable = false)
+    @Column(name = "capacity")
     private int capacity;
 
     @ElementCollection(fetch = FetchType.EAGER)
