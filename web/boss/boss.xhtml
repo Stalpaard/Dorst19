@@ -16,6 +16,7 @@
 
 <f:view>
     <h:form>
+        <p:commandButton ajax="false" action="/index?faces-redirect=true" value="Back"/>
         <h:outputText value="Bosspage"/>
         <h:outputText value="&lt;br/&gt;" escape="false"/>
         <h:outputLabel value="Status: #{userManagedBean.loginStatus} "/>

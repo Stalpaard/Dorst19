@@ -11,9 +11,27 @@
 
 <f:view>
    <h:head>
-
+      <h:outputStylesheet library="CSS_files" name="header.css"  />
+      <h:outputStylesheet library="CSS_files" name="BarOverview.css"  />
+      <title>Cafe overview</title>
    </h:head>
    <h:body>
+      <div id="header" >
+         <div class="header">
+            <h1>Cafe overview</h1>
+            <p>Eentje is geentje!</p>
+         </div>
+         <div class="button">
+            <h:form>
+               <p:commandButton ajax="false" action="boss/boss?faces-redirect=true" rendered="#{userManagedBean.isUserBoss()}" value="Manage" styleClass="left"/>
+               <p:commandButton ajax="false" actionListener="#{userManagedBean.logout()}" value="Logout" action="returnFromCustomer" rendered="#{userManagedBean.loggedIn}"/>
+               <p:commandButton ajax="false" action="/login?faces-redirect=true" value="Login" rendered="#{!userManagedBean.loggedIn}"/>
+               <p:commandButton ajax="false" actionListener="#{userManagedBean.createUser()}" value="Register" rendered="#{!userManagedBean.loggedIn}"/>
+            </h:form>
+            <p:outputLabel style=" font-size: 15px" value="Status: #{userManagedBean.loginStatus}" rendered="#{userManagedBean.loggedIn}"/>
+            <p:outputLabel style=" font-size: 15px" value="No user is logged in" rendered="#{!userManagedBean.loggedIn}"/>
+         </div>
+      </div>
       <p:dataScroller value="#{utilityManagedBean.getAllCafes()}" var="bar" chunkSize="10">
          <f:facet name="header">
             Scroll Down to Load More Bars
@@ -29,9 +47,13 @@
 
                   <h:outputText value="Capacity:" />
                   <h:outputText value="#{bar.capacity}" style="font-weight: bold"/>
+               </h:panelGrid>
+               <h:panelGrid columns="2" cellpadding="5">
+                  <h:outputText value="Id:" />
+                  <h:outputText value="#{bar.id}" style="font-weight: bold"/>
 
-                  <h:outputText value="Color:" />
-                  <h:outputText value="#{car.color}" style="font-weight: bold"/>
+                  <h:outputText value="Capacity:" />
+                  <h:outputText value="#{bar.capacity}" style="font-weight: bold"/>
                </h:panelGrid>
             </p:outputPanel>
          </h:panelGrid>
