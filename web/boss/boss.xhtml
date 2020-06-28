@@ -39,7 +39,7 @@
             </div>
         </div>
         <h:form id="bossform">
-            <p:growl id="growl" life="2500" />
+            <p:growl id="growl" showDetail="true" life="2500" />
 
             <h:outputText value="Bosspage"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
@@ -58,7 +58,7 @@
                 <p:inputText label="cafeName" value="#{cafeManagedBean.newCafeName}"/>
                 <p:inputText label = "cafeStreet" value="#{cafeManagedBean.newCafeStreet}"/>
                 <p:inputText label = "cafeCity" value="#{cafeManagedBean.newCafeCity}"/>
-                <p:inputNumber label = "cafeCapacity" minValue="0" decimalPlaces="0" value="#{cafeManagedBean.newCafeCapacity}"/>
+                <p:inputNumber label = "cafeCapacity" minValue="0" maxValue="2147483647" decimalPlaces="0" value="#{cafeManagedBean.newCafeCapacity}"/>
                 <p:commandButton value="Create cafe" action="#{cafeManagedBean.createCafe()}" update="bossform"/>
             </p:dialog>
 

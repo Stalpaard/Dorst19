@@ -9,9 +9,6 @@ import javax.interceptor.Interceptors;
 import javax.jms.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 @Stateless(name = "ReservationEJB")
 public class PlaceReservationBean {
@@ -50,7 +47,7 @@ public class PlaceReservationBean {
             if(menuEntry.getStock() >= amount){
                 if(customer.getCredit() >= total)
                 {
-                    payReservation();
+                    sendReservation();
                 }
                 else
                 {
@@ -70,7 +67,7 @@ public class PlaceReservationBean {
     }
 
     @Interceptors(LogInterceptor.class)
-    private void payReservation() throws DorstException
+    private void sendReservation() throws DorstException
     {
         //Produces ObjectMessage (needs to be serializable!) containing the ItemReservation
         ReservationInfo reservationInfo = new ReservationInfo(barId, menuEntryId, customerUsername, amount);
