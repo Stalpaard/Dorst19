@@ -25,8 +25,7 @@
             <h:form>
                <p:commandButton ajax="false" action="boss/boss?faces-redirect=true" rendered="#{userManagedBean.isUserBoss()}" value="Manage" styleClass="left"/>
                <p:commandButton ajax="false" actionListener="#{userManagedBean.logout()}" value="Logout" action="returnFromCustomer" rendered="#{userManagedBean.loggedIn}"/>
-               <p:commandButton ajax="false" action="/login?faces-redirect=true" value="Login" rendered="#{!userManagedBean.loggedIn}"/>
-               <p:commandButton ajax="false" actionListener="#{userManagedBean.createUser()}" value="Register" rendered="#{!userManagedBean.loggedIn}"/>
+               <p:commandButton ajax="false" action="/login?faces-redirect=true" value="Authenticate" rendered="#{!userManagedBean.loggedIn}"/>
             </h:form>
             <p:outputLabel style=" font-size: 15px" value="Status: #{userManagedBean.loginStatus}" rendered="#{userManagedBean.loggedIn}"/>
             <p:outputLabel style=" font-size: 15px" value="No user is logged in" rendered="#{!userManagedBean.loggedIn}"/>
