@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+<f:view>
+    <h:head>
+        <h:outputStylesheet library="CSS_files" name="header.css"  />
+        <h:outputStylesheet library="CSS_files" name="BarOverview.css"  />
+        <title>Cafe overview</title>
+    </h:head>
+    <h:body>
+        <div id="header" >
+            <div class="header">
+                <h1>#{dtSelect.bar.barInfo.name} menu</h1>
+                <p>Eentje is geentje!</p>
+            </div>
+            <div class="button">
+                <h:form>
+                    <p:commandButton ajax="false" action="/index?faces-redirect=true" actionListener="#{dtSelect.back()}" value="Back" styleClass="left"/>
+                    <p:commandButton ajax="false" action="boss/boss?faces-redirect=true" rendered="#{userManagedBean.isUserBoss()}" value="Manage" styleClass="left"/>
+                    <p:commandButton ajax="false" actionListener="#{userManagedBean.logout()}" value="Logout" action="returnFromCustomer" rendered="#{userManagedBean.loggedIn}"/>
+                    <p:commandButton ajax="false" action="/login?faces-redirect=true" value="Authenticate" rendered="#{!userManagedBean.loggedIn}"/>
+                </h:form>
+                <p:outputLabel style=" font-size: 15px" value="Status: #{userManagedBean.loginStatus}" rendered="#{userManagedBean.loggedIn}"/>
+                <p:outputLabel style=" font-size: 15px" value="No user is logged in" rendered="#{!userManagedBean.loggedIn}"/>
+            </div>
+        </div>
+        <div class="cafeTable">
+            <h:form>
+                <p:dataTable lazy="false" var="drink" rowKey="#{drink.id}" value="#{dtSelect.menuItems}" widgetVar="drinksTable" stickyHeader="true" stickyTopAt=".layout-topbar"
+                             emptyMessage="No drinks found with given criteria"> <!-- filteredValue="#{dtFilterView.filteredBars}" globalFilterFunction="#{dtFilterView.globalFilterFunction}" value="#{dtFilterView.bars}"> -->
+                    <f:facet name="header">
+                        <p:outputPanel>
+                            <h:outputText value="Search all:" />
+                            <p:inputText id="globalFilter" onkeyup="PF('drinksTable').filter()" style="width:150px" placeholder="Enter keyword"/>
+                        </p:outputPanel>
+                    </f:facet>
+                    <p:column headerText="Name" filterBy="#{drink.item.name}" filterStyleClass="hide">
+                        <h:outputText value="#{drink.item.name}" />
+                    </p:column>
+
+                    <p:column headerText="AlcoholPercentage" filterBy="#{drink.item.alcoholPercentage}" filterStyleClass="hide">
+                        <h:outputText value="#{drink.item.alcoholPercentage}" />
+                    </p:column>
+
+                    <p:column headerText="Volume" filterBy="#{drink.item.volume}" filterStyleClass="hide">
+                        <h:outputText value="#{drink.item.volume}" />
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </div>
+    </h:body>
+</f:view>
+</html>
