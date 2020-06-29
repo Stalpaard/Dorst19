@@ -24,9 +24,6 @@ public class MenuEntry {
     @JoinColumn(name = "item_fk")
     private Item item;
 
-    @ManyToOne(optional = false)
-    private Bar bar;
-
     public void setItem(Item item) {
         this.item = item;
     }

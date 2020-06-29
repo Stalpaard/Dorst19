@@ -12,7 +12,7 @@ public class ItemReservation {
     @Column(name = "id")
     private int id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "menu_entry_fk")
     private MenuEntry menuEntry;
 
@@ -20,7 +20,7 @@ public class ItemReservation {
     @Column(name = "amount")
     private int amountOfDrinks;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(
             name = "jnd_reservation_customer",
             joinColumns = @JoinColumn(name = "reservation_fk"),
@@ -28,7 +28,7 @@ public class ItemReservation {
     )
     private Customer customer;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(
             name = "jnd_reservations_bar",
             joinColumns = {
