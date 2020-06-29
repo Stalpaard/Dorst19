@@ -46,6 +46,7 @@ public class BarCreationBean {
     public void removeBar(int cafeId) throws DorstException
     {
         Bar toDelete = entityManager.find(Bar.class, cafeId);
+        entityManager.refresh(toDelete);
         if(toDelete != null)
         {
             if(!toDelete.getReservations().isEmpty()) throw new DorstException("There are still customer reservations");
