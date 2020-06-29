@@ -1,5 +1,6 @@
 package jpa.entities;
 
+import javax.jms.JMSConnectionFactory;
 import javax.persistence.*;
 import javax.validation.constraints.Positive;
 import java.util.Objects;
@@ -12,7 +13,7 @@ public class ItemReservation {
     private int id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "menuEntry_fk")
+    @JoinColumn(name = "menu_entry_fk")
     private MenuEntry menuEntry;
 
     @Positive(message = "has to be greater than 0")

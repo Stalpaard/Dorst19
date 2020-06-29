@@ -6,7 +6,7 @@
 
     <flow-definition id="customer">
         <flow-return id="returnFromCustomer">
-            <from-outcome>/index.xhtml</from-outcome>
+            <from-outcome>/index.xhtml?faces-redirect=true</from-outcome>
         </flow-return>
     </flow-definition>
 
