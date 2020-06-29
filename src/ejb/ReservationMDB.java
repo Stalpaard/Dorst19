@@ -25,11 +25,11 @@ import javax.persistence.PersistenceContext;
 )
 public class ReservationMDB implements MessageListener {
 
-    @EJB
-    ReservationCounterBean reservationCounterBean;
-
     @PersistenceContext(unitName = "DorstPersistenceUnit")
     EntityManager entityManager;
+
+    @EJB
+    ReservationCounterBean reservationCounterBean;
 
     public ReservationMDB() {
     }
@@ -50,12 +50,11 @@ public class ReservationMDB implements MessageListener {
                         customer.addReservation(success);
                         entityManager.merge(customer);
                         entityManager.merge(bar);
-                        entityManager.flush();
-                        reservationCounterBean.incReservationsDone();
                     }
                 }
             }
         } catch (JMSException e) {
+            reservationCounterBean.decReservationsDone();
             e.printStackTrace();
         }
     }

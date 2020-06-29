@@ -22,6 +22,9 @@ public class PlaceReservationBean {
     @Resource(mappedName = "jms/reservationMsg")
     private ConnectionFactory queue;
 
+    @EJB
+    ReservationCounterBean reservationCounterBean;
+
     int barId = -1;
     int menuEntryId = -1;
     String customerUsername = null; //zou uit sessioncontext moeten gehaald worden
@@ -78,6 +81,7 @@ public class PlaceReservationBean {
             MessageProducer mp = s.createProducer(reservationDest);
             ObjectMessage reservationMsg = s.createObjectMessage();
             reservationMsg.setObject(reservationInfo);
+            reservationCounterBean.incReservationsDone();
             mp.send(reservationMsg);
         }
         catch (Exception e)
