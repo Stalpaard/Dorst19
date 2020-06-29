@@ -57,5 +57,25 @@
          </h:form>
       </div>
    </h:body>
+   <h:body>
+      <style type="text/css">
+         .footer{
+            background: linear-gradient(white, #f8cee6);
+            margin-top: 5px;
+            border-color: black;
+            font-family: "fantasy";
+         }
+      </style>
+      <div class="footer" align="center">
+         <h:outputText value="Global amount of reservations: #{utilityManagedBean.globalAmountOfReservations}"/>
+         <br/>
+         <h:outputText value="Next time you get free credits! YEEEEEY :  #{utilityManagedBean.giftDatesString()}"/>
+         <h:form>
+            <p:commandButton ajax="false" actionListener="#{userManagedBean.removeUser}" value="Remove" action="returnFromCustomer" rendered="#{userManagedBean.loggedIn}"/>
+         </h:form>
+
+
+      </div>
+   </h:body>
 </f:view>
 </html>
