@@ -148,11 +148,14 @@ public class CafeManagedBean implements Serializable {
     }
 
     public void removeCafe(int cafeId) {
-        if(barCreationBean.removeBar(cafeId))
-        {
+        try{
+            barCreationBean.removeBar(cafeId);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Café removed", "Café with id: " + cafeId + " removed"));
         }
-        else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "REMOVE ERROR", "Internal server error"));
+        catch (DorstException e)
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to remove bar", e.getMessage()));
+        }
     }
 
 

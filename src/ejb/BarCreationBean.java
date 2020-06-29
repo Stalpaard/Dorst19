@@ -43,21 +43,15 @@ public class BarCreationBean {
         return false;
     }
 
-    public boolean removeBar(int cafeId)
+    public void removeBar(int cafeId) throws DorstException
     {
         Bar toDelete = entityManager.find(Bar.class, cafeId);
         if(toDelete != null)
         {
-            for(ItemReservation reservation : toDelete.getReservations())
-            {
-                Customer customer = entityManager.find(Customer.class, reservation.getCustomer().getUsername());
-                customer.removeReservation(reservation);
-                entityManager.merge(customer);
-            }
-            entityManager.remove(toDelete);
-            return true;
+            if(!toDelete.getReservations().isEmpty()) throw new DorstException("There are still customer reservations");
+            else entityManager.remove(toDelete);
         }
-        else return false;
+        else throw new DorstException("Internal server error");
     }
 
     private void validateBar(Bar bar) throws DorstException
