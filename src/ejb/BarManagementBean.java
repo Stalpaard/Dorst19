@@ -70,21 +70,22 @@ public class BarManagementBean implements Serializable {
         } else managedBar = null;
     }
 
-    public boolean removeMenuItem(int id) {
-        if (managedBar != null) {
-            managedBar = entityManager.find(Bar.class, managedBar.getId());
-            entityManager.refresh(managedBar);
-            Item removed = managedBar.removeFromMenu(id);
-            int removed_id = removed.getId();
-            entityManager.merge(managedBar);
-            TypedQuery<MenuEntry> removeDrinkQuery = entityManager.createNamedQuery("CHECK_DRINK_REF", MenuEntry.class)
-                    .setParameter("id", removed_id);
-            if (removeDrinkQuery.getResultList().size() <= 0) {
-                if (removed instanceof DrinkItem) entityManager.remove(entityManager.find(DrinkItem.class, removed_id));
-            }
-            return true;
+    public void removeMenuItem(int id) throws DorstException {
+        managedBar = entityManager.find(Bar.class, managedBar.getId());
+        entityManager.refresh(managedBar);
+        MenuEntry toRemove = managedBar.getMenuEntryById(id);
+        for (ItemReservation reservation : managedBar.getReservations()) {
+            if (reservation.getMenuEntry().equals(toRemove))
+                throw new DorstException("There are still reservations for this item");
         }
-        return false;
+        Item removed = managedBar.removeFromMenu(id);
+        int removed_id = removed.getId();
+        entityManager.merge(managedBar);
+        TypedQuery<MenuEntry> removeDrinkQuery = entityManager.createNamedQuery("CHECK_DRINK_REF", MenuEntry.class)
+                .setParameter("id", removed_id);
+        if (removeDrinkQuery.getResultList().size() <= 0) {
+            if (removed instanceof DrinkItem) entityManager.remove(entityManager.find(DrinkItem.class, removed_id));
+        }
     }
 
     public void addStockToMenuItem(int menuEntryId, int amount) throws DorstException {

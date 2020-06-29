@@ -155,11 +155,15 @@ public class CafeManagedBean implements Serializable {
     }
 
     public void removeDrinkFromMenu(int menuEntry) {
-        if (barManagementBean.removeMenuItem(menuEntry)) {
+        try{
+            barManagementBean.removeMenuItem(menuEntry);
             if (barManagementBean.getMenu().isEmpty()) menuNotEmpty = false;
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Item removed", "Menu entry with id: " + menuEntry + " was removed"));
-        } else
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "REMOVE ERROR", "Internal server error"));
+        }
+        catch (DorstException e)
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to remove item", e.getMessage()));
+        }
     }
 
     public void addStockToDrink() {
@@ -167,7 +171,7 @@ public class CafeManagedBean implements Serializable {
             barManagementBean.addStockToMenuItem(menuEntryId, addToStock);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Stock added", addToStock + " added to menu entry with id: " + menuEntryId));
         } catch (DorstException e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "STOCK ERROR", e.getMessage()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to add to stock", e.getMessage()));
         }
     }
 

@@ -45,23 +45,9 @@ public class UtilityManagedBean {
         return bars;
     }
 
-
-    public String menuRedirect(int barId) {
-        return "menuDemo.xhtml?faces-redirect=true&barId=" + barId;
-    }
-
     public void xmlMenuRedirect(int cafeId) throws IOException {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         externalContext.redirect("http://localhost:8080/Dorst19/resources/menu/" + cafeId);
-    }
-
-    public String stringOfAllCafes() {
-        String s = "";
-        for (Bar b : queryBean.queryBars()) {
-            BarInfo info = b.getBarInfo();
-            s = s + info.getName() + " in " + info.getAddress().getStreet() + ", " + info.getAddress().getCity() + " | ";
-        }
-        return s;
     }
 
     public Map<String, Object> getUserTypes() {
