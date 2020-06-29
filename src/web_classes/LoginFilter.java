@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 
 //@WebFilter(urlPatterns = {"/Dorst19/boss/*", "/Dorst19/customer/*"})
 //@WebFilter("/Dorst19/boss/*")
-//@WebFilter("/*")
+@WebFilter("/*")
 public class LoginFilter implements Filter {
 
     @Inject
@@ -28,13 +28,12 @@ public class LoginFilter implements Filter {
             throws IOException, ServletException {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpSession session = httpRequest.getSession(false);
 
         String loginURI = httpRequest.getContextPath() + "/login";
 
         boolean isLoginRequest = httpRequest.getRequestURI().equals(loginURI);
 
-        boolean isLoginPage = httpRequest.getRequestURI().endsWith("/login.xhtml");
+        boolean isLoginPage = httpRequest.getRequestURI().contains("/login.xhtml");
 
         if (userManagedBean.isLoggedIn() && (isLoginRequest || isLoginPage)) {
             // the user is already logged in and he's trying to login again
@@ -49,16 +48,10 @@ public class LoginFilter implements Filter {
                 dispatcher.forward(request, response);
             }
 
-        } else if (userManagedBean.isLoggedIn() || isLoginRequest) {
+        } else {
             // continues the filter chain
             // allows the request to reach the destination
             chain.doFilter(request, response);
-
-        } else {
-            // the user is not logged in, so authentication is required
-            // forwards to the Login page
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/login.xhtml");
-            dispatcher.forward(request, response);
 
         }
 
