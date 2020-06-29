@@ -73,8 +73,6 @@
             <p:commandButton ajax="false" actionListener="#{userManagedBean.removeUser}" value="Remove" action="returnFromCustomer" rendered="#{userManagedBean.loggedIn and userManagedBean.userCustomer}"/>
             <p:commandButton ajax="false" actionListener="#{userManagedBean.removeUser}" value="Remove" action="returnFromBoss" rendered="#{userManagedBean.loggedIn and userManagedBean.userBoss}"/>
          </h:form>
-
-
       </div>
    </h:body>
 </f:view>
