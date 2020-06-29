@@ -54,40 +54,61 @@
 
             <h:outputText style="font-weight: bold" value="Credit: &euro;#{userManagedBean.userCredit}" escape="false"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
-            <p:commandButton value="Add credit" onclick="PF('dlg').show()"/>
-            <p:dialog header="Credit" widgetVar="dlg" modal="true" height="100">
+            <p:commandButton value="Add credit" onclick="PF('creditDialog').show()"/>
+            <p:dialog header="Credit" widgetVar="creditDialog" modal="true">
                     <h:outputText value="Enter the amount to add " />
                     <p:inputNumber minValue="0" symbol="&euro;" symbolPosition="p" value="#{userManagedBean.amountToAdd}"/>
                     <p:commandButton value="Add to credit" action="#{userManagedBean.addCredit()}" update="customerform"/>
             </p:dialog>
+
             <h:outputText value="&lt;br/&gt;" escape="false"/>
-            <h:outputText value="Reservation Menu" escape="false"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
-            <p:selectOneMenu id="select_cafe_cus" value ="#{reservationManagedBean.reservationCafeId}">
-                <f:selectItems id="select_cafe_map_cus" value="#{utilityManagedBean.mapAllCafes()}" />
-            </p:selectOneMenu>
-            <p:commandButton styleClass="formButton" value="Load café menu" action="#{reservationManagedBean.updateReservationMenu()}" update="customerform"/>
-            <p:selectOneMenu styleClass="formButton" id="select_menu_cus" value ="#{reservationManagedBean.reservationMenuEntryId}">
-                <f:selectItems id="select_menu_map_cus" value="#{reservationManagedBean.reservationMenu}" />
-            </p:selectOneMenu>
-            <c:if test="#{reservationManagedBean.isReservationMenuLoaded()}">
-                <p:inputNumber minValue="0" maxValue="2147483647" id="reservation_amount" value="#{reservationManagedBean.reservationAmount}"/>
-            </c:if>
+
+            <p:commandButton value="Add reservation" onclick="PF('reservationDialog').show();" update="cafeSelect,cafeMenu"/>
+
+            <p:dialog header="New Reservation" modal="true" widgetVar="reservationDialog">
+                <p:panelGrid columns="2">
+                    <p:outputLabel value="Café: "/>
+                    <p:selectOneMenu id="cafeSelect" filter="true" filterMatchMode="contains" value ="#{reservationManagedBean.reservationCafeId}">
+                        <p:ajax event="change" update="cafeMenu"/>
+                        <f:selectItems value="#{utilityManagedBean.mapAllCafes()}" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Menu: "/>
+                    <p:selectOneMenu id="cafeMenu" filter="true" filterMatchMode="contains" value ="#{reservationManagedBean.reservationMenuEntryId}">
+                        <f:selectItems value="#{reservationManagedBean.updateReservationMenu()}" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Amount: "/>
+                    <p:inputNumber minValue="0" maxValue="2147483647" value="#{reservationManagedBean.reservationAmount}"/>
+                </p:panelGrid>
+                <p:commandButton value="Pay reservation" action="#{reservationManagedBean.addReservation()}" update="customerform"/>
+            </p:dialog>
+
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+
+            <p:commandButton value="Cancel reservation" onclick="PF('cancelReservationDialog').show();" update="reservationMenu"/>
+
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+
+            <p:commandButton value="Refresh reservations" update="reservationOverview"/>
+
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
 
             <p:messages showDetail="true" severity="error"/>
 
-            <h:outputText value="&lt;br/&gt;" escape="false"/>
-
-            <c:if test="#{reservationManagedBean.isReservationMenuLoaded()}">
-                <h:outputText value="&lt;br/&gt;" escape="false"/>
-                <p:commandButton styleClass="formButton" value="Pay reservation" action="#{reservationManagedBean.addReservation()}" update="customerform"/>
-            </c:if>
-            <h:outputText value="&lt;br/&gt;" escape="false"/>
-            <p:selectOneMenu styleClass="formButton" id="select_res_cus" value ="#{reservationManagedBean.removeReservationId}">
-                <f:selectItems id="select_res_map_cus" value="#{reservationManagedBean.userReservationsMap}" />
-            </p:selectOneMenu>
-            <p:commandButton styleClass="formButton" value="Cancel reservation" action="#{reservationManagedBean.cancelReservation()}" update="customerform"/>
+            <p:dialog header="Cancel Reservation" modal="true" widgetVar="cancelReservationDialog">
+                <p:panelGrid columns="2">
+                    <p:outputLabel value="Reservation ID: "/>
+                    <p:selectOneMenu id="reservationMenu" value ="#{reservationManagedBean.removeReservationId}" filter="true" filterMatchMode="contains">
+                        <f:selectItems value="#{reservationManagedBean.userReservationsMap}" />
+                    </p:selectOneMenu>
+                </p:panelGrid>
+                <p:commandButton id="cancelButton" value="Remove reservation" action="#{reservationManagedBean.cancelReservation()}" update="customerform"/>
+            </p:dialog>
 
             <style type="text/css">
                 .logo {
@@ -117,9 +138,9 @@
                 }
             </style>
 
-            <p:dataScroller value="#{reservationManagedBean.userReservations}" var="reservation" chunkSize="10">
+            <p:dataScroller id="reservationOverview" value="#{reservationManagedBean.userReservations}" var="reservation" chunkSize="10">
                 <f:facet name="header">
-                    Scroll Down to Load More Reservations
+                    Reservations Overview
                 </f:facet>
 
                 <h:panelGrid columns="3" columnClasses="logo,detail,detail">
