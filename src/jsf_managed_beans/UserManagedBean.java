@@ -42,6 +42,7 @@ public class UserManagedBean implements Serializable {
             User login_user = userBean.authenticateUser(username, password);
             user = login_user;
             loginStatus = "logged in as " + login_user.getUsername();
+            System.out.println("Yeeeeeet");
             if(isUserCustomer()) return "customer";
             if(isUserBoss()) return "boss";
         }

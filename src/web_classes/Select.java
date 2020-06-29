@@ -3,8 +3,7 @@ package web_classes;
 import jpa.entities.Bar;
 import jpa.entities.DrinkItem;
 import jpa.entities.MenuEntry;
-import jsf_managed_beans.UtilityManagedBean;
-import org.primefaces.event.SelectEvent;
+import jsf_managed_beans.UserManagedBean;
 import org.primefaces.json.JSONArray;
 import org.primefaces.json.JSONObject;
 
@@ -30,7 +29,7 @@ public class Select implements Serializable {
     private MenuEntry drink;
 
     @Inject
-    private UtilityManagedBean utilityManagedBean;
+    private UserManagedBean userManagedBean;
 
     public MenuEntry getDrink() {
         return drink;
@@ -64,17 +63,27 @@ public class Select implements Serializable {
         drink = null;
     }
 
-    public void onRowSelect(SelectEvent event) throws IOException {
+    public void onRowSelect() throws IOException {
         menuItems = null;
         JSONArray jsonArray = readJsonFromUrl("http://localhost:8080/Dorst19/resources/menu/" + bar.getId());
         parseJson(jsonArray);
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         externalContext.redirect("http://localhost:8080/Dorst19/menu.xhtml");
     }
-    public void onDrinkSelect(SelectEvent event) throws IOException {
+    public void onDrinkSelect() throws IOException {
 
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        externalContext.redirect("http://localhost:8080/Dorst19/login.xhtml");
+        System.out.println("yeeeeeet");
+        System.out.println(userManagedBean == null);
+        System.out.println(userManagedBean.getLoginStatus());
+        if(userManagedBean.isLoggedIn())
+        {
+            System.out.println(userManagedBean.attemptLogin());
+        }
+        else
+        {
+            ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+            externalContext.redirect("http://localhost:8080/Dorst19/login.xhtml");
+        }
     }
     public JSONArray readJsonFromUrl(String nurl) throws IOException {
         URL url = new URL(nurl);
