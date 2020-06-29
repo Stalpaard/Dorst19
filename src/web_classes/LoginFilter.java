@@ -38,7 +38,8 @@ public class LoginFilter implements Filter {
         if (userManagedBean.isLoggedIn() && (isLoginRequest || isLoginPage)) {
             // the user is already logged in and he's trying to login again
             // then forwards to the admin's homepage
-            if (userManagedBean.isUserCustomer()) {
+            userManagedBean.attemptLogin();
+            /**if (userManagedBean.isUserCustomer()) {
 
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/customer.xhtml");
                 dispatcher.forward(request, response);
@@ -46,13 +47,12 @@ public class LoginFilter implements Filter {
             if (userManagedBean.isUserBoss()) {
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/boss/boss.xhtml");
                 dispatcher.forward(request, response);
-            }
+            }**/
 
         } else {
             // continues the filter chain
             // allows the request to reach the destination
             chain.doFilter(request, response);
-
         }
 
     }
