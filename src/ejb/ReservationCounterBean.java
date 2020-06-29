@@ -13,7 +13,7 @@ public class ReservationCounterBean {
     @Lock(LockType.WRITE)
     public void incReservationsDone()
     {
-        reservations_done++;
+        reservations_done = reservations_done+1;
     }
 
     @Lock(LockType.READ)
