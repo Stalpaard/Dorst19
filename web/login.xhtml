@@ -27,21 +27,25 @@
 
         <h:form id="loginform">
             <p:growl id="growl" showDetail="true" life="2500" />
-            <h:outputText value="reservations done: #{utilityManagedBean.globalAmountOfReservations}"/>
+
             <h:outputText value="&lt;br/&gt;" escape="false"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
+
             <h:outputLabel value="Users in DB: #{utilityManagedBean.stringOfAllUsers()} "/>
+
             <h:outputText value="&lt;br/&gt;" escape="false"/>
+
             <p:messages showDetail="true"/>
+
             <h:outputText value="&lt;br/&gt;" escape="false"/>
-            <c:if test="#{not userManagedBean.isLoggedIn()}">
-                <p:inputText id="username" a:placeholder="username" value="#{userManagedBean.username}"/>
-                <h:inputSecret id="password" a:placeholder="password" value="#{userManagedBean.password}"/>
-                <p:commandButton value="Login" action="#{userManagedBean.attemptLogin()}" update="loginform"/>
-                <p:commandButton value="Register" onclick="PF('userDialog').show();"/>
-                <h:outputText value="&lt;br/&gt;" escape="false"/>
-                <h:outputText value="&lt;br/&gt;" escape="false"/>
-            </c:if>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+
+            <p:inputText id="username" a:placeholder="username" value="#{userManagedBean.username}"/>
+            <h:inputSecret id="password" a:placeholder="password" value="#{userManagedBean.password}"/>
+            <p:commandButton value="Login" action="#{userManagedBean.attemptLogin()}" update="loginform"/>
+            <p:commandButton value="Register" onclick="PF('userDialog').show();"/>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
 
             <p:dialog header="What type of user are you registering?" modal="true" widgetVar="userDialog">
                 <p:panelGrid columns="1">
