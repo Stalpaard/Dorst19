@@ -50,7 +50,7 @@ public class Bar implements Serializable
     )
     private List<BarBoss> bosses;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "bar")
     @JoinTable(
             name = "jnd_bar_menu",
             joinColumns = @JoinColumn(name = "bar_fk", referencedColumnName = "id"),

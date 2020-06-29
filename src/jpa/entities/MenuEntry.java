@@ -20,9 +20,16 @@ public class MenuEntry {
     @Column(name = "id", updatable = false, nullable = false)
     private int id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "item_fk")
     private Item item;
+
+    @ManyToOne(optional = false)
+    private Bar bar;
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
 
     @PositiveOrZero(message = "cannot be negative")
     @Column(name = "price")

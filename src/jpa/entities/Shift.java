@@ -18,7 +18,7 @@ public class Shift {
     @Column(name = "id")
     private int id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinTable(
             name = "jnd_shift_bar",
             joinColumns = @JoinColumn(name = "shift_fk"),
