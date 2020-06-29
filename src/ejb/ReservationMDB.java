@@ -15,7 +15,6 @@ import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.Objects;
 
 @MessageDriven(
         name = "ReservationConsumerEJB",
@@ -45,7 +44,7 @@ public class ReservationMDB implements MessageListener {
             MenuEntry menuEntry = bar.getMenuEntryById(reservationMsg.menuEntryId);
             Customer customer = entityManager.find(Customer.class, reservationMsg.customerUsername);
             entityManager.refresh(customer);
-            if(bar != null && menuEntry != null) {
+            if (menuEntry != null) {
                 if (menuEntry.getStock() >= reservationMsg.amount) {
                     ItemReservation success = bar.addReservation(customer, reservationMsg.menuEntryId, reservationMsg.amount);
                     if (success != null) {

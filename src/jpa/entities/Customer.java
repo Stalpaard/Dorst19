@@ -14,13 +14,11 @@ public class Customer extends User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", orphanRemoval = true)
     private List<ItemReservation> reservations = new ArrayList<>();
 
-    protected Customer()
-    {
+    protected Customer() {
 
     }
 
-    public Customer(String username, String password)
-    {
+    public Customer(String username, String password) {
         this.username = username;
         this.password = password;
     }
@@ -33,18 +31,15 @@ public class Customer extends User {
         this.credit = credit;
     }
 
-    public boolean addReservation(ItemReservation itemReservationEntity)
-    {
+    public boolean addReservation(ItemReservation itemReservationEntity) {
         return reservations.add(itemReservationEntity);
     }
 
-    public boolean removeReservation(ItemReservation itemReservationEntity)
-    {
-        return reservations.remove(itemReservationEntity); //returns true if collection contained the reservation
+    public boolean removeReservation(ItemReservation itemReservationEntity) {
+        return reservations.remove(itemReservationEntity);
     }
 
-    public List<ItemReservation> getReservations()
-    {
+    public List<ItemReservation> getReservations() {
         return reservations;
     }
 }

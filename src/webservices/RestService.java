@@ -15,7 +15,6 @@ import java.util.Set;
 @Stateless
 @ApplicationPath("/resources")
 public class RestService extends Application {
-        // /Dorst19/resources/epic/hello
 
     @PersistenceContext(unitName = "DorstPersistenceUnit")
     EntityManager entityManager;
@@ -23,13 +22,10 @@ public class RestService extends Application {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Set<MenuEntry> getBarMenu(@PathParam("id") String id)
-    {
+    public Set<MenuEntry> getBarMenu(@PathParam("id") String id) {
         Bar bar = entityManager.find(Bar.class, Integer.parseInt(id));
-        if(bar != null)
-        {
+        if (bar != null) {
             return bar.getMenu();
-        }
-        else throw new NotFoundException();
+        } else throw new NotFoundException();
     }
 }

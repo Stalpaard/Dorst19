@@ -1,16 +1,11 @@
 package jpa.entities;
 
-import com.sun.istack.NotNull;
 import jpa.embeddables.TimePeriod;
 import jpa.embeddables.BarInfo;
 import utilities.DaysOfTheWeek;
 
 import javax.persistence.*;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.*;
 import java.util.List;
@@ -24,9 +19,9 @@ import java.util.List;
 @Table(
         name = "BAR"
 )
-public class Bar implements Serializable
-{
-    @Id @GeneratedValue
+public class Bar implements Serializable {
+    @Id
+    @GeneratedValue
     @Column(name = "id")
     private int id;
 
@@ -66,86 +61,69 @@ public class Bar implements Serializable
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bar", orphanRemoval = true)
     private List<ItemReservation> reservations;
 
-    protected Bar()
-    {
+    protected Bar() {
 
     }
 
-    public Bar(BarInfo barInfo, int capacity)
-    {
+    public Bar(BarInfo barInfo, int capacity) {
         this.barInfo = barInfo;
         this.capacity = capacity;
         this.bosses = new ArrayList<>();
         this.shifts = new ArrayList<>();
         this.reservations = new ArrayList<>();
         this.menu = new TreeSet<>();
-        this.openingHours = new ArrayList<>(Collections.nCopies(7, new TimePeriod(0,0)));
-        for(DaysOfTheWeek d : DaysOfTheWeek.values())
-        {
-            setOpeningHourAtDay(d, new TimePeriod(0,0));
+        this.openingHours = new ArrayList<>(Collections.nCopies(7, new TimePeriod(0, 0)));
+        for (DaysOfTheWeek d : DaysOfTheWeek.values()) {
+            setOpeningHourAtDay(d, new TimePeriod(0, 0));
         }
     }
 
-    public BarInfo getBarInfo()
-    {
+    public BarInfo getBarInfo() {
         return barInfo;
     }
 
-    public boolean addEmployeeToShift(BarEmployee barEmployee, TimePeriod timePeriod, DaysOfTheWeek day)
-    {
+    public boolean addEmployeeToShift(BarEmployee barEmployee, TimePeriod timePeriod, DaysOfTheWeek day) {
         Shift shift = new Shift(this, timePeriod, day);
         boolean add_shift = true;
-        if(shifts.contains(shift) == false)
-        {
+        if (shifts.contains(shift) == false) {
             add_shift = this.addShift(shift);
         }
         return add_shift && shifts.get(shifts.indexOf(shift)).addEmployee(barEmployee);
     }
 
-    public boolean removeEmployeeFromShift(BarEmployee barEmployee, Shift shift)
-    {
-        if(shifts.contains(shift))
-        {
+    public boolean removeEmployeeFromShift(BarEmployee barEmployee, Shift shift) {
+        if (shifts.contains(shift)) {
 
             return shifts.get(shifts.indexOf(shift)).removeEmployee(barEmployee);
-        }
-        else return false;
+        } else return false;
     }
 
-    private boolean addShift(Shift new_shift)
-    {
-        if(shifts.contains(new_shift) == false)
-        {
+    private boolean addShift(Shift new_shift) {
+        if (shifts.contains(new_shift) == false) {
             return shifts.add(new_shift);
-        }
-        else return false;
+        } else return false;
     }
 
-    public boolean removeShift(Shift shift)
-    {
-        if(shifts.contains(shift))
-        {
+    public boolean removeShift(Shift shift) {
+        if (shifts.contains(shift)) {
             Shift remove_shift = shifts.get(shifts.indexOf(shift));
             boolean success_removal = true;
-            for(BarEmployee employee : remove_shift.getEmployees()){
+            for (BarEmployee employee : remove_shift.getEmployees()) {
                 success_removal = remove_shift.removeEmployee(employee);
-                if(success_removal == false) return false;
+                if (success_removal == false) return false;
             }
             return shifts.remove(shift);
-        }
-        else return false;
+        } else return false;
     }
 
-    public List<Shift> getShifts(){
+    public List<Shift> getShifts() {
         return shifts;
     }
 
-    public ItemReservation addReservation(Customer customer, int menuEntryId, int amount)
-    {
+    public ItemReservation addReservation(Customer customer, int menuEntryId, int amount) {
         MenuEntry menuEntry = getMenuEntryById(menuEntryId);
-        if(menuEntry.getStock() >= amount)
-        {
-            ItemReservation reservation = new ItemReservation(this,menuEntry, amount, customer);
+        if (menuEntry.getStock() >= amount) {
+            ItemReservation reservation = new ItemReservation(this, menuEntry, amount, customer);
             reservations.add(reservation);
             menuEntry.setStock(menuEntry.getStock() - amount);
             return reservation;
@@ -153,20 +131,17 @@ public class Bar implements Serializable
         return null;
     }
 
-    private boolean removeReservation(ItemReservation reservation)
-    {
+    private boolean removeReservation(ItemReservation reservation) {
         return reservations.remove(reservation);
     }
 
-    public boolean cancelReservation(ItemReservation reservation)
-    {
+    public boolean cancelReservation(ItemReservation reservation) {
         MenuEntry menuEntry = getMenuEntryById(reservation.getMenuEntry().getId());
         menuEntry.setStock(menuEntry.getStock() + reservation.getAmountOfDrinks());
         return removeReservation(reservation);
     }
 
-    public List<ItemReservation> getReservations()
-    {
+    public List<ItemReservation> getReservations() {
         return reservations;
     }
 
@@ -174,18 +149,14 @@ public class Bar implements Serializable
         return bosses;
     }
 
-    public boolean addBoss(BarBoss boss)
-    {
-        if(bosses.contains(boss) == false)
-        {
+    public boolean addBoss(BarBoss boss) {
+        if (bosses.contains(boss) == false) {
             boolean add_bar = boss.addBar(this);
             return bosses.add(boss) && add_bar;
-        }
-        else return false;
+        } else return false;
     }
 
-    public boolean removeBoss(BarBoss boss)
-    {
+    public boolean removeBoss(BarBoss boss) {
         boolean remove_bar = boss.removeBar(this);
         return bosses.remove(boss) && remove_bar;
     }
@@ -194,11 +165,9 @@ public class Bar implements Serializable
         return menu;
     }
 
-    public MenuEntry getMenuEntryById(int id)
-    {
-        for(MenuEntry m : menu)
-        {
-            if(m.getId() == id) return m;
+    public MenuEntry getMenuEntryById(int id) {
+        for (MenuEntry m : menu) {
+            if (m.getId() == id) return m;
         }
         return null;
     }
@@ -210,10 +179,8 @@ public class Bar implements Serializable
     public Item removeFromMenu(int entryId) {
 
         MenuEntry temp = getMenuEntryById(entryId);
-        if(temp != null)
-        {
-            if(menu.remove(temp))
-            {
+        if (temp != null) {
+            if (menu.remove(temp)) {
                 return temp.getItem();
             }
         }
@@ -232,13 +199,11 @@ public class Bar implements Serializable
         this.capacity = capacity;
     }
 
-    public List<TimePeriod> getOpeningHours()
-    {
+    public List<TimePeriod> getOpeningHours() {
         return openingHours;
     }
 
-    public void setOpeningHourAtDay(DaysOfTheWeek day, TimePeriod timePeriod)
-    {
+    public void setOpeningHourAtDay(DaysOfTheWeek day, TimePeriod timePeriod) {
         this.openingHours.set(day.ordinal(), timePeriod);
     }
 
@@ -253,11 +218,11 @@ public class Bar implements Serializable
                 Objects.equals(menu, that.menu) &&
                 Objects.equals(capacity, that.capacity);
     }
+
     @Override
     public int hashCode() {
         return Objects.hash(barInfo, openingHours, bosses, menu, capacity);
     }
-
 
 
 }

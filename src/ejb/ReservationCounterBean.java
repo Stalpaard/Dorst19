@@ -10,23 +10,22 @@ public class ReservationCounterBean {
     private int reservations_done;
 
     @PostConstruct
-    public void reset()
-    {
+    public void reset() {
         reservations_done = 0;
     }
 
     @Lock(LockType.WRITE)
-    public void incReservationsDone()
-    {
-        reservations_done = reservations_done+1;
+    public void incReservationsDone() {
+        reservations_done = reservations_done + 1;
     }
 
     @Lock(LockType.WRITE)
-    public void decReservationsDone() {reservations_done = reservations_done-1;}
+    public void decReservationsDone() {
+        reservations_done = reservations_done - 1;
+    }
 
     @Lock(LockType.READ)
-    public int getReservationsDone()
-    {
+    public int getReservationsDone() {
         return reservations_done;
     }
 }

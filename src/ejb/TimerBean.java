@@ -24,23 +24,19 @@ public class TimerBean {
 
     final static float giftAmount = 10.0f;
 
-    @Schedule(dayOfMonth="1", hour = "0", persistent = false)
-    public void giftCredit()
-    {
-        for(String username : queryBean.queryUsers())
-        {
+    @Schedule(dayOfMonth = "1", hour = "0", persistent = false)
+    public void giftCredit() {
+        for (String username : queryBean.queryUsers()) {
             Customer customer = entityManager.find(Customer.class, username);
             entityManager.refresh(customer);
-            if(customer != null) customer.setCredit(customer.getCredit() + giftAmount);
+            if (customer != null) customer.setCredit(customer.getCredit() + giftAmount);
             entityManager.merge(customer);
         }
     }
 
-    public List<Date> getNextGiftDates()
-    {
+    public List<Date> getNextGiftDates() {
         ArrayList<Date> dates = new ArrayList<>();
-        for(Timer timer : timerService.getTimers())
-        {
+        for (Timer timer : timerService.getTimers()) {
             dates.add(timer.getNextTimeout());
         }
         return dates;

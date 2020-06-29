@@ -9,7 +9,6 @@ import jpa.embeddables.BarInfo;
 import jpa.entities.*;
 
 import javax.ejb.EJB;
-import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.flow.FlowScoped;
@@ -34,12 +33,12 @@ public class CafeManagedBean implements Serializable {
     int newCafeCapacity = 0;
 
     String newDrinkName;
-    @PositiveOrZero(message = "Alcohol percentage can't be negative") @Max(value = 100 , message = "Alcohol percentage is max 100%")
+    @PositiveOrZero(message = "Alcohol percentage can't be negative") @Max(value = 100, message = "Alcohol percentage is max 100%")
     float newDrinkAlc = 0;
     @Positive(message = "Drink volume has to be greater than 0")
     float newDrinkVol = 1;
     @PositiveOrZero(message = "Price can't be negative")
-    float newDrinkPrice= 0;
+    float newDrinkPrice = 0;
     @PositiveOrZero(message = "Stock can't be negative")
     int newDrinkStock = 0;
 
@@ -62,23 +61,19 @@ public class CafeManagedBean implements Serializable {
     @Inject
     UserManagedBean userManagedBean;
 
-    public List<Bar> getOwnedCafes()
-    {
+    public List<Bar> getOwnedCafes() {
         BarBoss boss = null;
         List<Bar> ownedBars = null;
-        if(userManagedBean != null) boss = ((BarBoss)userManagedBean.getUser());
-        if(boss != null)ownedBars = boss.getOwnedBars();
-        return  ownedBars;
+        if (userManagedBean != null) boss = ((BarBoss) userManagedBean.getUser());
+        if (boss != null) ownedBars = boss.getOwnedBars();
+        return ownedBars;
     }
 
-    public Map<String, Object> mapManagedMenu()
-    {
+    public Map<String, Object> mapManagedMenu() {
         Map<String, Object> menumap = new TreeMap<>();
         Set<MenuEntry> barMenu = barManagementBean.getMenu();
-        if(!(barMenu.isEmpty()) && barMenu != null)
-        {
-            for(MenuEntry m : barMenu)
-            {
+        if (!(barMenu.isEmpty()) && barMenu != null) {
+            for (MenuEntry m : barMenu) {
                 String key = m.getId() + " " + m.getItem().getName();
                 menumap.put(key, m.getId());
             }
@@ -86,116 +81,93 @@ public class CafeManagedBean implements Serializable {
         return menumap;
     }
 
-    public Set<MenuEntry> getManagedMenu()
-    {
+    public Set<MenuEntry> getManagedMenu() {
         return barManagementBean.getMenu();
     }
 
-    public void checkMenuEmpty()
-    {
-        if(barManagementBean.getMenu().isEmpty())
-        {
+    public void checkMenuEmpty() {
+        if (barManagementBean.getMenu().isEmpty()) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Stock", "Menu is empty"));
         }
     }
 
     public void createCafe() {
         User user = null;
-        if(userManagedBean != null) user = userManagedBean.getUser();
-        if(user != null) {
+        if (userManagedBean != null) user = userManagedBean.getUser();
+        if (user != null) {
             Address address = new Address(newCafeStreet, newCafeCity);
             BarInfo barInfo = new BarInfo(newCafeName, address);
-            try{
-                if(barCreationBean.createBar((BarBoss)userManagedBean.getUser(), barInfo, newCafeCapacity))
-                {
+            try {
+                if (barCreationBean.createBar((BarBoss) userManagedBean.getUser(), barInfo, newCafeCapacity)) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Café " + newCafeName + " created",
                             "Street: " + newCafeStreet + " City: " + newCafeCity + " Capacity: " + newCafeCapacity));
-                }
-                else
-                {
+                } else {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Bar already exists", "Unique name/street/city combination required"));
                 }
-            }
-            catch(DorstException e)
-            {
+            } catch (DorstException e) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid bar details", e.getMessage()));
             }
         }
     }
 
     public String manageCafe(int cafeId) {
-        //Om de named query te testen heb ik het zo gedaan
-        if(barManagementBean.attachBar(cafeId))
-        {
-            if(barManagementBean.getMenu().isEmpty()) menuNotEmpty = false;
+        if (barManagementBean.attachBar(cafeId)) {
+            if (barManagementBean.getMenu().isEmpty()) menuNotEmpty = false;
             else menuNotEmpty = true;
             return "boss-management";
         }
         return "";
     }
 
-    public String unmanageCafe()
-    {
+    public String unmanageCafe() {
         barManagementBean.detachBar();
         return "boss";
     }
 
-    public String getManagedCafeNaam()
-    {
-        if(barManagementBean.isManaged())
+    public String getManagedCafeNaam() {
+        if (barManagementBean.isManaged())
             return barManagementBean.getManagedBarInfo().getName();
         else return "";
     }
 
     public void removeCafe(int cafeId) {
-        try{
+        try {
             barCreationBean.removeBar(cafeId);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Café removed", "Café with id: " + cafeId + " removed"));
-        }
-        catch (DorstException e)
-        {
+        } catch (DorstException e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to remove bar", e.getMessage()));
         }
     }
 
 
-    public void addDrinkToMenu()
-    {
+    public void addDrinkToMenu() {
         DrinkItem drinkItem = new DrinkItem(newDrinkName, newDrinkAlc, newDrinkVol);
         try {
-            if(barManagementBean.addMenuItem(drinkItem, newDrinkPrice, newDrinkStock))
-            {
-                if(!menuNotEmpty) menuNotEmpty = true;
+            if (barManagementBean.addMenuItem(drinkItem, newDrinkPrice, newDrinkStock)) {
+                if (!menuNotEmpty) menuNotEmpty = true;
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(newDrinkName + " added to menu"));
-            }
-            else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Failed to add item","Item already in menu"));
-        }
-        catch (DorstException e)
-        {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Invalid item details",e.getMessage()));
+            } else
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to add item", "Item already in menu"));
+        } catch (DorstException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid item details", e.getMessage()));
         }
 
     }
 
-    public void removeDrinkFromMenu(int menuEntry)
-    {
-        if(barManagementBean.removeMenuItem(menuEntry))
-        {
-            if(barManagementBean.getMenu().isEmpty()) menuNotEmpty = false;
+    public void removeDrinkFromMenu(int menuEntry) {
+        if (barManagementBean.removeMenuItem(menuEntry)) {
+            if (barManagementBean.getMenu().isEmpty()) menuNotEmpty = false;
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Item removed", "Menu entry with id: " + menuEntry + " was removed"));
-        }
-        else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "REMOVE ERROR", "Internal server error"));
+        } else
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "REMOVE ERROR", "Internal server error"));
     }
 
-    public void addStockToDrink()
-    {
-        try{
+    public void addStockToDrink() {
+        try {
             barManagementBean.addStockToMenuItem(menuEntryId, addToStock);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Stock added",addToStock + " added to menu entry with id: " + menuEntryId));
-        }
-        catch (DorstException e)
-        {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"STOCK ERROR", e.getMessage()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Stock added", addToStock + " added to menu entry with id: " + menuEntryId));
+        } catch (DorstException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "STOCK ERROR", e.getMessage()));
         }
     }
 

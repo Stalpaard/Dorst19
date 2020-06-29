@@ -1,6 +1,5 @@
 package jpa.entities;
 
-import javax.jms.JMSConnectionFactory;
 import javax.persistence.*;
 import javax.validation.constraints.Positive;
 import java.util.Objects;
@@ -8,7 +7,8 @@ import java.util.Objects;
 @Entity
 @Table(name = "ITEM_RESERVATION")
 public class ItemReservation {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "id")
     private int id;
 
@@ -38,13 +38,11 @@ public class ItemReservation {
     )
     private Bar bar;
 
-    protected ItemReservation()
-    {
+    protected ItemReservation() {
 
     }
 
-    public ItemReservation(Bar bar, MenuEntry menuEntry, int amountOfDrinks, Customer customer)
-    {
+    public ItemReservation(Bar bar, MenuEntry menuEntry, int amountOfDrinks, Customer customer) {
         this.bar = bar;
         this.menuEntry = menuEntry;
         this.amountOfDrinks = amountOfDrinks;
@@ -75,8 +73,7 @@ public class ItemReservation {
         return bar;
     }
 
-    public void setBar(Bar bar)
-    {
+    public void setBar(Bar bar) {
         this.bar = bar;
     }
 

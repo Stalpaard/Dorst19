@@ -1,7 +1,5 @@
 package jpa.embeddables;
 
-import com.sun.istack.NotNull;
-
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
@@ -24,13 +22,11 @@ public class TimePeriod {
     @Column(name = "end_hour")
     private int endHour;
 
-    protected TimePeriod()
-    {
+    protected TimePeriod() {
 
     }
 
-    public TimePeriod(int beginHour, int endHour)
-    {
+    public TimePeriod(int beginHour, int endHour) {
         this();
         this.beginHour = beginHour;
         this.endHour = endHour;

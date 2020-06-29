@@ -1,7 +1,6 @@
 package jpa.entities;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,30 +10,25 @@ public class BarBoss extends User {
     @ManyToMany(mappedBy = "bosses", fetch = FetchType.LAZY)
     private List<Bar> ownedBars = new ArrayList<>();
 
-    protected BarBoss()
-    {
+    protected BarBoss() {
 
     }
 
-    public BarBoss(String username, String password)
-    {
+    public BarBoss(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
-    public List<Bar> getOwnedBars()
-    {
+    public List<Bar> getOwnedBars() {
         return ownedBars;
     }
 
-    protected boolean addBar(Bar bar)
-    {
-        if(ownedBars.contains(bar) == false) return ownedBars.add(bar);
+    protected boolean addBar(Bar bar) {
+        if (ownedBars.contains(bar) == false) return ownedBars.add(bar);
         else return false;
     }
 
-    protected boolean removeBar(Bar bar)
-    {
+    protected boolean removeBar(Bar bar) {
         return ownedBars.remove(bar);
     }
 

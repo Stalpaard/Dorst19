@@ -14,7 +14,6 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.*;
 
 @Named
@@ -47,8 +46,7 @@ public class UtilityManagedBean {
     }
 
 
-    public String menuRedirect(int barId)
-    {
+    public String menuRedirect(int barId) {
         return "menuDemo.xhtml?faces-redirect=true&barId=" + barId;
     }
 
@@ -66,44 +64,37 @@ public class UtilityManagedBean {
         return s;
     }
 
-    public Map<String, Object> getUserTypes()
-    {
-        Map<String,Object> userTypes = new LinkedHashMap<>();
-        for(UserType type : UserType.values())
-        {
+    public Map<String, Object> getUserTypes() {
+        Map<String, Object> userTypes = new LinkedHashMap<>();
+        for (UserType type : UserType.values()) {
             userTypes.put(type.name(), type);
         }
         return userTypes;
     }
 
-    public String stringOfAllUsers(){
+    public String stringOfAllUsers() {
         String s = "";
-        for(String u : queryBean.queryUsers()) s = s + " " + u;
+        for (String u : queryBean.queryUsers()) s = s + " " + u;
         return s;
     }
 
-    public int getGlobalAmountOfReservations()
-    {
+    public int getGlobalAmountOfReservations() {
         return reservationCounterBean.getReservationsDone();
     }
 
-    public String giftDatesString()
-    {
+    public String giftDatesString() {
         String giftDates = "";
-        for(Date d : timerBean.getNextGiftDates())
-        {
+        for (Date d : timerBean.getNextGiftDates()) {
             giftDates = giftDates + d.toString() + "\t";
         }
         return giftDates;
     }
 
-    public List<Bar> queryBars()
-    {
+    public List<Bar> queryBars() {
         return queryBean.queryBars();
     }
 
-    public Set<MenuEntry> queryMenuFromBar(int barId)
-    {
+    public Set<MenuEntry> queryMenuFromBar(int barId) {
         return queryBean.queryMenuFromBar(barId);
     }
 }

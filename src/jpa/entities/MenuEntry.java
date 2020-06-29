@@ -1,12 +1,9 @@
 package jpa.entities;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.util.Objects;
 
 @Entity
@@ -16,7 +13,8 @@ import java.util.Objects;
 @NamedQuery(name = "CHECK_DRINK_REF", query = "SELECT m FROM MenuEntry m WHERE m.item.id = :id")
 @XmlRootElement
 public class MenuEntry {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "id", updatable = false, nullable = false)
     private int id;
 
@@ -36,25 +34,26 @@ public class MenuEntry {
     @Column(name = "stock")
     private int stock;
 
-    protected MenuEntry()
-    {
+    protected MenuEntry() {
 
     }
 
-    public MenuEntry(Item item, float price, int stock)
-    {
+    public MenuEntry(Item item, float price, int stock) {
         this.item = item;
         this.price = price;
         this.stock = stock;
     }
+
     @XmlElement
     public int getId() {
         return id;
     }
+
     @XmlElement
     public Item getItem() {
         return item;
     }
+
     @XmlElement
     public float getPrice() {
         return price;
@@ -63,6 +62,7 @@ public class MenuEntry {
     public void setPrice(float price) {
         this.price = price;
     }
+
     @XmlElement
     public int getStock() {
         return stock;
