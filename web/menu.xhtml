@@ -12,8 +12,8 @@
 <f:view>
     <h:head>
         <h:outputStylesheet library="CSS_files" name="header.css"  />
-        <h:outputStylesheet library="CSS_files" name="BarOverview.css"  />
-        <title>Cafe overview</title>
+        <h:outputStylesheet library="CSS_files" name="BarOverview.css" />
+        <title>Menu overview</title>
     </h:head>
     <h:body>
         <div id="header" >
@@ -47,13 +47,35 @@
                     </p:column>
 
                     <p:column headerText="AlcoholPercentage" filterBy="#{drink.item.alcoholPercentage}" filterStyleClass="hide">
-                        <h:outputText value="#{drink.item.alcoholPercentage}" />
+                        <h:outputText value="#{drink.item.alcoholPercentage}%"/>
                     </p:column>
 
                     <p:column headerText="Volume" filterBy="#{drink.item.volume}" filterStyleClass="hide">
-                        <h:outputText value="#{drink.item.volume}" />
+                        <h:outputText value="#{drink.item.volume}L" />
+                    </p:column>
+
+                    <p:column headerText="Price" filterBy="#{drink.price}" filterStyleClass="hide">
+                        <h:outputText value="€#{drink.price}" />
                     </p:column>
                 </p:dataTable>
+            </h:form>
+        </div>
+    </h:body>
+    <h:body>
+        <style type="text/css">
+            .footer{
+                background: linear-gradient(white, #f8cee6);
+                margin-top: 5px;
+                border-color: black;
+            }
+        </style>
+        <div class="footer" align="center">
+            <h:outputText value="Global amount of reservations: #{utilityManagedBean.globalAmountOfReservations}"/>
+            <br/>
+            <h:outputText value="Next time you get free credits! YEEEEEY :  #{utilityManagedBean.giftDatesString()}"/>
+            <h:form>
+                <p:commandButton ajax="false" actionListener="#{userManagedBean.removeUser}" value="Remove" action="returnFromCustomer" rendered="#{userManagedBean.loggedIn and userManagedBean.userCustomer}"/>
+                <p:commandButton ajax="false" actionListener="#{userManagedBean.removeUser}" value="Remove" action="returnFromBoss" rendered="#{userManagedBean.loggedIn and userManagedBean.userBoss}"/>
             </h:form>
         </div>
     </h:body>
