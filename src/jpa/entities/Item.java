@@ -10,7 +10,8 @@ import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @XmlRootElement
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.CHAR)
 abstract public class Item {
     @Id @GeneratedValue
     @Column(name = "id")
