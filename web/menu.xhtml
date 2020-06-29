@@ -34,8 +34,9 @@
         </div>
         <div class="cafeTable">
             <h:form>
-                <p:dataTable lazy="false" var="drink" rowKey="#{drink.id}" value="#{dtSelect.menuItems}" widgetVar="drinksTable" stickyHeader="true" stickyTopAt=".layout-topbar"
-                             emptyMessage="No drinks found with given criteria"> <!-- filteredValue="#{dtFilterView.filteredBars}" globalFilterFunction="#{dtFilterView.globalFilterFunction}" value="#{dtFilterView.bars}"> -->
+                <p:dataTable lazy="false" var="drink" rowKey="#{drink.getId()}" value="#{dtSelect.menuItems}" widgetVar="drinksTable" stickyHeader="true" stickyTopAt=".layout-topbar"
+                             emptyMessage="No drinks found with given criteria" selectionMode="single" selection="#{dtSelect.drink}"> <!-- filteredValue="#{dtFilterView.filteredBars}" globalFilterFunction="#{dtFilterView.globalFilterFunction}" value="#{dtFilterView.bars}"> -->
+                    <p:ajax event="rowSelect" listener="#{dtSelect.onDrinkSelect}" />
                     <f:facet name="header">
                         <p:outputPanel>
                             <h:outputText value="Search all:" />
@@ -46,12 +47,12 @@
                         <h:outputText value="#{drink.item.name}" />
                     </p:column>
 
-                    <p:column headerText="AlcoholPercentage" filterBy="#{drink.item.alcoholPercentage}" filterStyleClass="hide">
-                        <h:outputText value="#{drink.item.alcoholPercentage}%"/>
+                    <p:column headerText="AlcoholPercentage" filterBy="#{drink.item.getAlcoholPercentage()}" filterStyleClass="hide">
+                        <h:outputText value="#{drink.item.getAlcoholPercentage()}%"/>
                     </p:column>
 
-                    <p:column headerText="Volume" filterBy="#{drink.item.volume}" filterStyleClass="hide">
-                        <h:outputText value="#{drink.item.volume}L" />
+                    <p:column headerText="Volume" filterBy="#{drink.item.getVolume()}" filterStyleClass="hide">
+                        <h:outputText value="#{drink.item.getVolume()}L" />
                     </p:column>
 
                     <p:column headerText="Price" filterBy="#{drink.price}" filterStyleClass="hide">

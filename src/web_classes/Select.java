@@ -27,8 +27,18 @@ public class Select implements Serializable {
 
     private List<MenuEntry> menuItems;
 
+    private MenuEntry drink;
+
     @Inject
     private UtilityManagedBean utilityManagedBean;
+
+    public MenuEntry getDrink() {
+        return drink;
+    }
+
+    public void setDrink(MenuEntry drink) {
+        this.drink = drink;
+    }
 
     public Bar getBar()
     {
@@ -51,6 +61,7 @@ public class Select implements Serializable {
     {
         menuItems = null;
         bar = null;
+        drink = null;
     }
 
     public void onRowSelect(SelectEvent event) throws IOException {
@@ -59,6 +70,11 @@ public class Select implements Serializable {
         parseJson(jsonArray);
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         externalContext.redirect("http://localhost:8080/Dorst19/menu.xhtml");
+    }
+    public void onDrinkSelect(SelectEvent event) throws IOException {
+
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        externalContext.redirect("http://localhost:8080/Dorst19/login.xhtml");
     }
     public JSONArray readJsonFromUrl(String nurl) throws IOException {
         URL url = new URL(nurl);
