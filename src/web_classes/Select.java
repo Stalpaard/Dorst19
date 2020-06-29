@@ -78,6 +78,7 @@ public class Select implements Serializable {
         if(userManagedBean.isLoggedIn())
         {
             System.out.println(userManagedBean.attemptLogin());
+            userManagedBean.attemptLogin();
         }
         else
         {
