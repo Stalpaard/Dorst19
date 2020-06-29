@@ -21,11 +21,11 @@ public abstract class User {
     @Id
     @NotBlank(message = "cannot be blank")
     @Size(max = 20, message = "Username is limited to 20 characters")
-    @Column(name = "username", length=20, nullable = false)
+    @Column(name = "username", length=20)
     protected String username;
 
     @NotBlank(message = "cannot be blank")
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     protected String password;
 
     public String getUsername()

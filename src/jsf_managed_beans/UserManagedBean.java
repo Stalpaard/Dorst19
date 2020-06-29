@@ -119,7 +119,15 @@ public class UserManagedBean implements Serializable {
 
     public void addCredit()
     {
-        if(amountToAdd > 0) userBean.addCreditToUser((Customer)getUser(), amountToAdd);
+        if(amountToAdd > 0)
+        {
+            if(userBean.addCreditToUser((Customer)getUser(), amountToAdd))
+            {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Credit added", amountToAdd + " was added to user credit"));
+            }
+            else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "CREDIT ERROR", "Internal server error, try again later"));
+        }
+        else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid credit amount", "Amount has to greater than 0"));
     }
 
 

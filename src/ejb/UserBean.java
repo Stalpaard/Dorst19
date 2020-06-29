@@ -59,7 +59,7 @@ public class UserBean {
         return false;
     }
 
-    public void cancelUserReservation(Customer managed_customer, int reservationId)
+    public boolean cancelUserReservation(Customer managed_customer, int reservationId)
     {
         ItemReservation reservation = entityManager.find(ItemReservation.class, reservationId);
         if(reservation != null)
@@ -70,13 +70,18 @@ public class UserBean {
                 Bar bar = entityManager.find(Bar.class, reservation.getBar().getId());
                 if(bar != null)
                 {
-                    bar.cancelReservation(reservation);
-                    entityManager.merge(managed_customer);
-                    entityManager.merge(bar);
-                    entityManager.flush();
+                    boolean removed = bar.cancelReservation(reservation);
+                    if(removed)
+                    {
+                        entityManager.merge(managed_customer);
+                        entityManager.merge(bar);
+                        entityManager.flush();
+                        return true;
+                    }
                 }
             }
         }
+        return false;
     }
 
     private void validateCustomer(Customer customer) throws DorstException
@@ -111,22 +116,6 @@ public class UserBean {
         }
     }
 
-    private void validateUser(User user) throws DorstException
-    {
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<User>> constraintViolations = validator.validate(user);
-
-        if (constraintViolations.size() > 0) {
-            Set<String> violationMessages = new HashSet<String>();
-
-            for (ConstraintViolation<User> constraintViolation : constraintViolations) {
-                violationMessages.add(constraintViolation.getPropertyPath() + ": " + constraintViolation.getMessage() + "\t|\t");
-            }
-
-            throw new DorstException(String.join("\n",violationMessages));
-        }
-    }
-
     public User authenticateUser(String username, String password) throws DorstException
     {
         if(username == null || password == null) throw new DorstException("Please fill in the credentials form");
@@ -139,14 +128,16 @@ public class UserBean {
         return null;
     }
 
-    public void addCreditToUser(User user, float amount)
+    public boolean addCreditToUser(User user, float amount)
     {
         Customer customer = entityManager.find(Customer.class, user.getUsername());
         if(customer != null)
         {
             customer.setCredit(customer.getCredit() + amount);
             entityManager.merge(customer);
+            return true;
         }
+        return false;
     }
 
     public User refreshUser(User user)

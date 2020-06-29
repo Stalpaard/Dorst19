@@ -39,20 +39,16 @@
             </div>
         </div>
         <h:form id="bossform">
-            <p:growl id="growl" showDetail="true" life="2500" />
-
-            <h:outputText value="Bosspage"/>
-            <h:outputText value="&lt;br/&gt;" escape="false"/>
-
-            <p:commandButton value="Remove" action="returnFromBoss" ajax="false">
-                <f:actionListener binding="#{userManagedBean.removeUser()}"/>
-            </p:commandButton>
+            <p:growl id="growl" showDetail="true" severity="info" life="2500" />
+            <p:growl id="growl_error" severity="error" life="2500" />
 
             <h:outputText value="&lt;br/&gt;" escape="false"/>
 
             <p:commandButton value="Create new cafe" onclick="PF('cafeDialog').show();"/>
+
             <h:outputText value="&lt;br/&gt;" escape="false"/>
-            <p:messages showDetail="true"/>
+
+            <p:messages showDetail="true" severity="error"/>
 
             <p:dialog header="Add a new cafe" modal="true" widgetVar="cafeDialog">
                 <p:panelGrid columns="2">
@@ -98,6 +94,8 @@
                             <h:outputText value="#{cafe.barInfo.address.city}"/>
                             <h:outputText value="Street:" />
                             <h:outputText value="#{cafe.barInfo.address.street}"/>
+                            <h:outputText value="Capacity:" />
+                            <h:outputText value="#{cafe.capacity} persons"/>
                         </p:panelGrid>
                     </p:outputPanel>
                     <p:outputPanel>
@@ -116,7 +114,25 @@
                 <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes"/>
                 <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no"/>
             </p:confirmDialog>
+
         </h:form>
+        <style type="text/css">
+            .footer{
+                background: linear-gradient(white, #f8cee6);
+                margin-top: 5px;
+                border-color: black;
+            }
+        </style>
+        <div class="footer" align="center">
+            <h:outputText value="Global amount of reservations: #{utilityManagedBean.globalAmountOfReservations}"/>
+            <br/>
+            <h:outputText value="Next time you get free credits! YEEEEEY :  #{utilityManagedBean.giftDatesString()}"/>
+            <br/>
+            <h:form>
+                <p:commandButton ajax="false" actionListener="#{userManagedBean.removeUser}" value="Remove" action="returnFromBoss" rendered="#{userManagedBean.loggedIn and userManagedBean.userBoss}"/>
+            </h:form>
+
+        </div>
     </h:body>
 </f:view>
 

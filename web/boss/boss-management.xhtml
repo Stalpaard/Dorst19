@@ -40,11 +40,16 @@
             </div>
         </div>
         <h:form id="bossform">
-            <p:growl id="growl" showDetail="true" life="2500" />
+            <p:growl id="growl" showDetail="true" severity="info" life="2500" />
+            <p:growl id="growl_error" severity="error" life="2500" />
 
             <p:commandButton value="unmanage cafe" action="#{cafeManagedBean.unmanageCafe()}"/>
 
             <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+
+            <p:messages showDetail="true" severity="error"/>
+
             <h:outputText value="&lt;br/&gt;" escape="false"/>
 
             <p:commandButton value="Add drink to menu" onclick="PF('drinkDialog').show();"/>
@@ -54,13 +59,13 @@
                     <p:inputText label="drinkName" value="#{cafeManagedBean.newDrinkName}"/>
 
                     <p:outputLabel value="Alcohol Percentage: "/>
-                    <p:inputNumber label = "drinkPercentage" decimalPlaces="1" minValue="0.0" maxValue="100.0" value="#{cafeManagedBean.newDrinkAlc}"/>
+                    <p:inputNumber label = "drinkPercentage" symbol="%" symbolPosition="s" decimalPlaces="1" minValue="0.0" maxValue="100.0" value="#{cafeManagedBean.newDrinkAlc}"/>
 
                     <p:outputLabel value="Volume: "/>
-                    <p:inputNumber label = "drinkVolume" value="#{cafeManagedBean.newDrinkVol}"/>
+                    <p:inputNumber label = "drinkVolume" symbol="l" symbolPosition="s" value="#{cafeManagedBean.newDrinkVol}"/>
 
                     <p:outputLabel value="Price: "/>
-                    <p:inputNumber label = "drinkPrice" decimalPlaces="2" minValue="0.00" value="#{cafeManagedBean.newDrinkPrice}"/>
+                    <p:inputNumber label = "drinkPrice" decimalPlaces="2" symbol="&euro;" symbolPosition="p" minValue="0.00" value="#{cafeManagedBean.newDrinkPrice}"/>
 
                     <p:outputLabel value="Initial stock: "/>
                     <p:inputNumber label = "drinkStock" minValue="0" maxValue="2147483647" decimalPlaces="0"  value="#{cafeManagedBean.newDrinkStock}"/>
@@ -101,7 +106,7 @@
                             <h:outputText value="#{entry.item.name}"/>
 
                             <h:outputText value="Price:" />
-                            <h:outputText value="#{entry.price}"/>
+                            <h:outputText value="&euro;#{entry.price}"/>
                         </p:panelGrid>
                     </p:outputPanel>
                     <p:outputPanel>

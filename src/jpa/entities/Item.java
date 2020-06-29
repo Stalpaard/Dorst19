@@ -17,7 +17,7 @@ abstract public class Item {
     private int id;
     @NotBlank(message = "cannot be blank")
     @Size(max = 20, message = "limited to 20 characters")
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     protected String name;
 
     protected Item()

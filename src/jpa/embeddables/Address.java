@@ -22,12 +22,12 @@ public class Address implements Serializable {
 
     @Size(max = 90, message = "limited to 90 characters")
     @NotBlank(message = "cannot be blank")
-    @Column(name = "street", length = 90, nullable = false)
+    @Column(name = "street", length = 90)
     private String street;
 
     @Size(max = 90, message = "limited to 90 characters")
     @NotBlank(message = "cannot be blank")
-    @Column(name = "city", length = 90, nullable = false)
+    @Column(name = "city", length = 90)
     private String city;
 
     public Address()

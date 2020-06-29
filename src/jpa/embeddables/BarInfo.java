@@ -18,7 +18,7 @@ public class BarInfo implements Serializable {
 
     @Size(max = 20, message = "limited to 20 characters")
     @NotBlank(message = "cannot be blank")
-    @Column(name = "name", length = 20, nullable = false)
+    @Column(name = "name", length = 20)
     private String name;
 
     @Embedded
