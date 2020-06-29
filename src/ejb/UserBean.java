@@ -62,6 +62,7 @@ public class UserBean {
     public void cancelUserReservation(Customer managed_customer, int reservationId) throws DorstException
     {
         ItemReservation reservation = entityManager.find(ItemReservation.class, reservationId);
+        entityManager.refresh(reservation);
         if(reservation != null)
         {
             Customer customer = entityManager.find(Customer.class, managed_customer.getUsername());
@@ -70,6 +71,7 @@ public class UserBean {
                 customer.removeReservation(reservation);
                 int barId = reservation.getBar().getId();
                 Bar bar = entityManager.find(Bar.class, barId);
+                entityManager.refresh(bar);
                 if(bar != null)
                 {
                     boolean removed = bar.cancelReservation(reservation);
@@ -134,6 +136,7 @@ public class UserBean {
     public boolean addCreditToUser(User user, float amount)
     {
         Customer customer = entityManager.find(Customer.class, user.getUsername());
+        entityManager.refresh(customer);
         if(customer != null)
         {
             customer.setCredit(customer.getCredit() + amount);

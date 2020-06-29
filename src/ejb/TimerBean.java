@@ -30,7 +30,9 @@ public class TimerBean {
         for(String username : queryBean.queryUsers())
         {
             Customer customer = entityManager.find(Customer.class, username);
+            entityManager.refresh(customer);
             if(customer != null) customer.setCredit(customer.getCredit() + giftAmount);
+            entityManager.merge(customer);
         }
     }
 

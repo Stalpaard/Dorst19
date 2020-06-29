@@ -53,7 +53,7 @@ public class ReservationManagedBean implements Serializable {
         if(menu != null)
         {
             for (MenuEntry m : menu)
-                temp.put(m.getId() + m.getItem().getName() + " price: " + geldFormat.format(m.getPrice()), m.getId());
+                temp.put(m.getItem().getName() + " Price: " + geldFormat.format(m.getPrice()), m.getId());
         }
         return temp;
     }

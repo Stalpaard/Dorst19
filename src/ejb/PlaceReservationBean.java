@@ -38,8 +38,10 @@ public class PlaceReservationBean {
     public void addReservation(int barId, int menuEntryId, String customerUsername, int amount) throws DorstException
     {
         Bar bar = entityManager.find(Bar.class, barId);
+        entityManager.refresh(bar);
         MenuEntry menuEntry = bar.getMenuEntryById(menuEntryId);
         Customer customer = entityManager.find(Customer.class, customerUsername);
+        entityManager.refresh(customer);
         if(menuEntry != null && bar != null && customer != null)
         {
             this.customerUsername = customerUsername;
