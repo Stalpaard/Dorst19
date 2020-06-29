@@ -48,10 +48,10 @@ public class ReservationMDB implements MessageListener {
                     if (success != null) {
                         customer.setCredit(customer.getCredit() - (menuEntry.getPrice() * reservationMsg.amount));
                         customer.addReservation(success);
-                        reservationCounterBean.incReservationsDone();
                         entityManager.merge(customer);
                         entityManager.merge(bar);
                         entityManager.flush();
+                        reservationCounterBean.incReservationsDone();
                     }
                 }
             }

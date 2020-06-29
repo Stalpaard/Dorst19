@@ -59,29 +59,32 @@ public class UserBean {
         return false;
     }
 
-    public boolean cancelUserReservation(Customer managed_customer, int reservationId)
+    public void cancelUserReservation(Customer managed_customer, int reservationId) throws DorstException
     {
         ItemReservation reservation = entityManager.find(ItemReservation.class, reservationId);
         if(reservation != null)
         {
-            if(managed_customer != null)
+            Customer customer = entityManager.find(Customer.class, managed_customer.getUsername());
+            if(customer != null)
             {
-                managed_customer.removeReservation(reservation);
-                Bar bar = entityManager.find(Bar.class, reservation.getBar().getId());
+                customer.removeReservation(reservation);
+                int barId = reservation.getBar().getId();
+                Bar bar = entityManager.find(Bar.class, barId);
                 if(bar != null)
                 {
                     boolean removed = bar.cancelReservation(reservation);
                     if(removed)
                     {
-                        entityManager.merge(managed_customer);
+                        entityManager.merge(customer);
                         entityManager.merge(bar);
                         entityManager.flush();
-                        return true;
                     }
                 }
+                else throw new DorstException("Bar with id: " + barId + " not found");
             }
+            else throw new DorstException("Customer " + managed_customer.getUsername() + " not found");
         }
-        return false;
+        else throw new DorstException("reservation with id: " + reservationId + " not found");
     }
 
     private void validateCustomer(Customer customer) throws DorstException

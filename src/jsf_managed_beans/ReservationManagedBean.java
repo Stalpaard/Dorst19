@@ -52,15 +52,10 @@ public class ReservationManagedBean implements Serializable {
         Set<MenuEntry> menu = queryBean.queryMenuFromBar(reservationCafeId);
         if(menu != null)
         {
-            for (MenuEntry m : queryBean.queryMenuFromBar(reservationCafeId))
+            for (MenuEntry m : menu)
                 temp.put(m.getId() + m.getItem().getName() + " price: " + geldFormat.format(m.getPrice()), m.getId());
         }
         return temp;
-    }
-
-    public void reservationMenuListener(ValueChangeEvent event)
-    {
-        reservationCafeId = (int)event.getNewValue();
     }
 
     public void addReservation()
@@ -93,11 +88,14 @@ public class ReservationManagedBean implements Serializable {
 
     public void cancelReservation()
     {
-        if(userBean.cancelUserReservation((Customer)userManagedBean.getUser(), removeReservationId))
-        {
+        try{
+            userBean.cancelUserReservation((Customer)userManagedBean.getUser(), removeReservationId);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Remove complete", "Reservation with id: " + removeReservationId + " has been removed"));
         }
-        else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Remove failed", "Internal server error"));
+        catch (DorstException e)
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Remove failed", e.getMessage()));
+        }
     }
 
 

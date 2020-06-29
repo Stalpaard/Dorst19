@@ -189,9 +189,14 @@ public class CafeManagedBean implements Serializable {
 
     public void addStockToDrink()
     {
-        if(barManagementBean.addStockToMenuItem(menuEntryId, addToStock) == false)
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"STOCK ERROR", "Internal server error"));
-        else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Stock added",addToStock + " added to menu entry with id: " + menuEntryId));
+        try{
+            barManagementBean.addStockToMenuItem(menuEntryId, addToStock);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Stock added",addToStock + " added to menu entry with id: " + menuEntryId));
+        }
+        catch (DorstException e)
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"STOCK ERROR", e.getMessage()));
+        }
     }
 
     public boolean isMenuNotEmpty() {

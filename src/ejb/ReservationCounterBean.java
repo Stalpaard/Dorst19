@@ -6,17 +6,16 @@ import javax.ejb.*;
 @Singleton(name = "SingletonEJB")
 @ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
 public class ReservationCounterBean {
-    private int reservations_done = 0;
+    private int reservations_done;
 
     public ReservationCounterBean() {
     }
-    @Lock(LockType.WRITE)
+
     public void incReservationsDone()
     {
         reservations_done = reservations_done+1;
     }
 
-    @Lock(LockType.READ)
     public int getReservationsDone()
     {
         return reservations_done;

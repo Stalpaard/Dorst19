@@ -104,19 +104,13 @@ public class BarManagementBean implements Serializable {
         return false;
     }
 
-    public boolean addStockToMenuItem(int menuEntryId, int amount)
+    public void addStockToMenuItem(int menuEntryId, int amount) throws DorstException
     {
-        if(amount > 0 && managedBar != null)
-        {
-            MenuEntry menuEntry = managedBar.getMenuEntryById(menuEntryId);
-            if(menuEntry != null)
-            {
-                menuEntry.setStock(menuEntry.getStock() + amount);
-                entityManager.merge(managedBar);
-                return true;
-            }
-        }
-        return false;
+        if(amount <= 0) throw new DorstException("Amount has to be greater than zero");
+        MenuEntry menuEntry = managedBar.getMenuEntryById(menuEntryId);
+        if(menuEntry == null) throw new DorstException("MenuEntry not found");
+        menuEntry.setStock(menuEntry.getStock() + amount);
+        entityManager.merge(managedBar);
     }
 
     public Set<MenuEntry> getMenu()
