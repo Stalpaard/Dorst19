@@ -83,7 +83,7 @@
                     </p:selectOneMenu>
 
                     <p:outputLabel value="Amount: "/>
-                    <p:inputNumber minValue="0" maxValue="2147483647" value="#{reservationManagedBean.reservationAmount}"/>
+                    <p:inputNumber minValue="1" maxValue="2147483647" value="#{reservationManagedBean.reservationAmount}"/>
                 </p:panelGrid>
                 <p:commandButton value="Pay reservation" action="#{reservationManagedBean.addReservation()}" update="customerform"/>
             </p:dialog>
