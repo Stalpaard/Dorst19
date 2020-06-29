@@ -97,7 +97,7 @@
             <h:outputText value="&lt;br/&gt;" escape="false"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
 
-            <p:commandButton value="Refresh reservations" update="reservationOverview"/>
+            <p:commandButton value="Refresh reservations" update="customerform"/>
 
             <h:outputText value="&lt;br/&gt;" escape="false"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
@@ -171,23 +171,22 @@
                 </h:panelGrid>
             </p:dataScroller>
 
+            <style type="text/css">
+                .footer{
+                    background: linear-gradient(white, #f8cee6);
+                    margin-top: 5px;
+                    border-color: black;
+                }
+            </style>
+            <div class="footer" align="center">
+                <p:outputLabel value="Global amount of reservations: #{utilityManagedBean.globalAmountOfReservations}"/>
+                <br/>
+                <p:outputLabel value="Next time you get free credits! YEEEEEY :  #{utilityManagedBean.giftDatesString()}"/>
+                <p:commandButton ajax="false" actionListener="#{userManagedBean.removeUser}" value="Remove" action="returnFromCustomer" rendered="#{userManagedBean.loggedIn and userManagedBean.userCustomer}"/>
+            </div>
         </h:form>
 
-        <style type="text/css">
-            .footer{
-                background: linear-gradient(white, #f8cee6);
-                margin-top: 5px;
-                border-color: black;
-            }
-        </style>
-        <div class="footer" align="center">
-            <h:outputText value="Global amount of reservations: #{utilityManagedBean.globalAmountOfReservations}"/>
-            <br/>
-            <h:outputText value="Next time you get free credits! YEEEEEY :  #{utilityManagedBean.giftDatesString()}"/>
-            <h:form>
-                <p:commandButton ajax="false" actionListener="#{userManagedBean.removeUser}" value="Remove" action="returnFromCustomer" rendered="#{userManagedBean.loggedIn and userManagedBean.userCustomer}"/>
-            </h:form>
-        </div>
+
     </h:body>
 </f:view>
 </html>
