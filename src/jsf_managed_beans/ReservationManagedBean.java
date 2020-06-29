@@ -9,6 +9,7 @@ import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.flow.FlowScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -40,31 +41,26 @@ public class ReservationManagedBean implements Serializable {
     UserManagedBean userManagedBean;
 
     int reservationCafeId = -1;
-    Map<String,Object> reservationMenu;
     int reservationMenuEntryId = -1;
-    @Positive
     int reservationAmount = 1;
     int removeReservationId = -1;
 
     private static DecimalFormat geldFormat = new DecimalFormat("0.00");
 
-    public void updateReservationMenu() {
-        if (reservationCafeId > -1) {
-            Set<MenuEntry> menu = queryBean.queryMenuFromBar(reservationCafeId);
-            if(menu != null)
-            {
-                Map<String, Object> temp = new TreeMap<>();
-                for (MenuEntry m : queryBean.queryMenuFromBar(reservationCafeId))
-                    temp.put(m.getId() + m.getItem().getName() + " price: " + geldFormat.format(m.getPrice()), m.getId());
-                reservationMenu = temp;
-            }
-
+    public Map<String,Object> updateReservationMenu() {
+        Map<String, Object> temp = new TreeMap<>();
+        Set<MenuEntry> menu = queryBean.queryMenuFromBar(reservationCafeId);
+        if(menu != null)
+        {
+            for (MenuEntry m : queryBean.queryMenuFromBar(reservationCafeId))
+                temp.put(m.getId() + m.getItem().getName() + " price: " + geldFormat.format(m.getPrice()), m.getId());
         }
+        return temp;
     }
 
-    public boolean isReservationMenuLoaded()
+    public void reservationMenuListener(ValueChangeEvent event)
     {
-        return reservationMenu != null;
+        reservationCafeId = (int)event.getNewValue();
     }
 
     public void addReservation()
@@ -108,14 +104,6 @@ public class ReservationManagedBean implements Serializable {
 
 
 
-
-    public Map<String, Object> getReservationMenu() {
-        return reservationMenu;
-    }
-
-    public void setReservationMenu(Map<String, Object> reservationMenu) {
-        this.reservationMenu = reservationMenu;
-    }
 
     public int getRemoveReservationId() {
         return removeReservationId;
