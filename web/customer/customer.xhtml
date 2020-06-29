@@ -71,7 +71,7 @@
                 <f:selectItems id="select_menu_map_cus" value="#{reservationManagedBean.reservationMenu}" />
             </p:selectOneMenu>
             <c:if test="#{reservationManagedBean.isReservationMenuLoaded()}">
-                <h:inputText id="reservation_amount" a:placeholder="amount" value="#{reservationManagedBean.reservationAmount}"/>
+                <p:inputNumber minValue="0" maxValue="2147483647" id="reservation_amount" value="#{reservationManagedBean.reservationAmount}"/>
             </c:if>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
 
