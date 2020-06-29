@@ -1,15 +1,8 @@
 package jpa.entities;
 
-import ch.qos.cal10n.IMessageConveyor;
-
-import javax.management.remote.JMXServerErrorException;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
 @Entity
@@ -21,25 +14,22 @@ public abstract class User {
     @Id
     @NotBlank(message = "cannot be blank")
     @Size(max = 20, message = "Username is limited to 20 characters")
-    @Column(name = "username", length=20)
+    @Column(name = "username", length = 20)
     protected String username;
 
     @NotBlank(message = "cannot be blank")
     @Column(name = "password")
     protected String password;
 
-    public String getUsername()
-    {
+    public String getUsername() {
         return username;
     }
 
-    public void setPassword(String password)
-    {
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getPassword()
-    {
+    public String getPassword() {
         return password;
     }
 

@@ -4,7 +4,6 @@ import jpa.embeddables.Address;
 import jpa.embeddables.BarInfo;
 import jpa.entities.*;
 
-import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
@@ -26,36 +25,32 @@ public class BarCreationBean {
     public BarCreationBean() {
     }
 
-    public boolean createBar(BarBoss initBoss, BarInfo newBarInfo, int capacity)
-    {
+    public boolean createBar(BarBoss initBoss, BarInfo newBarInfo, int capacity) {
         TypedQuery<Bar> barQuery = entityManager.createNamedQuery("CHECK_EXISTING_BARS", Bar.class)
                 .setParameter("barinfo", newBarInfo);
 
-        if(barQuery.getResultList().size() <= 0)
-        {
-                Bar new_bar = new Bar(newBarInfo, capacity);
-                new_bar.addBoss(initBoss);
-                validateBar(new_bar);
-                entityManager.persist(new_bar);
-                entityManager.merge(initBoss);
-                return true;
+        if (barQuery.getResultList().size() <= 0) {
+            Bar new_bar = new Bar(newBarInfo, capacity);
+            new_bar.addBoss(initBoss);
+            validateBar(new_bar);
+            entityManager.persist(new_bar);
+            entityManager.merge(initBoss);
+            return true;
         }
         return false;
     }
 
-    public void removeBar(int cafeId) throws DorstException
-    {
+    public void removeBar(int cafeId) throws DorstException {
         Bar toDelete = entityManager.find(Bar.class, cafeId);
-        if(toDelete != null)
-        {
-            if(!toDelete.getReservations().isEmpty()) throw new DorstException("There are still customer reservations");
+        entityManager.refresh(toDelete);
+        if (toDelete != null) {
+            if (!toDelete.getReservations().isEmpty())
+                throw new DorstException("There are still customer reservations");
             else entityManager.remove(toDelete);
-        }
-        else throw new DorstException("Internal server error");
+        } else throw new DorstException("Internal server error");
     }
 
-    private void validateBar(Bar bar) throws DorstException
-    {
+    private void validateBar(Bar bar) throws DorstException {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
         Set<ConstraintViolation<Bar>> constraintViolationsBar = validator.validate(bar);
@@ -75,7 +70,7 @@ public class BarCreationBean {
                 violationMessages.add(constraintViolation.getPropertyPath() + ": " + constraintViolation.getMessage() + "\t|\t");
             }
 
-            throw new DorstException(String.join("\n",violationMessages));
+            throw new DorstException(String.join("\n", violationMessages));
         }
     }
 }

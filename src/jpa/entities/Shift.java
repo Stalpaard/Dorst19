@@ -1,6 +1,5 @@
 package jpa.entities;
 
-import com.sun.istack.NotNull;
 import jpa.embeddables.TimePeriod;
 import utilities.DaysOfTheWeek;
 
@@ -14,7 +13,8 @@ import java.util.Objects;
         name = "SHIFT"
 )
 public class Shift {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "id")
     private int id;
 
@@ -40,13 +40,11 @@ public class Shift {
     @Column(name = "day")
     private DaysOfTheWeek dayOfTheWeek;
 
-    protected Shift()
-    {
+    protected Shift() {
 
     }
 
-    protected Shift(Bar bar, TimePeriod timePeriod, DaysOfTheWeek dayOfTheWeek)
-    {
+    protected Shift(Bar bar, TimePeriod timePeriod, DaysOfTheWeek dayOfTheWeek) {
         this.bar = bar;
         this.timePeriod = timePeriod;
         this.dayOfTheWeek = dayOfTheWeek;
@@ -56,18 +54,14 @@ public class Shift {
         return employees;
     }
 
-    public boolean addEmployee(BarEmployee barEmployee)
-    {
-        if(employees.contains(barEmployee) == false)
-        {
+    public boolean addEmployee(BarEmployee barEmployee) {
+        if (employees.contains(barEmployee) == false) {
             boolean add_shift = barEmployee.addShift(this);
             return employees.add(barEmployee) && add_shift;
-        }
-        else return false;
+        } else return false;
     }
 
-    public boolean removeEmployee(BarEmployee barEmployee)
-    {
+    public boolean removeEmployee(BarEmployee barEmployee) {
         boolean remove_shift = barEmployee.removeShift(this);
         return employees.remove(barEmployee) && remove_shift;
     }
@@ -94,7 +88,7 @@ public class Shift {
         if (o == null || getClass() != o.getClass()) return false;
         Shift that = (Shift) o;
         return Objects.equals(bar, that.bar) &&
-                Objects.equals(timePeriod,that.timePeriod) &&
+                Objects.equals(timePeriod, that.timePeriod) &&
                 Objects.equals(dayOfTheWeek, that.dayOfTheWeek);
     }
 

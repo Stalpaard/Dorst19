@@ -91,8 +91,12 @@
             <h:outputText value="&lt;br/&gt;" escape="false"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
 
-            <h:outputText value="Menu: " escape="false"/>
             <p:dataScroller id="menuDataScroller" value="#{cafeManagedBean.managedMenu}" var="entry" chunkSize="10">
+
+                <f:facet name="header">
+                    Menu
+                </f:facet>
+
                 <p:panelGrid columns="4" style="width:100%">
                     <p:outputPanel>
                         <p:panelGrid columns="2">

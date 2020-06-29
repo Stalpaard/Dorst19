@@ -10,13 +10,11 @@ public class BarEmployee extends User {
     @ManyToMany(mappedBy = "employees", fetch = FetchType.LAZY)
     private List<Shift> shifts = new ArrayList<>();
 
-    protected BarEmployee()
-    {
+    protected BarEmployee() {
 
     }
 
-    public BarEmployee(String username, String password)
-    {
+    public BarEmployee(String username, String password) {
         this.username = username;
         this.password = password;
     }
@@ -25,13 +23,12 @@ public class BarEmployee extends User {
         return shifts;
     }
 
-    protected boolean addShift(Shift shift){
-        if(shifts.contains(shift) == false) return shifts.add(shift);
+    protected boolean addShift(Shift shift) {
+        if (shifts.contains(shift) == false) return shifts.add(shift);
         else return false;
     }
 
-    protected boolean removeShift(Shift shift)
-    {
+    protected boolean removeShift(Shift shift) {
         return shifts.remove(shift);
     }
 }

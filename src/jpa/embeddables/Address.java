@@ -1,7 +1,5 @@
 package jpa.embeddables;
 
-import com.sun.istack.NotNull;
-
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
@@ -17,8 +15,6 @@ import java.util.Objects;
 @XmlRootElement
 @Access(AccessType.FIELD)
 public class Address implements Serializable {
-    //Huisnummer weggelaten omdat cafés meerdere huisnummers kunnen hebben => veel werk
-    //Velden worden updatable gehouden opdat bars kunnen verhuizen
 
     @Size(max = 90, message = "limited to 90 characters")
     @NotBlank(message = "cannot be blank")
@@ -30,41 +26,36 @@ public class Address implements Serializable {
     @Column(name = "city", length = 90)
     private String city;
 
-    public Address()
-    {
+    public Address() {
 
     }
 
-    public Address(String street, String city)
-    {
+    public Address(String street, String city) {
         this();
         this.street = street;
         this.city = city;
     }
+
     @XmlElement
-    public String getStreet()
-    {
+    public String getStreet() {
         return street;
     }
 
-    public void setStreet(String street)
-    {
+    public void setStreet(String street) {
         this.street = street;
     }
+
     @XmlElement
-    public String getCity()
-    {
+    public String getCity() {
         return city;
     }
 
-    public void setCity(String city)
-    {
+    public void setCity(String city) {
         this.city = city;
     }
 
     @Override
-    public boolean equals(Object o)
-    {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Address that = (Address) o;

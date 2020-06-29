@@ -67,14 +67,15 @@
                 <p:commandButton value="Create cafe" action="#{cafeManagedBean.createCafe()}" update="bossform"/>
             </p:dialog>
 
-
-            <h:outputText value="&lt;br/&gt;" escape="false"/>
-
             <h:outputText value="&lt;br/&gt;" escape="false"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
-            <h:outputText value="My cafés: " escape="false"/>
 
             <p:dataScroller id="cafeDataScroller" value="#{cafeManagedBean.ownedCafes}" var="cafe" chunkSize="10">
+
+                <f:facet name="header">
+                    Owned Cafés
+                </f:facet>
+
                 <p:panelGrid columns="5" style="width:100%">
                     <p:outputPanel>
                         <p:panelGrid columns="2">

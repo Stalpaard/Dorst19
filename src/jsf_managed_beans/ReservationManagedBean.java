@@ -6,14 +6,11 @@ import jpa.entities.ItemReservation;
 import jpa.entities.MenuEntry;
 
 import javax.ejb.EJB;
-import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ValueChangeEvent;
 import javax.faces.flow.FlowScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.validation.constraints.Positive;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -47,62 +44,46 @@ public class ReservationManagedBean implements Serializable {
 
     private static DecimalFormat geldFormat = new DecimalFormat("0.00");
 
-    public Map<String,Object> updateReservationMenu() {
+    public Map<String, Object> updateReservationMenu() {
         Map<String, Object> temp = new TreeMap<>();
         Set<MenuEntry> menu = queryBean.queryMenuFromBar(reservationCafeId);
-        if(menu != null)
-        {
-            for (MenuEntry m : queryBean.queryMenuFromBar(reservationCafeId))
-                temp.put(m.getId() + m.getItem().getName() + " price: " + geldFormat.format(m.getPrice()), m.getId());
+        if (menu != null) {
+            for (MenuEntry m : menu)
+                temp.put(m.getItem().getName() + " Price: " + geldFormat.format(m.getPrice()), m.getId());
         }
         return temp;
     }
 
-    public void reservationMenuListener(ValueChangeEvent event)
-    {
-        reservationCafeId = (int)event.getNewValue();
-    }
-
-    public void addReservation()
-    {
+    public void addReservation() {
         try {
             placeReservationBean.addReservation(reservationCafeId, reservationMenuEntryId, userManagedBean.getUser().getUsername(), reservationAmount);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Reservation sent to Bar", "Refresh to see the new reservation"));
-        }
-        catch (DorstException e)
-        {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Reservation Failed", e.getMessage()));
+        } catch (DorstException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Reservation Failed", e.getMessage()));
         }
     }
 
 
-    public Map<String, Object> getUserReservationsMap()
-    {
+    public Map<String, Object> getUserReservationsMap() {
         Map<String, Object> reservationsMap = new TreeMap<>();
-        for(ItemReservation r : ((Customer)userManagedBean.getUser()).getReservations())
-        {
+        for (ItemReservation r : ((Customer) userManagedBean.getUser()).getReservations()) {
             reservationsMap.put(Integer.toString(r.getId()), r.getId());
         }
         return reservationsMap;
     }
 
-    public List<ItemReservation> getUserReservations()
-    {
-        return ((Customer)userManagedBean.getUser()).getReservations();
+    public List<ItemReservation> getUserReservations() {
+        return ((Customer) userManagedBean.getUser()).getReservations();
     }
 
-    public void cancelReservation()
-    {
-        if(userBean.cancelUserReservation((Customer)userManagedBean.getUser(), removeReservationId))
-        {
+    public void cancelReservation() {
+        try {
+            userBean.cancelUserReservation((Customer) userManagedBean.getUser(), removeReservationId);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Remove complete", "Reservation with id: " + removeReservationId + " has been removed"));
+        } catch (DorstException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to remove reservation", e.getMessage()));
         }
-        else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Remove failed", "Internal server error"));
     }
-
-
-
-
 
 
     public int getRemoveReservationId() {

@@ -53,7 +53,7 @@
             <p:growl id="growl" showDetail="true" severity="info" life="2500" />
             <p:growl id="growl_error" severity="error" life="2500" />
 
-            <h:outputText style="font-weight: bold" value="Credit: &euro;#{userManagedBean.userCredit}" escape="false"/>
+            <p:outputLabel id="credit" style="font-weight: bold" value="Credit: &euro;#{userManagedBean.userCredit}" escape="false"/>
 
             <h:outputText value="&lt;br/&gt;" escape="false"/>
 
@@ -83,7 +83,7 @@
                     </p:selectOneMenu>
 
                     <p:outputLabel value="Amount: "/>
-                    <p:inputNumber minValue="0" maxValue="2147483647" value="#{reservationManagedBean.reservationAmount}"/>
+                    <p:inputNumber minValue="1" maxValue="2147483647" value="#{reservationManagedBean.reservationAmount}"/>
                 </p:panelGrid>
                 <p:commandButton value="Pay reservation" action="#{reservationManagedBean.addReservation()}" update="customerform"/>
             </p:dialog>

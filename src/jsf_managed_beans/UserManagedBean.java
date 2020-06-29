@@ -5,6 +5,7 @@ import ejb.QueryBean;
 import ejb.UserBean;
 import jpa.entities.*;
 import utilities.UserType;
+
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.enterprise.context.SessionScoped;
@@ -36,113 +37,86 @@ public class UserManagedBean implements Serializable {
 
     private static DecimalFormat geldFormat = new DecimalFormat("0.00");
 
-    public String attemptLogin()
-    {
+    public String attemptLogin() {
         try {
             User login_user = userBean.authenticateUser(username, password);
             user = login_user;
             loginStatus = "logged in as " + login_user.getUsername();
-            System.out.println("Yeeeeeet");
-            if(isUserCustomer()) return "customer";
-            if(isUserBoss()) return "boss";
-        }
-        catch (EJBException e) {
+            if (isUserCustomer()) return "customer";
+            if (isUserBoss()) return "boss";
+        } catch (EJBException e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Login failed", e.getMessage()));
             return "login";
         }
         return "login";
     }
 
-    public boolean isLoggedIn()
-    {
+    public boolean isLoggedIn() {
         return user != null;
     }
 
-    public String getLoginStatus()
-    {
-        if(!isLoggedIn()) return "User not logged in";
+    public String getLoginStatus() {
+        if (!isLoggedIn()) return "User not logged in";
         return loginStatus;
     }
 
-    public void logout()
-    {
+    public void logout() {
         username = null;
         password = null;
         user = null;
     }
 
 
-
-    public String createUser()
-    {
-        try{
+    public String createUser() {
+        try {
             User new_user = userBean.createUser(username, password, userType);
-            if(new_user != null)
-            {
+            if (new_user != null) {
                 return attemptLogin();
-            }
-            else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Failed to create user", "User already exists"));
+            } else
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to create user", "User already exists"));
             return "login";
-        }
-        catch(DorstException e)
-        {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Invalid credentials", e.getMessage()));
+        } catch (DorstException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid credentials", e.getMessage()));
             return "login";
         }
     }
 
-    public void removeUser()
-    {
-        if(username != null && password != null)
-        {
+    public void removeUser() {
+        if (username != null && password != null) {
             userBean.removeUser(getUser().getUsername());
             user = null;
         }
     }
 
-    public boolean isUserBoss()
-    {
-        if(getUser() != null) return user instanceof BarBoss;
+    public boolean isUserBoss() {
+        if (getUser() != null) return user instanceof BarBoss;
         else return false;
     }
 
-    public boolean isUserCustomer()
-    {
-        if(getUser() != null) return user instanceof Customer;
+    public boolean isUserCustomer() {
+        if (getUser() != null) return user instanceof Customer;
         else return false;
     }
 
-    public String getUserCredit()
-    {
+    public String getUserCredit() {
         geldFormat.setRoundingMode(RoundingMode.UP);
-        return geldFormat.format(((Customer)getUser()).getCredit());
+        return geldFormat.format(((Customer) getUser()).getCredit());
     }
 
-    public void addCredit()
-    {
-        if(amountToAdd > 0)
-        {
-            if(userBean.addCreditToUser((Customer)getUser(), amountToAdd))
-            {
+    public void addCredit() {
+        if (amountToAdd > 0) {
+            if (userBean.addCreditToUser((Customer) getUser(), amountToAdd)) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Credit added", amountToAdd + " was added to user credit"));
-            }
-            else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "CREDIT ERROR", "Internal server error, try again later"));
-        }
-        else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid credit amount", "Amount has to greater than 0"));
+            } else
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to add credit", "Internal server error, try again later"));
+        } else
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid credit amount", "Amount has to be greater than 0"));
     }
-
-
-
-
-
-
-
-
-
 
     public UserType getUserType() {
         return userType;
     }
+
     public void setUserType(UserType userType) {
         this.userType = userType;
     }
@@ -150,6 +124,7 @@ public class UserManagedBean implements Serializable {
     public User getUser() {
         return userBean.refreshUser(user);
     }
+
     public void setUser(User user) {
         this.user = user;
     }
@@ -157,6 +132,7 @@ public class UserManagedBean implements Serializable {
     public String getUsername() {
         return username;
     }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -164,6 +140,7 @@ public class UserManagedBean implements Serializable {
     public String getPassword() {
         return password;
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
