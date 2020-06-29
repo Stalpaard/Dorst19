@@ -63,7 +63,6 @@
             background: linear-gradient(white, #f8cee6);
             margin-top: 5px;
             border-color: black;
-            font-family: "fantasy";
          }
       </style>
       <div class="footer" align="center">
@@ -71,7 +70,8 @@
          <br/>
          <h:outputText value="Next time you get free credits! YEEEEEY :  #{utilityManagedBean.giftDatesString()}"/>
          <h:form>
-            <p:commandButton ajax="false" actionListener="#{userManagedBean.removeUser}" value="Remove" action="returnFromCustomer" rendered="#{userManagedBean.loggedIn}"/>
+            <p:commandButton ajax="false" actionListener="#{userManagedBean.removeUser}" value="Remove" action="returnFromCustomer" rendered="#{userManagedBean.loggedIn and userManagedBean.userCustomer}"/>
+            <p:commandButton ajax="false" actionListener="#{userManagedBean.removeUser}" value="Remove" action="returnFromBoss" rendered="#{userManagedBean.loggedIn and userManagedBean.userBoss}"/>
          </h:form>
 
 

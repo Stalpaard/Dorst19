@@ -97,7 +97,11 @@ public class ReservationManagedBean implements Serializable {
 
     public void cancelReservation()
     {
-        userBean.cancelUserReservation((Customer)userManagedBean.getUser(), removeReservationId);
+        if(userBean.cancelUserReservation((Customer)userManagedBean.getUser(), removeReservationId))
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Remove complete", "Reservation with id: " + removeReservationId + " has been removed"));
+        }
+        else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Remove failed", "Internal server error"));
     }
 
 

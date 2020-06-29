@@ -40,11 +40,16 @@
             </div>
         </div>
         <h:form id="bossform">
-            <p:growl id="growl" showDetail="true" life="2500" />
+            <p:growl id="growl" showDetail="true" severity="info" life="2500" />
+            <p:growl id="growl_error" severity="error" life="2500" />
 
             <p:commandButton value="unmanage cafe" action="#{cafeManagedBean.unmanageCafe()}"/>
 
             <h:outputText value="&lt;br/&gt;" escape="false"/>
+            <h:outputText value="&lt;br/&gt;" escape="false"/>
+
+            <p:messages showDetail="true" severity="error"/>
+
             <h:outputText value="&lt;br/&gt;" escape="false"/>
 
             <p:commandButton value="Add drink to menu" onclick="PF('drinkDialog').show();"/>
