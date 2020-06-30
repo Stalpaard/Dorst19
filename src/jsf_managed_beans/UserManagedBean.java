@@ -44,11 +44,16 @@ public class UserManagedBean implements Serializable {
             loginStatus = "logged in as " + login_user.getUsername();
             if (isUserCustomer()) return "customer";
             if (isUserBoss()) return "boss";
-        } catch (EJBException e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Login failed", e.getMessage()));
-            return "login";
+        } catch (DorstException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Login failed", e.getMessage()));
         }
         return "login";
+    }
+
+    public void logout() {
+        username = null;
+        password = null;
+        user = null;
     }
 
     public boolean isLoggedIn() {
@@ -60,11 +65,7 @@ public class UserManagedBean implements Serializable {
         return loginStatus;
     }
 
-    public void logout() {
-        username = null;
-        password = null;
-        user = null;
-    }
+
 
 
     public String createUser() {
