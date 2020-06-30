@@ -114,6 +114,15 @@ public class UserManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid credit amount", "Amount has to be greater than 0"));
     }
 
+    public void addSurpriseCredit(float amount)
+    {
+        User user = getUser();
+        if(user instanceof Customer)
+        {
+            userBean.addCreditToUser((Customer) getUser(), amountToAdd);
+        }
+    }
+
     public UserType getUserType() {
         return userType;
     }

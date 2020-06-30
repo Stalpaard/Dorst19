@@ -32,7 +32,7 @@ public class UtilityManagedBean {
     ReservationCounterBean reservationCounterBean;
 
     @Inject
-    private UserManagedBean userManagedBean;
+    UserManagedBean userManagedBean;
 
     public Map<String, Object> mapAllCafes() {
         Map<String, Object> cafeMap = new TreeMap<>();
@@ -88,9 +88,9 @@ public class UtilityManagedBean {
             System.out.println(message);
             Float amount = (float) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("amountToAdd");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Surprise!!!!", "Random credit drop"));
-            userManagedBean.setAmountToAdd(amount);
-            userManagedBean.addCredit();
+            userManagedBean.addSurpriseCredit(amount);
         }
+
     }
 
     public List<Bar> queryBars() {
