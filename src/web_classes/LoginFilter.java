@@ -3,21 +3,20 @@ package web_classes;
 import jsf_managed_beans.UserManagedBean;
 
 import java.io.IOException;
+import java.util.Random;
 import javax.inject.Inject;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 
-//@WebFilter(urlPatterns = {"/Dorst19/boss/*", "/Dorst19/customer/*"})
-@WebFilter("/*")
-//@WebFilter(servletNames = {"Dorst19/login.xhtml"})
+//@WebFilter("/*")
 public class LoginFilter implements Filter {
 
     @Inject
@@ -25,47 +24,20 @@ public class LoginFilter implements Filter {
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        //System.out.println("yeeeeeeeeeeeeeet");
+
         HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpSession session = httpRequest.getSession();
 
-        String loginURI = httpRequest.getContextPath() + "/login";
+        Random rand = new Random();
 
-        boolean isLoginRequest = httpRequest.getRequestURI().equals(loginURI);
-
-        boolean isLoginPage = httpRequest.getRequestURI().contains("/login.xhtml");
-
-        if (userManagedBean.isLoggedIn() && (isLoginRequest || isLoginPage)) {
-        //if (userManagedBean.isLoggedIn()) {
-            System.out.println("hoe zit het nu");
-            System.out.println(userManagedBean.attemptLogin());
-            System.out.println("yeeeeeeeeeeeeeet");
-            //chain.doFilter(request, response);
-            userManagedBean.attemptLogin();
-            // the user is already logged in and he's trying to login again
-            // then forwards to the admin's homepage
-            //if(userManagedBean.attemptLogin() == "customer") {
-                //System.out.println("yeeeeeeeeeeeeeet");
-                //RequestDispatcher dispatcher = request.getRequestDispatcher("customer/customer.xhtml");
-                //dispatcher.forward(request, response);
-            //chain.doFilter(request, response);
-            //userManagedBean.attemptLogin();
-            //}
-            /**if (userManagedBean.isUserCustomer()) {
-
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/customer.xhtml");
-                dispatcher.forward(request, response);
-            }
-            if (userManagedBean.isUserBoss()) {
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/boss/boss.xhtml");
-                dispatcher.forward(request, response);
-            }**/
-
-        } else {
-            // continues the filter chain
-            // allows the request to reach the destination
-            chain.doFilter(request, response);
+        int rand1 = rand.nextInt(10);
+        int rand2 = rand.nextInt(100);
+        if (userManagedBean.isLoggedIn() && userManagedBean.isUserCustomer() && rand1 == 1) {
+            session.setAttribute("message", "Surprise: " + rand2 + " Credits added");
+            session.setAttribute("amountToAdd", (float) rand2);
         }
 
+        chain.doFilter(request, response);
     }
 
     public void destroy() {

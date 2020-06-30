@@ -24,6 +24,10 @@
     </h:head>
 
     <h:body>
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{utilityManagedBean.checkSessionAtt()}" />
+        </f:metadata>
+        <p:growl id="growls" showDetail="true" severity="info" life="5000" />
         <div id="header" >
             <div class="header">
                 <h1>Customer Page</h1>

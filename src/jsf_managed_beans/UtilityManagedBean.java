@@ -10,8 +10,10 @@ import utilities.UserType;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.ApplicationScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.IOException;
 import java.util.*;
@@ -28,6 +30,9 @@ public class UtilityManagedBean {
 
     @EJB
     ReservationCounterBean reservationCounterBean;
+
+    @Inject
+    private UserManagedBean userManagedBean;
 
     public Map<String, Object> mapAllCafes() {
         Map<String, Object> cafeMap = new TreeMap<>();
@@ -74,6 +79,18 @@ public class UtilityManagedBean {
             giftDates = giftDates + d.toString() + "\t";
         }
         return giftDates;
+    }
+
+    public void checkSessionAtt()
+    {
+        String message = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("message");
+        if (message != null) {
+            System.out.println(message);
+            Float amount = (float) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("amountToAdd");
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Surprise!!!!", "Random credit drop"));
+            userManagedBean.setAmountToAdd(amount);
+            userManagedBean.addCredit();
+        }
     }
 
     public List<Bar> queryBars() {
