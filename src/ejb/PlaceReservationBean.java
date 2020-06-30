@@ -25,11 +25,6 @@ public class PlaceReservationBean {
     @EJB
     ReservationCounterBean reservationCounterBean;
 
-    int barId = -1;
-    int menuEntryId = -1;
-    String customerUsername = null;
-    int amount = 0;
-    float total = 0;
 
     public PlaceReservationBean() {
     }
@@ -41,14 +36,10 @@ public class PlaceReservationBean {
         Customer customer = entityManager.find(Customer.class, customerUsername);
         entityManager.refresh(customer);
         if (menuEntry != null && bar != null && customer != null) {
-            this.customerUsername = customerUsername;
-            this.barId = barId;
-            this.menuEntryId = menuEntryId;
-            this.amount = amount;
-            total = bar.getMenuEntryById(menuEntryId).getPrice() * amount;
             if (menuEntry.getStock() >= amount) {
+                float total = bar.getMenuEntryById(menuEntryId).getPrice() * amount;
                 if (customer.getCredit() >= total) {
-                    sendReservation();
+                    sendReservation(barId, menuEntryId, customerUsername, amount);
                 } else {
                     throw new DorstException("Insufficient amount of credit (total: " + total + ")");
                 }
@@ -62,7 +53,7 @@ public class PlaceReservationBean {
     }
 
     @Interceptors(LogInterceptor.class)
-    private void sendReservation() throws DorstException {
+    private void sendReservation(int barId, int menuEntryId, String customerUsername, int amount) throws DorstException {
         ReservationInfo reservationInfo = new ReservationInfo(barId, menuEntryId, customerUsername, amount);
 
         try {

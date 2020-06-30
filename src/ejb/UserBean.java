@@ -56,6 +56,33 @@ public class UserBean {
         return false;
     }
 
+    public User authenticateUser(String username, String password) throws DorstException {
+        if (username.isBlank() || password.isBlank()) throw new DorstException("Please fill in the credentials form");
+        User user = entityManager.find(User.class, username);
+        if (user != null) {
+            if (PasswordHasher.checkPw(password, user.getPassword())) return user;
+        } else throw new DorstException("User not found");
+        return null;
+    }
+
+    public User refreshUser(User user) {
+        if (user == null) return null;
+        User retrieved = entityManager.find(User.class, user.getUsername());
+        entityManager.refresh(retrieved);
+        return retrieved;
+    }
+
+    public boolean addCreditToUser(User user, float amount) {
+        Customer customer = entityManager.find(Customer.class, user.getUsername());
+        entityManager.refresh(customer);
+        if (customer != null) {
+            customer.setCredit(customer.getCredit() + amount);
+            entityManager.merge(customer);
+            return true;
+        }
+        return false;
+    }
+
     public void cancelUserReservation(Customer managed_customer, int reservationId) throws DorstException {
         ItemReservation reservation = entityManager.find(ItemReservation.class, reservationId);
         entityManager.refresh(reservation);
@@ -108,30 +135,5 @@ public class UserBean {
         }
     }
 
-    public User authenticateUser(String username, String password) throws DorstException {
-        if (username == null || password == null) throw new DorstException("Please fill in the credentials form");
-        User user = entityManager.find(User.class, username);
-        if (user != null) {
-            if (PasswordHasher.checkPw(password, user.getPassword())) return user;
-        } else throw new DorstException("User not found");
-        return null;
-    }
 
-    public boolean addCreditToUser(User user, float amount) {
-        Customer customer = entityManager.find(Customer.class, user.getUsername());
-        entityManager.refresh(customer);
-        if (customer != null) {
-            customer.setCredit(customer.getCredit() + amount);
-            entityManager.merge(customer);
-            return true;
-        }
-        return false;
-    }
-
-    public User refreshUser(User user) {
-        if (user == null) return null;
-        User retrieved = entityManager.find(User.class, user.getUsername());
-        entityManager.refresh(retrieved);
-        return retrieved;
-    }
 }

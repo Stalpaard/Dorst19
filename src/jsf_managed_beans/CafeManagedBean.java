@@ -85,12 +85,6 @@ public class CafeManagedBean implements Serializable {
         return barManagementBean.getMenu();
     }
 
-    public void checkMenuEmpty() {
-        if (barManagementBean.getMenu().isEmpty()) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Stock", "Menu is empty"));
-        }
-    }
-
     public void createCafe() {
         User user = null;
         if (userManagedBean != null) user = userManagedBean.getUser();
@@ -107,6 +101,15 @@ public class CafeManagedBean implements Serializable {
             } catch (DorstException e) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid bar details", e.getMessage()));
             }
+        }
+    }
+
+    public void removeCafe(int cafeId) {
+        try {
+            barCreationBean.removeBar(cafeId);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Café removed", "Café with id: " + cafeId + " removed"));
+        } catch (DorstException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to remove bar", e.getMessage()));
         }
     }
 
@@ -130,15 +133,11 @@ public class CafeManagedBean implements Serializable {
         else return "";
     }
 
-    public void removeCafe(int cafeId) {
-        try {
-            barCreationBean.removeBar(cafeId);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Café removed", "Café with id: " + cafeId + " removed"));
-        } catch (DorstException e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to remove bar", e.getMessage()));
+    public void checkMenuEmpty() {
+        if (barManagementBean.getMenu().isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Stock", "Menu is empty"));
         }
     }
-
 
     public void addDrinkToMenu() {
         DrinkItem drinkItem = new DrinkItem(newDrinkName, newDrinkAlc, newDrinkVol);

@@ -63,6 +63,15 @@ public class ReservationManagedBean implements Serializable {
         }
     }
 
+    public void cancelReservation() {
+        try {
+            userBean.cancelUserReservation((Customer) userManagedBean.getUser(), removeReservationId);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Remove complete", "Reservation with id: " + removeReservationId + " has been removed"));
+        } catch (DorstException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to remove reservation", e.getMessage()));
+        }
+    }
+
 
     public Map<String, Object> getUserReservationsMap() {
         Map<String, Object> reservationsMap = new TreeMap<>();
@@ -74,15 +83,6 @@ public class ReservationManagedBean implements Serializable {
 
     public List<ItemReservation> getUserReservations() {
         return ((Customer) userManagedBean.getUser()).getReservations();
-    }
-
-    public void cancelReservation() {
-        try {
-            userBean.cancelUserReservation((Customer) userManagedBean.getUser(), removeReservationId);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Remove complete", "Reservation with id: " + removeReservationId + " has been removed"));
-        } catch (DorstException e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to remove reservation", e.getMessage()));
-        }
     }
 
 

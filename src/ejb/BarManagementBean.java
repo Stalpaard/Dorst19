@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 @StatefulTimeout(unit = TimeUnit.MINUTES, value = 60)
 public class BarManagementBean implements Serializable {
 
-    @PersistenceContext(name = "DorstPersistenceBean")
+    @PersistenceContext(name = "DorstPersistenceUnit")
     EntityManager entityManager;
 
     private Bar managedBar = null;
@@ -29,10 +29,6 @@ public class BarManagementBean implements Serializable {
     private int barId = -1;
 
     public BarManagementBean() {
-    }
-
-    public boolean isManaged() {
-        return managedBar != null;
     }
 
     public BarInfo getManagedBarInfo() {
@@ -70,33 +66,6 @@ public class BarManagementBean implements Serializable {
         } else managedBar = null;
     }
 
-    public void removeMenuItem(int id) throws DorstException {
-        managedBar = entityManager.find(Bar.class, managedBar.getId());
-        entityManager.refresh(managedBar);
-        MenuEntry toRemove = managedBar.getMenuEntryById(id);
-        for (ItemReservation reservation : managedBar.getReservations()) {
-            if (reservation.getMenuEntry().equals(toRemove))
-                throw new DorstException("There are still reservations for this item");
-        }
-        Item removed = managedBar.removeFromMenu(id);
-        int removed_id = removed.getId();
-        entityManager.merge(managedBar);
-        TypedQuery<MenuEntry> removeDrinkQuery = entityManager.createNamedQuery("CHECK_DRINK_REF", MenuEntry.class)
-                .setParameter("id", removed_id);
-        if (removeDrinkQuery.getResultList().size() <= 0) {
-            if (removed instanceof DrinkItem) entityManager.remove(entityManager.find(DrinkItem.class, removed_id));
-        }
-    }
-
-    public void addStockToMenuItem(int menuEntryId, int amount) throws DorstException {
-        if (amount <= 0) throw new DorstException("Amount has to be greater than zero");
-        managedBar = entityManager.find(Bar.class, managedBar.getId());
-        entityManager.refresh(managedBar);
-        MenuEntry menuEntry = managedBar.getMenuEntryById(menuEntryId);
-        if (menuEntry == null) throw new DorstException("MenuEntry not found");
-        menuEntry.setStock(menuEntry.getStock() + amount);
-        entityManager.merge(managedBar);
-    }
 
     public Set<MenuEntry> getMenu() {
         if (managedBar != null) {
@@ -134,6 +103,35 @@ public class BarManagementBean implements Serializable {
         return false;
     }
 
+    public void removeMenuItem(int id) throws DorstException {
+        managedBar = entityManager.find(Bar.class, managedBar.getId());
+        entityManager.refresh(managedBar);
+        MenuEntry toRemove = managedBar.getMenuEntryById(id);
+        for (ItemReservation reservation : managedBar.getReservations()) {
+            if (reservation.getMenuEntry().equals(toRemove))
+                throw new DorstException("There are still reservations for this item");
+        }
+        Item removed = managedBar.removeFromMenu(id);
+        int removed_id = removed.getId();
+        entityManager.merge(managedBar);
+        TypedQuery<MenuEntry> removeDrinkQuery = entityManager.createNamedQuery("CHECK_DRINK_REF", MenuEntry.class)
+                .setParameter("id", removed_id);
+        if (removeDrinkQuery.getResultList().size() <= 0) {
+            if (removed instanceof DrinkItem) entityManager.remove(entityManager.find(DrinkItem.class, removed_id));
+        }
+    }
+
+    public void addStockToMenuItem(int menuEntryId, int amount) throws DorstException {
+        if (amount <= 0) throw new DorstException("Amount has to be greater than zero");
+        managedBar = entityManager.find(Bar.class, managedBar.getId());
+        entityManager.refresh(managedBar);
+        MenuEntry menuEntry = managedBar.getMenuEntryById(menuEntryId);
+        if (menuEntry == null) throw new DorstException("MenuEntry not found");
+        menuEntry.setStock(menuEntry.getStock() + amount);
+        entityManager.merge(managedBar);
+    }
+
+
     private void validateDrinkItem(DrinkItem drinkItem) throws DorstException {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
@@ -166,5 +164,8 @@ public class BarManagementBean implements Serializable {
         }
     }
 
+    public boolean isManaged() {
+        return managedBar != null;
+    }
 }
 

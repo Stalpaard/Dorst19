@@ -26,7 +26,8 @@
         </div>
 
         <h:form id="loginform">
-            <p:growl id="growl" showDetail="true" life="2500" />
+            <p:growl id="growl" showDetail="true" severity="info" life="2500" />
+            <p:growl id="growl_error" severity="error" life="2500" />
 
             <h:outputText value="&lt;br/&gt;" escape="false"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
@@ -35,7 +36,7 @@
 
             <h:outputText value="&lt;br/&gt;" escape="false"/>
 
-            <p:messages showDetail="true"/>
+            <p:messages severity="error" showDetail="true"/>
 
             <h:outputText value="&lt;br/&gt;" escape="false"/>
             <h:outputText value="&lt;br/&gt;" escape="false"/>
