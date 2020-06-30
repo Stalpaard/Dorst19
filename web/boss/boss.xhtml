@@ -28,7 +28,7 @@
 
             <div class="button">
                 <h:form>
-                    <p:commandButton ajax="false" action="/index?faces-redirect=true" value="Back" styleClass="left"/>
+                    <p:commandButton ajax="false" action="returnFromBoss" value="Back" styleClass="left"/>
                     <p:commandButton ajax="false" actionListener="#{userManagedBean.logout()}" value="Logout" action="returnFromBoss" rendered="#{userManagedBean.loggedIn}"/>
                     <p:commandButton ajax="false" actionListener="#{userManagedBean.attemptLogin()}" value="Login"  rendered="#{!userManagedBean.loggedIn}"/>
                     <p:commandButton ajax="false" actionListener="#{userManagedBean.createUser()}" value="Register" rendered="#{!userManagedBean.loggedIn}"/>

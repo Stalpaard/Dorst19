@@ -13,12 +13,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 
 //@WebFilter(urlPatterns = {"/Dorst19/boss/*", "/Dorst19/customer/*"})
-//@WebFilter("/Dorst19/boss/*")
-//@WebFilter("/*")
+@WebFilter("/*")
+//@WebFilter(servletNames = {"Dorst19/login.xhtml"})
 public class LoginFilter implements Filter {
 
     @Inject
@@ -26,20 +25,32 @@ public class LoginFilter implements Filter {
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-
+        //System.out.println("yeeeeeeeeeeeeeet");
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpSession session = httpRequest.getSession(false);
 
         String loginURI = httpRequest.getContextPath() + "/login";
 
         boolean isLoginRequest = httpRequest.getRequestURI().equals(loginURI);
 
-        boolean isLoginPage = httpRequest.getRequestURI().endsWith("/login.xhtml");
+        boolean isLoginPage = httpRequest.getRequestURI().contains("/login.xhtml");
 
         if (userManagedBean.isLoggedIn() && (isLoginRequest || isLoginPage)) {
+        //if (userManagedBean.isLoggedIn()) {
+            System.out.println("hoe zit het nu");
+            System.out.println(userManagedBean.attemptLogin());
+            System.out.println("yeeeeeeeeeeeeeet");
+            //chain.doFilter(request, response);
+            userManagedBean.attemptLogin();
             // the user is already logged in and he's trying to login again
             // then forwards to the admin's homepage
-            if (userManagedBean.isUserCustomer()) {
+            //if(userManagedBean.attemptLogin() == "customer") {
+                //System.out.println("yeeeeeeeeeeeeeet");
+                //RequestDispatcher dispatcher = request.getRequestDispatcher("customer/customer.xhtml");
+                //dispatcher.forward(request, response);
+            //chain.doFilter(request, response);
+            //userManagedBean.attemptLogin();
+            //}
+            /**if (userManagedBean.isUserCustomer()) {
 
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/customer.xhtml");
                 dispatcher.forward(request, response);
@@ -47,19 +58,12 @@ public class LoginFilter implements Filter {
             if (userManagedBean.isUserBoss()) {
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/boss/boss.xhtml");
                 dispatcher.forward(request, response);
-            }
+            }**/
 
-        } else if (userManagedBean.isLoggedIn() || isLoginRequest) {
+        } else {
             // continues the filter chain
             // allows the request to reach the destination
             chain.doFilter(request, response);
-
-        } else {
-            // the user is not logged in, so authentication is required
-            // forwards to the Login page
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/login.xhtml");
-            dispatcher.forward(request, response);
-
         }
 
     }
