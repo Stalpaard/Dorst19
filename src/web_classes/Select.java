@@ -8,8 +8,13 @@ import org.primefaces.json.JSONArray;
 import org.primefaces.json.JSONObject;
 
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.Application;
+import javax.faces.application.ConfigurableNavigationHandler;
+import javax.faces.application.NavigationCase;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.flow.Flow;
+import javax.faces.flow.FlowHandler;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.*;
@@ -72,13 +77,36 @@ public class Select implements Serializable {
     }
     public void onDrinkSelect() throws IOException {
 
-        System.out.println("yeeeeeet");
-        System.out.println(userManagedBean == null);
-        System.out.println(userManagedBean.getLoginStatus());
         if(userManagedBean.isLoggedIn())
         {
-            System.out.println(userManagedBean.attemptLogin());
-            userManagedBean.attemptLogin();
+            final FacesContext facesContext = FacesContext.getCurrentInstance();
+            final Application application = facesContext.getApplication();
+
+            // get an instance of the flow to start
+            final String flowId = (String) userManagedBean.attemptLogin();
+            final FlowHandler flowHandler = application.getFlowHandler();
+            final Flow targetFlow = flowHandler.getFlow(facesContext,
+                    "", // definingDocumentId (empty if flow is defined in "faces-config.xml")
+                    flowId);
+
+            // get the navigation handler and the view ID of the flow
+            final ConfigurableNavigationHandler navHandler = (ConfigurableNavigationHandler) application.getNavigationHandler();
+            final NavigationCase navCase = navHandler.getNavigationCase(facesContext,
+                    null, // fromAction
+                    flowId);
+            final String toViewId = navCase.getToViewId(facesContext);
+
+            // initialize the flow scope
+            flowHandler.transition(facesContext,
+                    null, // sourceFlow
+                    targetFlow,
+                    null, // outboundCallNode
+                    toViewId); // toViewId
+
+            final String outcome = toViewId + "?faces-redirect=true";
+            navHandler.handleNavigation(facesContext,
+                    null, // from action
+                    outcome);
         }
         else
         {

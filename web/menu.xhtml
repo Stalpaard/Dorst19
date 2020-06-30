@@ -23,8 +23,8 @@
             </div>
             <div class="button">
                 <h:form>
-                    <p:commandButton ajax="false" action="/login?faces-redirect=true" actionListener="#{dtSelect.back()}" value="Back" styleClass="left"/>
-                    <p:commandButton ajax="false" action="boss/boss?faces-redirect=true" rendered="#{userManagedBean.isUserBoss()}" value="Manage" styleClass="left"/>
+                    <p:commandButton ajax="false" action="/index?faces-redirect=true" actionListener="#{dtSelect.back()}" value="Back" styleClass="left"/>
+                    <p:commandButton ajax="false" action="boss" rendered="#{userManagedBean.isUserBoss()}" value="Manage" styleClass="left"/>
                     <p:commandButton ajax="false" actionListener="#{userManagedBean.logout()}" value="Logout" action="returnFromCustomer" rendered="#{userManagedBean.loggedIn}"/>
                     <p:commandButton ajax="false" action="/login?faces-redirect=true" value="Authenticate" rendered="#{!userManagedBean.loggedIn}"/>
                 </h:form>
@@ -36,7 +36,7 @@
             <h:form>
                 <p:dataTable lazy="false" var="drink" rowKey="#{drink.getId()}" value="#{dtSelect.menuItems}" widgetVar="drinksTable" stickyHeader="true" stickyTopAt=".layout-topbar"
                              emptyMessage="No drinks found with given criteria" selectionMode="single" selection="#{dtSelect.drink}"> <!-- filteredValue="#{dtFilterView.filteredBars}" globalFilterFunction="#{dtFilterView.globalFilterFunction}" value="#{dtFilterView.bars}"> -->
-                    <p:ajax event="rowSelect" listener="#{dtSelect.onDrinkSelect}" />
+                    <p:ajax event="rowSelect" listener="#{dtSelect.onDrinkSelect()}" />
                     <f:facet name="header">
                         <p:outputPanel>
                             <h:outputText value="Search all:" />
